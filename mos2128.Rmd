@@ -7,6 +7,10 @@ output:
     code_folding: hide
 ---
 
+```{r global options, include = FALSE}
+knitr::opts_chunk$set(warning=FALSE, message=FALSE)
+```
+
 ```{r setup, include=FALSE}
 knitr::opts_chunk$set(echo = TRUE)
 library(tidyverse)
@@ -18,7 +22,7 @@ library(patchwork)
 
 # **Data Importing and Cleaning**
 
-```{r, message= FALSE, warning = FALSE}
+```{r}
 res=GET('https://developer.nps.gov/api/v1/parks?limit=500&api_key=B9nDpbkbrb3kSOjz6kXSxMJ3d6MSpUvt1QqYdeyn')
 
 data = res %>% content("text") %>% jsonlite::fromJSON() %>% as_tibble()
@@ -44,7 +48,7 @@ combined_data <- full_join(NPS_data, visitation_data, by = c("park_code"))
 
 ## **Total Trend by Park Type Across Months**
 
-```{r, warning = FALSE, message = FALSE}
+```{r}
 visitation_data %>% 
   group_by(park_type, month) %>% 
   summarize(total_visitation = sum(recreation_visits)) %>% 
@@ -244,43 +248,6 @@ plots[14]
 
 This plot was interesting because the park type `Park (Other)` has high `tent` mean visitation, `rv` visitation, but low `backcountry` visitation. It is the highest in spring and summer.
 
-map of all national parks in US
-
-```{r}
-regional_data <- NPS_data %>% 
-  mutate(region = case_when(
-    states %in% c("CT", "RI", "NH", "VT", "NJ", "NY", "PA", "MD", "ME", "MA") ~ "northeast", 
-    states %in% c("IL","IN", "MI", "OH", "WI", "IA", "KS", "MN", "MO", "NE", "ND", "SD") ~ "midwest", 
-    states %in% c("FL", "GA", "NC", "SC", "VA", "DE", "WV", "AL", "KY", "MS", "TN", "AR", "LA", "OK", "TX", "DC") ~ "south", 
-    states %in% c("AK", "CA", "HI", "OR", "WA", "AZ", "CO", "ID", "MT", "NV", "NM", "UT", "WY") ~ "west",
-    states %in% c("VI", "AS", "GU", "PR") ~ "u.s. territory",
-    TRUE ~ "no state data"
-  ))
-
-g <- list(
-  scope = 'usa',
-  projection = list(type = 'albers usa'),
-  showland = TRUE,
-  landcolor = toRGB("gray95"),
-  subunitcolor = toRGB("gray85"),
-  countrycolor = toRGB("gray85"),
-  countrywidth = 0.5,
-  subunitwidth = 0.5
-)
-
-fig <- plot_geo(regional_data, lat = ~latitude, lon = ~longitude)
-fig <- fig %>% add_markers(
-    text = ~paste(full_name, states, sep = "<br />"),
-    color = ~region, symbol = I("circle"), size = I(8), hoverinfo = "text"
-  )
-
-fig <- fig %>% layout(
-    title = 'US National Parks', geo = g
-  )
-
-fig
-
-```
 
 # **Regional Comparisons**
 
@@ -504,3 +471,42 @@ region_data %>%
 ```
 
 Now looking at the specific visits by region, we can see once again that west has the highest mean visitation among all the regions, with its highest being tent camping. Unsurprisingly, we see that the south has the second highest mean visitation. Interestingly, in backcountry hiking, the midwest has the second highest mean visitation, despite the fact that it has one of the lowest amount of parks in the dataset.
+
+## US National Parks by Region 
+```{r}
+
+regional_data <- NPS_data %>% 
+  mutate(region = case_when(
+    states %in% c("CT", "RI", "NH", "VT", "NJ", "NY", "PA", "MD", "ME", "MA") ~ "northeast", 
+    states %in% c("IL","IN", "MI", "OH", "WI", "IA", "KS", "MN", "MO", "NE", "ND", "SD") ~ "midwest", 
+    states %in% c("FL", "GA", "NC", "SC", "VA", "DE", "WV", "AL", "KY", "MS", "TN", "AR", "LA", "OK", "TX", "DC") ~ "south", 
+    states %in% c("AK", "CA", "HI", "OR", "WA", "AZ", "CO", "ID", "MT", "NV", "NM", "UT", "WY") ~ "west",
+    states %in% c("VI", "AS", "GU", "PR") ~ "u.s. territory",
+    TRUE ~ "no state data"
+  ))
+
+g <- list(
+  scope = 'usa',
+  projection = list(type = 'albers usa'),
+  showland = TRUE,
+  landcolor = toRGB("#e5ecf6"),
+  countrywidth = 0.5,
+  subunitwidth = 0.5
+)
+
+fig <- plot_geo(regional_data, lat = ~latitude, lon = ~longitude)
+fig <- fig %>% add_markers(
+    text = ~paste(full_name, states, sep = "<br />"),
+    color = ~region, symbol = I("circle"), size = I(8), hoverinfo = "text"
+  )
+
+fig <- fig %>% layout(
+    title = 'US National Parks', geo = g
+  )
+
+fig
+
+
+
+```
+
