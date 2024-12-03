@@ -22,8 +22,7 @@ library(tidyverse)
 ```{r}
 month_names = month.name
 
-
-CAP_PAC_shiny = read_csv("data/CAP_PAC_state_info.csv") %>%
+CAP_PAC_shiny = read_csv(here::here ("data", "CAP_PAC_state_info.csv")) %>%
   group_by(state, year, month) %>%
   summarise(total_traffic = sum(traffic_count, na.rm = TRUE)) %>%
   ungroup()
