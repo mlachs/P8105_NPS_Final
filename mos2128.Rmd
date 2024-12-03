@@ -23,7 +23,7 @@ res=GET('https://developer.nps.gov/api/v1/parks?limit=500&api_key=B9nDpbkbrb3kSO
 
 data = res %>% content("text") %>% jsonlite::fromJSON() %>% as_tibble()
 
-NPS_data=data %>% unnest(data) %>% select(fullName,latitude,longitude,topics, activities,states, parkCode) %>%  janitor::clean_names() %>% 
+NPS_data = data %>% unnest(data) %>% select(fullName,latitude,longitude,topics, activities,states, parkCode) %>%  janitor::clean_names() %>% 
   mutate(
     latitude = as.numeric(latitude), 
     longitude = as.numeric(longitude)
@@ -143,9 +143,12 @@ Another interesting pattern is that in National Preserve, there is a higher aver
 ```{r}
 activities_count <- 
   combined_data %>% 
-  filter(park_type == "National Preserve") %>% distinct(activities_name) %>% nrow()
+  filter(park_type == "National Preserve") %>% 
+  distinct(activities_name) %>% 
+  nrow()
 combined_data %>% 
-  filter(park_type == "National Preserve") %>% distinct(activities_name)  %>% 
+  filter(park_type == "National Preserve") %>% 
+  distinct(activities_name)  %>% 
   head() %>% 
   knitr::kable()
 ```
