@@ -119,6 +119,10 @@ Most of the parks have a similar trend in average visitation, where summer is th
 
 ## **National Lakeshore Seasonal Trends and Activities**
 
+```{r}
+plots[7]
+```
+
 For `national lakeshore` parks, there is a really stark difference in average visits between summer and the other seasons.
 
 ```{r}
@@ -210,7 +214,7 @@ for (i in seq_along(park_types)) {
   plots[[i]] <- ggplot(visit_summary, aes(x = season, y = mean)) + 
     geom_col() + 
     facet_grid(~type_visit) +
-    ggtitle(paste("Average Visits for", park_types[i])) + 
+    ggtitle(paste(park_types[i])) + 
     theme(axis.text.x = element_text(angle = 90, vjust = 0.5, hjust = 1))
 } 
 
