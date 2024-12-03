@@ -105,7 +105,7 @@ NPS_Full %>%
 
 ## Things to do 
 
-As part of promotional material the NPS also has a list of things to do. These are specific programs or trails that a person might try at the park. They are catogorized under the different activities listed above. We have a little more information about these activites. Below is a breakdown of some of the things that might effect participation 
+As part of promotional material the NPS also has a list of things to do. These are specific programs, trails or events that a person might try at the park. They are categorized under the different activities listed above. We have a little more information about these activities. Below is a breakdown of some of the things that might effect participation.
 ```{r}
 
 clean_things %>% 

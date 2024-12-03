@@ -390,7 +390,7 @@ clean_things=things_data %&gt;% select(title,relatedParks_parkCode,latitude,long
 
 NPS_data_visits=read_csv(&#39;data/Query Builder for Public Use Statistics (1979 - Last Calendar Year).csv&#39;)</code></pre>
 <pre><code>## Rows: 101419 Columns: 35
-## ── Column specification ────────────────────────────────────────────────────────
+## ── Column specification ───────────────────────────────────────────────────────────────────────────
 ## Delimiter: &quot;,&quot;
 ## chr (10): ParkName, UnitCode, ParkType, Region, State, ParkNameTotal, UnitCo...
 ## dbl  (3): Year, Month, YearTotal
@@ -403,8 +403,8 @@ mutate(parkCode=str_to_upper(parkCode))%&gt;% full_join(NPS_data_visits,by=join_
 <pre><code>## Warning in full_join(., NPS_data_visits, by = join_by(&quot;parkCode&quot; == &quot;UnitCode&quot;)): Detected an unexpected many-to-many relationship between `x` and `y`.
 ## ℹ Row 1 of `x` matches multiple rows in `y`.
 ## ℹ Row 289 of `y` matches multiple rows in `x`.
-## ℹ If a many-to-many relationship is expected, set `relationship =
-##   &quot;many-to-many&quot;` to silence this warning.</code></pre>
+## ℹ If a many-to-many relationship is expected, set `relationship = &quot;many-to-many&quot;` to silence this
+##   warning.</code></pre>
 <p>There are many activities available to you when visiting a national
 park. Between all the parks there are 99 unique activities. Ranging from
 ATV Off-Roading to Wildlife Watching. This range of activites bring
@@ -946,8 +946,8 @@ different parks.</p>
   summarise(avg_visit=mean(RecreationVisits)) %&gt;% full_join(full_act %&gt;% group_by(parkCode) %&gt;% count(),by=&#39;parkCode&#39;) %&gt;% ggplot(aes(x=n,y=avg_visit))+geom_point()</code></pre>
 <pre><code>## `summarise()` has grouped output by &#39;ParkName&#39;. You can override using the
 ## `.groups` argument.</code></pre>
-<pre><code>## Warning: Removed 139 rows containing missing values or values outside the scale range
-## (`geom_point()`).</code></pre>
+<pre><code>## Warning: Removed 139 rows containing missing values or values outside the scale
+## range (`geom_point()`).</code></pre>
 <p><img src="Activities_files/figure-html/unnamed-chunk-8-1.png" width="672" /></p>
 <p>Lets look further to see if there is a relationship between them.</p>
 <pre class="r"><code>NPS_Full %&gt;%
@@ -965,22 +965,22 @@ graph.</p>
 <pre class="r"><code>NPS_Full %&gt;%
   group_by(ParkName,parkCode) %&gt;% 
   summarise(avg_visit=mean(RecreationVisits)) %&gt;% full_join(full_act %&gt;% group_by(parkCode) %&gt;% count(),by=&#39;parkCode&#39;) %&gt;% ggplot(aes(x=n,y=avg_visit))+geom_point()+stat_smooth(method = &#39;lm&#39;)</code></pre>
-<pre><code>## `summarise()` has grouped output by &#39;ParkName&#39;. You can override using the
-## `.groups` argument.
+<pre><code>## `summarise()` has grouped output by &#39;ParkName&#39;. You can override using the `.groups` argument.
 ## `geom_smooth()` using formula = &#39;y ~ x&#39;</code></pre>
 <pre><code>## Warning: Removed 139 rows containing non-finite outside the scale range
 ## (`stat_smooth()`).</code></pre>
-<pre><code>## Warning: Removed 139 rows containing missing values or values outside the scale range
-## (`geom_point()`).</code></pre>
+<pre><code>## Warning: Removed 139 rows containing missing values or values outside the scale
+## range (`geom_point()`).</code></pre>
 <p><img src="Activities_files/figure-html/unnamed-chunk-10-1.png" width="672" /></p>
 </div>
 <div id="things-to-do" class="section level2">
 <h2>Things to do</h2>
 <p>As part of promotional material the NPS also has a list of things to
-do. These are specific programs or trails that a person might try at the
-park. They are catogorized under the different activities listed above.
-We have a little more information about these activites. Below is a
-breakdown of some of the things that might effect participation</p>
+do. These are specific programs, trails or events that a person might
+try at the park. They are categorized under the different activities
+listed above. We have a little more information about these activities.
+Below is a breakdown of some of the things that might effect
+participation.</p>
 <pre class="r"><code>clean_things %&gt;% 
   ggplot(aes(x=doFeesApply))+geom_bar()</code></pre>
 <p><img src="Activities_files/figure-html/unnamed-chunk-11-1.png" width="672" /></p>
