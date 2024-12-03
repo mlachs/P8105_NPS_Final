@@ -1,0 +1,119 @@
+---
+title: "Activities"
+author: "Miriam Lachs"
+date: "2024-12-01"
+output: 
+  html_document:
+    toc: true
+    toc_float: true
+    code_folding: hide
+---
+
+
+```{r echo=FALSE, message=FALSE}
+library(tidyverse)
+library(httr)
+library(plotly)
+library(kableExtra)
+```
+
+
+```{r}
+res=GET('https://developer.nps.gov/api/v1/parks?limit=500&api_key=B9nDpbkbrb3kSOjz6kXSxMJ3d6MSpUvt1QqYdeyn')
+
+data = res %>% content("text") %>% jsonlite::fromJSON() %>% as_tibble()
+```
+
+```{r}
+res=GET('https://developer.nps.gov/api/v1/thingstodo?limit=5000&api_key=B9nDpbkbrb3kSOjz6kXSxMJ3d6MSpUvt1QqYdeyn')
+
+things_data = res %>% content("text") %>% jsonlite::fromJSON() %>% as_tibble()
+
+things_data=things_data %>% unnest(data) %>% unnest(relatedParks,names_sep = "_") %>% unnest(activities,names_sep = "_")
+
+clean_things=things_data %>% select(title,relatedParks_parkCode,latitude,longitude,isReservationRequired,arePetsPermittedWithRestrictions,activities_id,activities_name,doFeesApply,arePetsPermitted,season,timeOfDay) %>%
+  mutate(relatedParks_parkCode=str_to_upper(relatedParks_parkCode),
+           latitude=as.numeric(latitude),
+         longitude=as.numeric(longitude),
+         isReservationRequired=as.logical(isReservationRequired),
+         doFeesApply=as.logical(doFeesApply))
+```
+
+```{r}
+NPS_data_parks=data %>% unnest(data) %>% select(fullName,parkCode,description,latitude,longitude,activities,states,entranceFees,operatingHours,designation) %>% unnest(activities,names_sep = '_') %>% unnest(entranceFees,names_sep = '_') %>% unnest(operatingHours,names_sep = '_') 
+
+NPS_data_visits=read_csv('data/Query Builder for Public Use Statistics (1979 - Last Calendar Year).csv')
+
+NPS_Full=NPS_data_parks %>%   mutate(entranceFees_cost=as.numeric(entranceFees_cost)) %>% 
+mutate(parkCode=str_to_upper(parkCode))%>% full_join(NPS_data_visits,by=join_by('parkCode'=='UnitCode'))
+```
+
+There are many activities available to you when visiting a national park. Between all the parks there are `r NPS_Full %>% select(activities_name) %>% drop_na()%>% distinct %>% count()` unique activities. Ranging from `r NPS_Full %>% select(activities_name) %>% drop_na()%>% distinct %>% arrange(activities_name) %>% head(1)` to `r NPS_Full %>% select(activities_name) %>% drop_na()%>% distinct %>% arrange(activities_name) %>% tail(1)`. This range of activites bring millions of people to our national parks each year. This got us thinking, do the number of activites avalible at each park affect thhe level of visitation? We did some data analysis to find out. 
+
+## Popular Activities
+
+First lets look at all the activities available. 
+
+```{r}
+NPS_Full %>% select(activities_name) %>% drop_na()%>% distinct %>% arrange(activities_name) %>% knitr::kable() %>% kable_styling() %>%
+    scroll_box(width = "100%", height = "200px")
+```
+
+Now let's take a look at which activities are available at the most parks.
+```{r}
+full_act=NPS_Full %>% select(parkCode,activities_name) %>% bind_rows(clean_things %>% select(relatedParks_parkCode,activities_name) %>% mutate(parkCode=relatedParks_parkCode)) %>% select(parkCode,activities_name) %>% distinct() %>% drop_na()
+
+
+full_act%>% group_by(activities_name) %>% summarise(cnt=n_distinct(parkCode)) %>% mutate(activities_name=fct_reorder(activities_name,desc(cnt))) %>% top_n(10) %>%  ggplot(aes(x=activities_name,y=cnt))+geom_col()+theme(axis.text.x = element_text(angle = 90, vjust = 0.5, hjust=1))
+```
+
+Next let's take a look at the number of activities across the different parks. 
+
+```{r}
+
+
+full_act%>% group_by(parkCode) %>% count()%>% ggplot(aes(x=parkCode,y=n))+geom_point()+theme(axis.text.x = element_text(angle = 90, vjust = 0.5, hjust=1))
+```
+
+
+## Activities and Avg Visits
+
+Now lets look at activities compared to avg visits.
+
+```{r}
+NPS_Full %>%
+  group_by(ParkName,parkCode) %>% 
+  summarise(avg_visit=mean(RecreationVisits)) %>% full_join(full_act %>% group_by(parkCode) %>% count(),by='parkCode') %>% ggplot(aes(x=n,y=avg_visit))+geom_point()
+```
+
+Lets look further to see if there is a relationship between them.
+
+```{r}
+
+NPS_Full %>%
+  group_by(ParkName,parkCode) %>% 
+  summarise(avg_visit=mean(RecreationVisits)) %>% full_join(full_act %>% group_by(parkCode) %>% count(),by='parkCode')%>%   lm(avg_visit~ n,data=.) %>% broom::tidy()
+```
+
+It looks like there is a significent relationship, lets add it to our graph.
+
+```{r}
+NPS_Full %>%
+  group_by(ParkName,parkCode) %>% 
+  summarise(avg_visit=mean(RecreationVisits)) %>% full_join(full_act %>% group_by(parkCode) %>% count(),by='parkCode') %>% ggplot(aes(x=n,y=avg_visit))+geom_point()+stat_smooth(method = 'lm')
+```
+
+## Things to do 
+
+As part of promotional material the NPS also has a list of things to do. These are specific programs or trails that a person might try at the park. They are catogorized under the different activities listed above. We have a little more information about these activites. Below is a breakdown of some of the things that might effect participation 
+```{r}
+
+clean_things %>% 
+  ggplot(aes(x=doFeesApply))+geom_bar()
+clean_things %>% 
+  ggplot(aes(x=isReservationRequired))+geom_bar()
+clean_things %>% 
+  ggplot(aes(x=arePetsPermitted))+geom_bar()
+
+```
+
