@@ -136,14 +136,14 @@ ggplot(his_traffic_df, aes(x = year, y = traffic_count_total, color = traffic_co
 
 ```{r}
 his_traffic_df = 
-  read_csv(file = "data/Query Builder for Traffic Counts (1985 - Last Calendar Year).csv", na = c("NA", ",", ".")) %>% 
+  read_csv(file = "data/(east) Query Builder for Traffic Counts (1985 - Last Calendar Year).csv", na = c("NA", ",", ".")) %>% 
   janitor::clean_names() 
 
 his_traffic_df %>% 
   select(park_name) %>% 
   distinct() %>% 
-  pull()
-print(unique_park_names)
+  pull() %>% 
+  print()
 ```
 
 
@@ -1349,11 +1349,6 @@ plot_ly(data = US_states_sf_df, type = "choropleth",
                     lakecolor = toRGB('white')))
 ```
 
-
-```{r}
-write.csv(CAP_PAC_state_info, "data/CAP_PAC_state_info.csv", row.names = FALSE)
-
-```
 
 
 Making graph that does each state has its own plot for across the year where each line on the graph is the months. That way we can see monthly trends across the years for traffic counts. 
