@@ -1,14 +1,23 @@
 ---
 title: "fp2513"
-output: github_document
-date: "2024-11-07"
+output: 
+  html_document:
+    toc: true
+    toc_float: true
+    code_folding: hide
+
 ---
+
+```{r global options, include = FALSE}
+knitr::opts_chunk$set(warning=FALSE, message=FALSE)
+```
+
 
 ```{r setup, include=FALSE}
 library(tidyverse)
 ```
 
-```{r}
+```{r, message = FALSE, warning = FALSE}
 library(httr)
 library(jsonlite)
 
@@ -20,7 +29,7 @@ res=GET('https://developer.nps.gov/api/v1/newsreleases?limit=10000&api_key=B9nDp
 data = res %>%  content("text") %>%  jsonlite::fromJSON() %>%  as_tibble()
 ```
 
-```{r}
+```{r , message = FALSE, warning = FALSE}
 data %>% 
   janitor::clean_names() %>% 
   select(data) %>% 
@@ -38,7 +47,7 @@ Public use Statistics and how that changes over time
 With the 
 
 Text Analysis of news releases
-```{r}
+```{r , message = FALSE, warning = FALSE}
 library(tm)
 library(tidytext)
 library(stringr)
