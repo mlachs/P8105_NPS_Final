@@ -102,6 +102,7 @@ map <- leaflet(NY_close) %>%
 
 # Display the map
 map
+
 ```
 Discover some of the nearby parks that is either in NY state or within driving distance! When you place your cursor on the circles, you will be able to explore the name of the park and its disposition. 
 
