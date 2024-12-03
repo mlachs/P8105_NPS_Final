@@ -90,6 +90,7 @@ In fall, winter, and spring, the highest visitation is `tent_campers`, with a pe
 
 Next, we were interested in seeing the trends in park visitation by season and park type.
 
+
 ```{r}
 park_types <- unique(visitation_data$park_type)
 plots <- list()
