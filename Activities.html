@@ -9,9 +9,7 @@
 <meta http-equiv="X-UA-Compatible" content="IE=EDGE" />
 
 
-<meta name="author" content="Miriam Lachs" />
 
-<meta name="date" content="2024-12-01" />
 
 <title>Activities</title>
 
@@ -365,59 +363,24 @@ div.tocify {
 
 
 <h1 class="title toc-ignore">Activities</h1>
-<h4 class="author">Miriam Lachs</h4>
-<h4 class="date">2024-12-01</h4>
 
 </div>
 
 
-<pre class="r"><code>res=GET(&#39;https://developer.nps.gov/api/v1/parks?limit=500&amp;api_key=B9nDpbkbrb3kSOjz6kXSxMJ3d6MSpUvt1QqYdeyn&#39;)
-
-data = res %&gt;% content(&quot;text&quot;) %&gt;% jsonlite::fromJSON() %&gt;% as_tibble()</code></pre>
-<pre class="r"><code>res=GET(&#39;https://developer.nps.gov/api/v1/thingstodo?limit=5000&amp;api_key=B9nDpbkbrb3kSOjz6kXSxMJ3d6MSpUvt1QqYdeyn&#39;)
-
-things_data = res %&gt;% content(&quot;text&quot;) %&gt;% jsonlite::fromJSON() %&gt;% as_tibble()
-
-things_data=things_data %&gt;% unnest(data) %&gt;% unnest(relatedParks,names_sep = &quot;_&quot;) %&gt;% unnest(activities,names_sep = &quot;_&quot;)
-
-clean_things=things_data %&gt;% select(title,relatedParks_parkCode,latitude,longitude,isReservationRequired,arePetsPermittedWithRestrictions,activities_id,activities_name,doFeesApply,arePetsPermitted,season,timeOfDay) %&gt;%
-  mutate(relatedParks_parkCode=str_to_upper(relatedParks_parkCode),
-           latitude=as.numeric(latitude),
-         longitude=as.numeric(longitude),
-         isReservationRequired=as.logical(isReservationRequired),
-         doFeesApply=as.logical(doFeesApply))</code></pre>
-<pre class="r"><code>NPS_data_parks=data %&gt;% unnest(data) %&gt;% select(fullName,parkCode,description,latitude,longitude,activities,states,entranceFees,operatingHours,designation) %&gt;% unnest(activities,names_sep = &#39;_&#39;) %&gt;% unnest(entranceFees,names_sep = &#39;_&#39;) %&gt;% unnest(operatingHours,names_sep = &#39;_&#39;) 
-
-NPS_data_visits=read_csv(&#39;data/Query Builder for Public Use Statistics (1979 - Last Calendar Year).csv&#39;)</code></pre>
-<pre><code>## Rows: 101419 Columns: 35
-## ── Column specification ───────────────────────────────────────────────────────────────────────────
-## Delimiter: &quot;,&quot;
-## chr (10): ParkName, UnitCode, ParkType, Region, State, ParkNameTotal, UnitCo...
-## dbl  (3): Year, Month, YearTotal
-## num (22): RecreationVisits, NonRecreationVisits, RecreationHours, NonRecreat...
-## 
-## ℹ Use `spec()` to retrieve the full column specification for this data.
-## ℹ Specify the column types or set `show_col_types = FALSE` to quiet this message.</code></pre>
-<pre class="r"><code>NPS_Full=NPS_data_parks %&gt;%   mutate(entranceFees_cost=as.numeric(entranceFees_cost)) %&gt;% 
-mutate(parkCode=str_to_upper(parkCode))%&gt;% full_join(NPS_data_visits,by=join_by(&#39;parkCode&#39;==&#39;UnitCode&#39;))</code></pre>
-<pre><code>## Warning in full_join(., NPS_data_visits, by = join_by(&quot;parkCode&quot; == &quot;UnitCode&quot;)): Detected an unexpected many-to-many relationship between `x` and `y`.
-## ℹ Row 1 of `x` matches multiple rows in `y`.
-## ℹ Row 289 of `y` matches multiple rows in `x`.
-## ℹ If a many-to-many relationship is expected, set `relationship = &quot;many-to-many&quot;` to silence this
-##   warning.</code></pre>
 <p>There are many activities available to you when visiting a national
 park. Between all the parks there are 99 unique activities. Ranging from
-ATV Off-Roading to Wildlife Watching. This range of activites bring
+ATV Off-Roading to Wildlife Watching. This range of activities bring
 millions of people to our national parks each year. This got us
-thinking, do the number of activites avalible at each park affect thhe
+thinking, do the number of activities available at each park affect the
 level of visitation? We did some data analysis to find out.</p>
 <div id="popular-activities" class="section level2">
 <h2>Popular Activities</h2>
-<p>First lets look at all the activities available.</p>
+<p>First lets look at all the activities available. Below is the list of
+activity categories from the National Park Services.</p>
 <pre class="r"><code>NPS_Full %&gt;% select(activities_name) %&gt;% drop_na()%&gt;% distinct %&gt;% arrange(activities_name) %&gt;% knitr::kable() %&gt;% kable_styling() %&gt;%
-    scroll_box(width = &quot;100%&quot;, height = &quot;200px&quot;)</code></pre>
+    scroll_box(width = &quot;100%&quot;, height = &quot;500px&quot;)</code></pre>
 <div
-style="border: 1px solid #ddd; padding: 0px; overflow-y: scroll; height:200px; overflow-x: scroll; width:100%; ">
+style="border: 1px solid #ddd; padding: 0px; overflow-y: scroll; height:500px; overflow-x: scroll; width:100%; ">
 <table class="table" style="margin-left: auto; margin-right: auto;">
 <thead>
 <tr>
@@ -931,46 +894,46 @@ parks.</p>
 
 
 full_act%&gt;% group_by(activities_name) %&gt;% summarise(cnt=n_distinct(parkCode)) %&gt;% mutate(activities_name=fct_reorder(activities_name,desc(cnt))) %&gt;% top_n(10) %&gt;%  ggplot(aes(x=activities_name,y=cnt))+geom_col()+theme(axis.text.x = element_text(angle = 90, vjust = 0.5, hjust=1))</code></pre>
-<pre><code>## Selecting by cnt</code></pre>
 <p><img src="Activities_files/figure-html/unnamed-chunk-6-1.png" width="672" /></p>
-<p>Next let’s take a look at the number of activities across the
-different parks.</p>
-<pre class="r"><code>full_act%&gt;% group_by(parkCode) %&gt;% count()%&gt;% ggplot(aes(x=parkCode,y=n))+geom_point()+theme(axis.text.x = element_text(angle = 90, vjust = 0.5, hjust=1))</code></pre>
+<p>Here are the top 10 most frequently available activities. All showing
+up in more than 100 different parks. The most popular activity being the
+Junior Ranger Program, a program focused on engaging with younger
+visitors.</p>
+<p>Let’s look at it another way. Now let’s take a look at the number of
+activities across the different parks. In other words how many different
+activity categories does each park have.</p>
+<pre class="r"><code>full_act%&gt;% group_by(parkCode) %&gt;% count() %&gt;% view()%&gt;% ggplot(aes(x=parkCode,y=n))+geom_point()+theme(axis.text.x = element_text(angle = 90, vjust = 0.5, hjust=1))</code></pre>
 <p><img src="Activities_files/figure-html/unnamed-chunk-7-1.png" width="672" /></p>
+<p>Looks like there is quite a spread. With some parks as low as 1 and
+one with as many as 57 different categories.</p>
 </div>
 <div id="activities-and-avg-visits" class="section level2">
 <h2>Activities and Avg Visits</h2>
-<p>Now lets look at activities compared to avg visits.</p>
+<p>Because there are so many activities and such a wide range of
+availability, lets take a look at if the number of activities offered
+relates to the average visits to the park each month.</p>
 <pre class="r"><code>NPS_Full %&gt;%
   group_by(ParkName,parkCode) %&gt;% 
   summarise(avg_visit=mean(RecreationVisits)) %&gt;% full_join(full_act %&gt;% group_by(parkCode) %&gt;% count(),by=&#39;parkCode&#39;) %&gt;% ggplot(aes(x=n,y=avg_visit))+geom_point()</code></pre>
-<pre><code>## `summarise()` has grouped output by &#39;ParkName&#39;. You can override using the
-## `.groups` argument.</code></pre>
-<pre><code>## Warning: Removed 139 rows containing missing values or values outside the scale
-## range (`geom_point()`).</code></pre>
 <p><img src="Activities_files/figure-html/unnamed-chunk-8-1.png" width="672" /></p>
-<p>Lets look further to see if there is a relationship between them.</p>
+<p>This graph compares the number of activities to the average monthly
+visits.</p>
+<p>Lets look further to see if there is a relationship between them.
+Using a linear model to see if average visit can be at all predicted by
+the number of activity catagories found at the park.</p>
 <pre class="r"><code>NPS_Full %&gt;%
   group_by(ParkName,parkCode) %&gt;% 
   summarise(avg_visit=mean(RecreationVisits)) %&gt;% full_join(full_act %&gt;% group_by(parkCode) %&gt;% count(),by=&#39;parkCode&#39;)%&gt;%   lm(avg_visit~ n,data=.) %&gt;% broom::tidy()</code></pre>
-<pre><code>## `summarise()` has grouped output by &#39;ParkName&#39;. You can override using the
-## `.groups` argument.</code></pre>
 <pre><code>## # A tibble: 2 × 5
 ##   term        estimate std.error statistic   p.value
 ##   &lt;chr&gt;          &lt;dbl&gt;     &lt;dbl&gt;     &lt;dbl&gt;     &lt;dbl&gt;
 ## 1 (Intercept)   39513.    11169.      3.54 0.000465 
 ## 2 n              2733.      676.      4.04 0.0000661</code></pre>
-<p>It looks like there is a significent relationship, lets add it to our
+<p>It looks like there is a significant relationship, lets add it to our
 graph.</p>
 <pre class="r"><code>NPS_Full %&gt;%
   group_by(ParkName,parkCode) %&gt;% 
   summarise(avg_visit=mean(RecreationVisits)) %&gt;% full_join(full_act %&gt;% group_by(parkCode) %&gt;% count(),by=&#39;parkCode&#39;) %&gt;% ggplot(aes(x=n,y=avg_visit))+geom_point()+stat_smooth(method = &#39;lm&#39;)</code></pre>
-<pre><code>## `summarise()` has grouped output by &#39;ParkName&#39;. You can override using the `.groups` argument.
-## `geom_smooth()` using formula = &#39;y ~ x&#39;</code></pre>
-<pre><code>## Warning: Removed 139 rows containing non-finite outside the scale range
-## (`stat_smooth()`).</code></pre>
-<pre><code>## Warning: Removed 139 rows containing missing values or values outside the scale
-## range (`geom_point()`).</code></pre>
 <p><img src="Activities_files/figure-html/unnamed-chunk-10-1.png" width="672" /></p>
 </div>
 <div id="things-to-do" class="section level2">
