@@ -137,6 +137,10 @@ NPS_Full %>% mutate(latitude=as.numeric(latitude),longitude=as.numeric(longitude
 NPS_Full %>% mutate(latitude=as.numeric(latitude),longitude=as.numeric(longitude)) %>%
   filter(
          entranceFees_cost %in% 0:30)
+
+
+clean_things %>% mutate(latitude=as.numeric(latitude),longitude=as.numeric(longitude)) %>%
+  select(fullName,latitude,longitude) %>% distinct() 
 ```
 
 
