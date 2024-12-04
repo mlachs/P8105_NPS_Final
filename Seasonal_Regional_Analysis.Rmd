@@ -5,7 +5,11 @@ output:
     toc: true
     toc_float: true
     code_folding: hide
+editor_options: 
+  markdown: 
+    wrap: 72
 ---
+
 ```{r global options, include = FALSE}
 knitr::opts_chunk$set(warning = FALSE, message = FALSE)
 ```
@@ -61,17 +65,33 @@ visitation_data <-
 combined_data <- full_join(NPS_data, visitation_data, by = c("park_code"))
 ```
 
-Our visitation data includes variables `r names(visitation_data)`. It has `r nrow(visitation_data)` rows and `r ncol(visitation_data)` columns. The only data cleaning that needed to be done in the visitation dataset is to clean the column names and mutate some of the column names to be able to merge the full national parks data with the visitation data .
-* `full_name`: Includes the full name of the National Park 
-* `park_code`: Unique code that identifies each National Park 
-* `park_type`: 18 Unique National Park Types 
-* `state`: State(s) that the park is located 
-* `year`: Year that the data is collected from 
-* `month`: Month that the data is collected from 
-* `recreation_visits`: Total number of recreation visits to each National Park 
-* `tent_campers`: Number of visits that were tent campers 
-* `rv_campers`: Number of visits that were RV campers
-* `backcountry`: Number of backcountry hiker visits
+Our visitation data includes variables `r names(visitation_data)`. It
+has `r nrow(visitation_data)` rows and `r ncol(visitation_data)`
+columns. The only data cleaning that needed to be done in the visitation
+dataset is to clean the column names and mutate some of the column names
+to be able to merge the full national parks data with the visitation
+data .
+
+-   `full_name`: Includes the full name of the National Park
+
+-   `park_code`: Unique code that identifies each National Park
+
+-   `park_type`: 18 Unique National Park Types\*
+
+-   `state`: State(s) that the park is located
+
+-   `year`: Year that the data is collected from
+
+-   `month`: Month that the data is collected from
+
+-   `recreation_visits`: Total number of recreation visits to each
+    National Park
+
+-   `tent_campers`: Number of visits that were tent campers
+
+-   `rv_campers`: Number of visits that were RV campers
+
+-   `backcountry`: Number of backcountry hiker visits
 
 # **Trends across Time**
 
@@ -90,11 +110,18 @@ visitation_data %>%
   knitr::kable()
 ```
 
-As seen in the graph, national parks have the highest total visitation among all park types. Interestingly, there more national monuments, national historic sites, and national historic parks than national parks, even though all of these have less total visitation than national parks.
+As seen in the graph, national parks have the highest total visitation
+among all park types. Interestingly, there more national monuments,
+national historic sites, and national historic parks than national
+parks, even though all of these have less total visitation than national
+parks.
 
 ## **Total Visitation by Visitation Type and Season**
 
-The `visitation_data` data set also includes information on visitation split by `tent_campers`, `backcountry`, and `rv_campers`. We were interested in looking at the total visitation split by these three visitation types and by season.
+The `visitation_data` data set also includes information on visitation
+split by `tent_campers`, `backcountry`, and `rv_campers`. We were
+interested in looking at the total visitation split by these three
+visitation types and by season.
 
 ```{r}
 visitation_data %>% 
@@ -117,12 +144,19 @@ visitation_data %>%
   plot_ly(x = ~season, y = ~total_visit, color = ~type_visit, type = "bar")
 ```
 
-In fall, winter, and spring, the highest visitation is `tent_campers`, with a peak summer. Interestingly and unsurprisingly, the highest visitation in winter is `rv_campers`. This is probably due to weather conditions not permitting tent camping, but allows for rv camping. For fall, winter, and spring there is a similar trend where `backcountry` has the lowest total visitation and `tent_campers` has the highest visitation. In winter, `rv_campers` has the highest total visitation, then `tent_campers`, and then `backcountry`.
+In fall, winter, and spring, the highest visitation is `tent_campers`,
+with a peak summer. Interestingly and unsurprisingly, the highest
+visitation in winter is `rv_campers`. This is probably due to weather
+conditions not permitting tent camping, but allows for rv camping. For
+fall, winter, and spring there is a similar trend where `backcountry`
+has the lowest total visitation and `tent_campers` has the highest
+visitation. In winter, `rv_campers` has the highest total visitation,
+then `tent_campers`, and then `backcountry`.
 
 ## **Average Park Visitation by Season and Park Type**
 
-Next, we were interested in seeing the trends in park visitation by season and park type.
-
+Next, we were interested in seeing the trends in park visitation by
+season and park type.
 
 ```{r}
 park_types <- unique(visitation_data$park_type)
@@ -144,7 +178,8 @@ plots[[i]] <- visitation_data %>%
 } 
 ```
 
-Most of the parks have a similar trend in average visitation, where summer is the highest and winter is the lowest.
+Most of the parks have a similar trend in average visitation, where
+summer is the highest and winter is the lowest.
 
 ## **National Lakeshore Seasonal Trends and Activities**
 
@@ -152,7 +187,8 @@ Most of the parks have a similar trend in average visitation, where summer is th
 plots[7]
 ```
 
-For `national lakeshore` parks, there is a really stark difference in average visits between summer and the other seasons.
+For `national lakeshore` parks, there is a really stark difference in
+average visits between summer and the other seasons.
 
 ```{r}
 activities_count <- 
@@ -167,7 +203,11 @@ combined_data %>%
   head() %>% knitr::kable()
 ```
 
-Based on the activities offered in National Lakeshore, we can see that most of the activities revolve around water, such as `boating`, `sailing`, and `boat tours`. Interestingly, at National Lakeshore, there are skiing activities, but the winter average visits are still the lowest.
+Based on the activities offered in National Lakeshore, we can see that
+most of the activities revolve around water, such as `boating`,
+`sailing`, and `boat tours`. Interestingly, at National Lakeshore, there
+are skiing activities, but the winter average visits are still the
+lowest.
 
 ## **National Preserve Seasonal Trends and Activities**
 
@@ -175,7 +215,9 @@ Based on the activities offered in National Lakeshore, we can see that most of t
 plots[10]
 ```
 
-Another interesting pattern is that in National Preserve, there is a higher average visitation in spring than summer and winter has a higher visitation than fall.
+Another interesting pattern is that in National Preserve, there is a
+higher average visitation in spring than summer and winter has a higher
+visitation than fall.
 
 ```{r}
 activities_count <- 
@@ -190,7 +232,13 @@ combined_data %>%
   knitr::kable()
 ```
 
-There are `r activities_count` activities offered at this park. It is near the middle of the distribution of total activities, so the trend is not due to having many more activities offered than other park types. It seems like there is a much bigger variety in the types of activities offered at these parks. There are tours, stargazing, biking, picnicking, hunting, water activities, wildlife watching, museums and stores, as well as winter activities like skiing, and snowshoeing.
+There are `r activities_count` activities offered at this park. It is
+near the middle of the distribution of total activities, so the trend is
+not due to having many more activities offered than other park types. It
+seems like there is a much bigger variety in the types of activities
+offered at these parks. There are tours, stargazing, biking, picnicking,
+hunting, water activities, wildlife watching, museums and stores, as
+well as winter activities like skiing, and snowshoeing.
 
 ## **International Historic Site Seasonal Trends and Activities**
 
@@ -198,7 +246,8 @@ There are `r activities_count` activities offered at this park. It is near the m
 plots[18]
 ```
 
-This plot is interesting because there is no average visitation in winter.
+This plot is interesting because there is no average visitation in
+winter.
 
 ```{r}
 activities_count <- 
@@ -211,7 +260,11 @@ combined_data %>%
   knitr::kable()
 ```
 
-There are `r activities_count` activities offered at this park type. It makes sense that there is no visitation in the winter because the only activities offered are `paddling`, `junior ranger program` and `wildlife watching`. There are no activities that would really be done in the winter at these parks.
+There are `r activities_count` activities offered at this park type. It
+makes sense that there is no visitation in the winter because the only
+activities offered are `paddling`, `junior ranger program` and
+`wildlife watching`. There are no activities that would really be done
+in the winter at these parks.
 
 ## **Average Visitation by Visit and Park Type**
 
@@ -256,7 +309,10 @@ for (i in seq_along(park_types)) {
 plots[[4]] + plots[[8]] + plots[[17]] + plots[[18]]
 ```
 
-National Historic Sites, National Memorials, National Battlefield Parks, International Historic Sites all had no faceted average visits. These four park types do not have any `rv_campers`, `backcountry` or `tent_campers`.
+National Historic Sites, National Memorials, National Battlefield Parks,
+International Historic Sites all had no faceted average visits. These
+four park types do not have any `rv_campers`, `backcountry` or
+`tent_campers`.
 
 ## **Only Backcountry Visitation**
 
@@ -264,7 +320,11 @@ National Historic Sites, National Memorials, National Battlefield Parks, Interna
 plots[[16]] + plots[[15]] + plots[[6]]
 ```
 
-`National Reserve` only had backcountry visitation in spring. `National Military Park` had backcountry visitation in all seasons, with mean visitation being highest in spring. `National Battlefield` had backcountry visitation in all seasons, with mean visitation being lowest in summer and highest in spring.
+`National Reserve` only had backcountry visitation in spring.
+`National Military Park` had backcountry visitation in all seasons, with
+mean visitation being highest in spring. `National Battlefield` had
+backcountry visitation in all seasons, with mean visitation being lowest
+in summer and highest in spring.
 
 ## **No RV Visitation**
 
@@ -272,7 +332,9 @@ plots[[16]] + plots[[15]] + plots[[6]]
 plots[13]
 ```
 
-National Wild and Scienic River has `backcountry` and `tent` visitation, no `rv` visitation. Interestingly though, the mean `tent` visitation is low for all seasons, with a slight peak in summer.
+National Wild and Scienic River has `backcountry` and `tent` visitation,
+no `rv` visitation. Interestingly though, the mean `tent` visitation is
+low for all seasons, with a slight peak in summer.
 
 ## **Park (Other) Visitation**
 
@@ -280,8 +342,9 @@ National Wild and Scienic River has `backcountry` and `tent` visitation, no `rv`
 plots[14]
 ```
 
-This plot was interesting because the park type `Park (Other)` has high `tent` mean visitation, `rv` visitation, but low `backcountry` visitation. It is the highest in spring and summer.
-
+This plot was interesting because the park type `Park (Other)` has high
+`tent` mean visitation, `rv` visitation, but low `backcountry`
+visitation. It is the highest in spring and summer.
 
 # **Regional Comparisons**
 
@@ -455,13 +518,34 @@ west_plot <-
 northeast_plot + midwest_plot + south_plot + west_plot
 ```
 
-Across all regions, it seems that summer has the highest visitation across regions, with the exception of backcountry hiking, which has a peak in spring.
+Across all regions, it seems that summer has the highest visitation
+across regions, with the exception of backcountry hiking, which has a
+peak in spring.
 
-For the Northeastern U.S. tent camping is by far the most popular visitation type. Interestingly, in this region of the United States, there was hardly any visitation in winter in all three visitation types. This might be due to the fact that the Northeastern U.S. typically has colder temperatures and possibly snow during this time.
+For the Northeastern U.S. tent camping is by far the most popular
+visitation type. Interestingly, in this region of the United States,
+there was hardly any visitation in winter in all three visitation types.
+This might be due to the fact that the Northeastern U.S. typically has
+colder temperatures and possibly snow during this time.
 
-For the Midwestern U.S., tent camping is the most popular visitation type, especially in the summer, but it is closely followed by backcountry hiking in summer. RV camping does seem to be higher in the Midwest than in the northeastern region, especially during the summer. As before, there is hardly any visitation in the winter, and actually none for RV camping. This again might be due to weather conditions not permitting outdoor activities such as these. For the Southern U.S., tent camping has the highest average visitation in the summer time, closely followed by RV camping. In the south, RV camping is much more popular than in other regions around the U.S. Backcountry is lower, but does have an almost even spread among the seasons. This could be due to the more temperate conditions in the winter and other times of the year, allowing individuals to enjoy this activity year round.
+For the Midwestern U.S., tent camping is the most popular visitation
+type, especially in the summer, but it is closely followed by
+backcountry hiking in summer. RV camping does seem to be higher in the
+Midwest than in the northeastern region, especially during the summer.
+As before, there is hardly any visitation in the winter, and actually
+none for RV camping. This again might be due to weather conditions not
+permitting outdoor activities such as these. For the Southern U.S., tent
+camping has the highest average visitation in the summer time, closely
+followed by RV camping. In the south, RV camping is much more popular
+than in other regions around the U.S. Backcountry is lower, but does
+have an almost even spread among the seasons. This could be due to the
+more temperate conditions in the winter and other times of the year,
+allowing individuals to enjoy this activity year round.
 
-For the Western U.S., ten camping once again has the highest average visitation across all seasons. Interestingly, backcountry hiking and RV camping are equal in the summer time in this region. This region has some visitation in the winter, but less than the southern region.
+For the Western U.S., ten camping once again has the highest average
+visitation across all seasons. Interestingly, backcountry hiking and RV
+camping are equal in the summer time in this region. This region has
+some visitation in the winter, but less than the southern region.
 
 # **Comparing Regions**
 
@@ -476,9 +560,12 @@ region_long <- region_data %>%
                values_to = "count") 
 ```
 
-The western region of the U.S. seems to have the highest average visitation of all regions, followed by the southern region.
+The western region of the U.S. seems to have the highest average
+visitation of all regions, followed by the southern region.
 
-Looking at the amount of parks in each region will be helpful to determine if this is due to the fact that there are more parks in this region, or if there is something else going on.
+Looking at the amount of parks in each region will be helpful to
+determine if this is due to the fact that there are more parks in this
+region, or if there is something else going on.
 
 ```{r}
 region_data %>% 
@@ -486,7 +573,10 @@ region_data %>%
   summarize(parks = n_distinct(park_code)) %>% knitr::kable()
 ```
 
-From this table, we can see that actually the southern region has the most amount of parks in this dataset, followed by the western region. So this trend is visitation is not just due to the amount of parks in a specific region.
+From this table, we can see that actually the southern region has the
+most amount of parks in this dataset, followed by the western region. So
+this trend is visitation is not just due to the amount of parks in a
+specific region.
 
 ```{r}
 region_data %>%
@@ -504,9 +594,14 @@ region_data %>%
   ) %>% ggplot(aes(x = region, y = mean)) + geom_col() + facet_grid(~type_visit) + theme(axis.text.x = element_text(angle = 90, vjust = 0.5, hjust = 1))
 ```
 
-Now looking at the specific visits by region, we can see once again that west has the highest mean visitation among all the regions, with its highest being tent camping. Unsurprisingly, we see that the south has the second highest mean visitation. Interestingly, in backcountry hiking, the midwest has the second highest mean visitation, despite the fact that it has one of the lowest amount of parks in the dataset.
+Now looking at the specific visits by region, we can see once again that
+west has the highest mean visitation among all the regions, with its
+highest being tent camping. Unsurprisingly, we see that the south has
+the second highest mean visitation. Interestingly, in backcountry
+hiking, the midwest has the second highest mean visitation, despite the
+fact that it has one of the lowest amount of parks in the dataset.
 
-## US National Parks by Region 
+## US National Parks by Region
 
 ```{r}
 
@@ -540,4 +635,3 @@ fig <- fig %>% layout(
   )
 fig
 ```
-
