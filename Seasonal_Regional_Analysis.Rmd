@@ -65,34 +65,6 @@ visitation_data <-
 combined_data <- full_join(NPS_data, visitation_data, by = c("park_code"))
 ```
 
-Our visitation data includes variables `r names(visitation_data)`. It
-has `r nrow(visitation_data)` rows and `r ncol(visitation_data)`
-columns. The only data cleaning that needed to be done in the visitation
-dataset is to clean the column names and mutate some of the column names
-to be able to merge the full national parks data with the visitation
-data, as well as filtering to the data that we wanted to analyze.
-
--   `full_name`: Includes the full name of the National Park
-
--   `park_code`: Unique code that identifies each National Park
-
--   `park_type`: 18 Unique National Park Types
-
--   `state`: State(s) that the park is located
-
--   `year`: Year that the data is collected from
-
--   `month`: Month that the data is collected from
-
--   `recreation_visits`: Total number of recreation visits to each
-    National Park
-
--   `tent_campers`: Number of visits that were tent campers
-
--   `rv_campers`: Number of visits that were RV campers
-
--   `backcountry`: Number of backcountry hiker visits
-
 # **Trends across Time**
 
 ## **Total Trend by Park Type Across Months**
