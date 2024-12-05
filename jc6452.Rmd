@@ -235,7 +235,7 @@ seasonal_camping %>%
   )
 ```
 
-<br /> Looking at the camping visit rate across parks in NY state, a notable pattern is the sudden spike in the proportion of summer camping in 2006. This shift could reflect broader cultural or economic changes that year, such as increased interest in outdoor recreation or economic factors encouraging local travel. The summer spike coincides with a national trend in 2006, where families increasingly turned to camping as an affordable vacation alternative during economic recession. This historical moment showcases how external events can shape seasonal camping behavior.
+<br /> The plot highlights seasonal trends in camping across New York State parks, showing how summer consistently dominates camping activities, with spring and fall following as secondary seasons. The 2006 drop in summer camping visits and spike in spring visits aligns with New York's unusual weather that year, marked by record-breaking precipitation and a heat wave. These extreme summer conditions likely pushed visitors to enjoy the parks earlier in the season, taking advantage of a milder and more welcoming spring.
 
 # Revenue generated from Vanderbilit Mansion NHS over the years
 
