@@ -367,6 +367,9 @@ div.tocify {
 </div>
 
 
+<p><img src="images/tent.png" /> <img src="images/boat.png" /> <img
+src="images/camper.png" /> <img src="images/moon.png" /> <img
+src="images/trail.png" /></p>
 <p>There are many activities available to you when visiting a national
 park. Between all the parks there are 99 unique activities. Ranging from
 ATV Off-Roading to Wildlife Watching. This range of activities bring
@@ -888,6 +891,8 @@ Wildlife Watching
 </tbody>
 </table>
 </div>
+<div id="top-activities" class="section level3">
+<h3>Top Activities</h3>
 <p>Now let’s take a look at which activities are available at the most
 parks.</p>
 <pre class="r"><code>full_act=NPS_Full %&gt;% select(parkCode,activities_name) %&gt;% bind_rows(clean_things %&gt;% select(relatedParks_parkCode,activities_name) %&gt;% mutate(parkCode=relatedParks_parkCode)) %&gt;% select(parkCode,activities_name) %&gt;% distinct() %&gt;% drop_na()
@@ -899,6 +904,9 @@ full_act%&gt;% group_by(activities_name) %&gt;% summarise(cnt=n_distinct(parkCod
 up in more than 100 different parks. The most popular activity being the
 Junior Ranger Program, a program focused on engaging with younger
 visitors.</p>
+</div>
+<div id="number-of-activities-at-each-park" class="section level3">
+<h3>Number of Activities at each Park</h3>
 <p>Let’s look at it another way. Now let’s take a look at the number of
 activities across the different parks. In other words how many different
 activity categories does each park have.</p>
@@ -906,6 +914,7 @@ activity categories does each park have.</p>
 <p><img src="Activities_files/figure-html/unnamed-chunk-7-1.png" width="672" /></p>
 <p>Looks like there is quite a spread. With some parks as low as 1 and
 one with as many as 57 different categories.</p>
+</div>
 </div>
 <div id="activities-and-avg-visits" class="section level2">
 <h2>Activities and Avg Visits</h2>
@@ -953,6 +962,13 @@ participation.</p>
 <pre class="r"><code>clean_things %&gt;% 
   ggplot(aes(x=arePetsPermitted))+geom_bar()</code></pre>
 <p><img src="Activities_files/figure-html/unnamed-chunk-11-3.png" width="672" /></p>
+<div id="shiny-app" class="section level3">
+<h3>Shiny App</h3>
+<p>In order to help people find these activities, we created a shiny app
+to help them find where these promoted things to do are based on the
+criteria they desire. The app can be found <a
+href="https://mlachs.shinyapps.io/shiny_app/">HERE</a></p>
+</div>
 </div>
 
 

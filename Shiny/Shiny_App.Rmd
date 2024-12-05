@@ -11,23 +11,9 @@ runtime: shiny
 library(flexdashboard)
 library(httr)
 library(tidyverse)
-library(p8105.datasets)
 library(plotly)
 library(leaflet)
 library(berryFunctions)
-```
-
-```{r, include=FALSE}
-res=GET('https://developer.nps.gov/api/v1/parks?limit=500&api_key=B9nDpbkbrb3kSOjz6kXSxMJ3d6MSpUvt1QqYdeyn')
-
-data = res %>% content("text") %>% jsonlite::fromJSON() %>% as_tibble()
-
-NPS_data_parks=data %>% unnest(data) %>% select(fullName,parkCode,description,latitude,longitude,activities,states,entranceFees,operatingHours,designation) %>% unnest(activities,names_sep = '_') %>% unnest(entranceFees,names_sep = '_') %>% unnest(operatingHours,names_sep = '_') 
-
-NPS_data_visits=read_csv(here::here("data", "Query Builder for Public Use Statistics (1979 - Last Calendar Year).csv"))
-
-NPS_Full=NPS_data_parks %>%   mutate(entranceFees_cost=as.numeric(entranceFees_cost)) %>% 
-mutate(parkCode=str_to_upper(parkCode))%>% full_join(NPS_data_visits,by=join_by('parkCode'=='UnitCode'))
 ```
 
 ```{r}
@@ -133,4 +119,3 @@ renderPlotly(
 )
 
 ```
-
