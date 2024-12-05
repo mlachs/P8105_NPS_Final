@@ -1,0 +1,158 @@
+---
+title: "Traffic Count Comparison"
+output: 
+  flexdashboard::flex_dashboard:
+    orientation: rows
+    vertical_layout: fill
+runtime: shiny
+---
+
+```{r setup, include=FALSE}
+library(flexdashboard)
+library(shiny)
+library(plotly)
+library(dplyr)
+library(viridis)
+library(lubridate)
+library(DT)
+library(tidyverse)
+```
+
+
+```{r}
+month_names = month.name
+
+CAP_PAC_shiny = read_csv(here::here ("data", "CAP_PAC_state_info.csv")) %>%
+  group_by(state, year, month) %>%
+  summarise(total_traffic = sum(traffic_count, na.rm = TRUE)) %>%
+  ungroup()
+
+AL_IM_MW_shiny = read_csv(here::here("data", "AL_IM_MW_state_info.csv")) %>%
+  group_by(state, year, month) %>%
+  summarise(total_traffic = sum(traffic_count, na.rm = TRUE)) %>%
+  ungroup()
+
+SE_shiny = read_csv(here::here("data", "SE_state_info.csv")) %>%
+  group_by(state, year, month) %>%
+  summarise(total_traffic = sum(traffic_count, na.rm = TRUE)) %>%
+  ungroup()
+
+NE_shiny = read_csv(here::here("data", "NE_state_info.csv")) %>%
+  group_by(state, year, month) %>%
+  summarise(total_traffic = sum(traffic_count, na.rm = TRUE)) %>%
+  ungroup()
+
+CAP_AL_combined_df = bind_rows(AL_IM_MW_shiny, CAP_PAC_shiny)
+SE_CAP_AL_combined_df = bind_rows(CAP_AL_combined_df, SE_shiny)
+Full_combined_shiny_df = bind_rows(SE_CAP_AL_combined_df, NE_shiny)
+
+state_choices = sort(unique(Full_combined_shiny_df$state))
+
+```
+
+
+
+Column {.sidebar}
+-----------------------------------------------------------------------
+
+
+```{r}
+selectInput("state1", "Select First State:", choices = state_choices, selected = state_choices[1])
+selectInput("state2", "Select Second State:", choices = state_choices, selected = state_choices[2])
+
+```
+
+
+
+Row {data-height=1}
+-----------------------------------------------------------------------
+
+### Chart A
+
+```{r}
+renderPlotly({
+  state1_data = Full_combined_shiny_df %>%
+    filter(state == input$state1)
+  
+p1 <- ggplot(state1_data, aes(x = year, y = total_traffic, color = factor(month, labels = month_names))) +
+    geom_line() +
+    scale_color_manual(values = viridis::viridis(12), name = "Month") +
+    labs(
+      title = paste("Traffic Count for", input$state1),
+      x = "Year",
+      y = "Traffic Count",
+      color = "Month"
+    ) +
+    theme_minimal() +
+    theme(legend.position = "bottom")
+  
+  ggplotly(p1) %>%
+    layout(hovermode = "x unified") %>%
+    style(hoverinfo = "text")
+})
+```
+
+
+### Chart B
+
+```{r}
+renderPlotly({
+  state2_data = Full_combined_shiny_df %>%
+    filter(state == input$state2)
+  
+p2 <- ggplot(state2_data, aes(x = year, y = total_traffic, color = factor(month, labels = month_names))) +
+    geom_line() +
+    scale_color_manual(values = viridis::viridis(12), name = "Month") +
+    labs(
+      title = paste("Traffic Count for", input$state2),
+      x = "Year",
+      y = "Traffic Count",
+      color = "Month"
+    ) +
+    theme_minimal() +
+    theme(legend.position = "bottom")
+  
+  ggplotly(p2) %>%
+    layout(hovermode = "x unified") %>%
+    style(hoverinfo = "text")
+})
+
+```
+
+
+
+
+```{r, eval = FALSE}
+renderDataTable({
+  state1_data <- Full_combined_shiny_df %>%
+    filter(state == input$state1)
+  
+  state2_data <- Full_combined_shiny_df %>%
+    filter(state == input$state2)
+  
+  # Get min and max traffic count for state1
+  min_traffic1 <- min(state1_data$total_traffic)
+  min_traffic_year1 <- state1_data %>% filter(total_traffic == min_traffic1) %>% pull(year)
+  max_traffic1 <- max(state1_data$total_traffic)
+  max_traffic_year1 <- state1_data %>% filter(total_traffic == max_traffic1) %>% pull(year)
+  
+  # Get min and max traffic count for state2
+  min_traffic2 <- min(state2_data$total_traffic)
+  min_traffic_year2 <- state2_data %>% filter(total_traffic == min_traffic2) %>% pull(year)
+  max_traffic2 <- max(state2_data$total_traffic)
+  max_traffic_year2 <- state2_data %>% filter(total_traffic == max_traffic2) %>% pull(year)
+  
+  # Create a dataframe for the annotations
+  annotations_df <- data.frame(
+    State = c(input$state1, input$state1, input$state2, input$state2),
+    Metric = c("Lowest Traffic Count Year", "Highest Traffic Count Year", "Lowest Traffic Count Year", "Highest Traffic Count Year"),
+    Year = c(min_traffic_year1, max_traffic_year1, min_traffic_year2, max_traffic_year2),
+    Value = c(min_traffic1, max_traffic1, min_traffic2, max_traffic2)
+  )
+  
+  datatable(annotations_df, options = list(pageLength = 5, autoWidth = TRUE))
+})
+
+
+```
+
