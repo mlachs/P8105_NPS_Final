@@ -2,7 +2,7 @@
 title: "Traffic Count Comparison"
 output: 
   flexdashboard::flex_dashboard:
-    orientation: columns
+    orientation: rows
     vertical_layout: fill
 runtime: shiny
 ---
@@ -26,6 +26,28 @@ CAP_PAC_shiny = read_csv(here::here ("data", "CAP_PAC_state_info.csv")) %>%
   group_by(state, year, month) %>%
   summarise(total_traffic = sum(traffic_count, na.rm = TRUE)) %>%
   ungroup()
+
+AL_IM_MW_shiny = read_csv(here::here("data", "AL_IM_MW_state_info.csv")) %>%
+  group_by(state, year, month) %>%
+  summarise(total_traffic = sum(traffic_count, na.rm = TRUE)) %>%
+  ungroup()
+
+SE_shiny = read_csv(here::here("data", "SE_state_info.csv")) %>%
+  group_by(state, year, month) %>%
+  summarise(total_traffic = sum(traffic_count, na.rm = TRUE)) %>%
+  ungroup()
+
+NE_shiny = read_csv(here::here("data", "NE_state_info.csv")) %>%
+  group_by(state, year, month) %>%
+  summarise(total_traffic = sum(traffic_count, na.rm = TRUE)) %>%
+  ungroup()
+
+CAP_AL_combined_df = bind_rows(AL_IM_MW_shiny, CAP_PAC_shiny)
+SE_CAP_AL_combined_df = bind_rows(CAP_AL_combined_df, SE_shiny)
+Full_combined_shiny_df = bind_rows(SE_CAP_AL_combined_df, NE_shiny)
+
+state_choices = sort(unique(Full_combined_shiny_df$state))
+
 ```
 
 
@@ -35,21 +57,21 @@ Column {.sidebar}
 
 
 ```{r}
-selectInput("state1", "Select First State:", choices = unique(CAP_PAC_shiny$state), selected = unique(CAP_PAC_shiny$state)[1])
-selectInput("state2", "Select Second State:", choices = unique(CAP_PAC_shiny$state), selected = unique(CAP_PAC_shiny$state)[2])
+selectInput("state1", "Select First State:", choices = state_choices, selected = state_choices[1])
+selectInput("state2", "Select Second State:", choices = state_choices, selected = state_choices[2])
+
 ```
 
 
 
-Column {data-width=650}
+Row {data-height=1}
 -----------------------------------------------------------------------
 
 ### Chart A
 
-
 ```{r}
 renderPlotly({
-  state1_data = CAP_PAC_shiny %>%
+  state1_data = Full_combined_shiny_df %>%
     filter(state == input$state1)
   
 p1 <- ggplot(state1_data, aes(x = year, y = total_traffic, color = factor(month, labels = month_names))) +
@@ -71,14 +93,11 @@ p1 <- ggplot(state1_data, aes(x = year, y = total_traffic, color = factor(month,
 ```
 
 
-Column {data-width=350}
------------------------------------------------------------------------
-
 ### Chart B
 
 ```{r}
 renderPlotly({
-  state2_data = CAP_PAC_shiny %>%
+  state2_data = Full_combined_shiny_df %>%
     filter(state == input$state2)
   
 p2 <- ggplot(state2_data, aes(x = year, y = total_traffic, color = factor(month, labels = month_names))) +
@@ -102,12 +121,13 @@ p2 <- ggplot(state2_data, aes(x = year, y = total_traffic, color = factor(month,
 
 
 
-```{r}
+
+```{r, eval = FALSE}
 renderDataTable({
-  state1_data <- CAP_PAC_shiny %>%
+  state1_data <- Full_combined_shiny_df %>%
     filter(state == input$state1)
   
-  state2_data <- CAP_PAC_shiny %>%
+  state2_data <- Full_combined_shiny_df %>%
     filter(state == input$state2)
   
   # Get min and max traffic count for state1
