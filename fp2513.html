@@ -1,0 +1,1156 @@
+<!DOCTYPE html>
+
+<html>
+
+<head>
+
+<meta charset="utf-8" />
+<meta name="generator" content="pandoc" />
+<meta http-equiv="X-UA-Compatible" content="IE=EDGE" />
+
+
+
+
+<title>fp2513</title>
+
+<script src="site_libs/header-attrs-2.28/header-attrs.js"></script>
+<script src="site_libs/jquery-3.6.0/jquery-3.6.0.min.js"></script>
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<link href="site_libs/bootstrap-3.3.5/css/cosmo.min.css" rel="stylesheet" />
+<script src="site_libs/bootstrap-3.3.5/js/bootstrap.min.js"></script>
+<script src="site_libs/bootstrap-3.3.5/shim/html5shiv.min.js"></script>
+<script src="site_libs/bootstrap-3.3.5/shim/respond.min.js"></script>
+<style>h1 {font-size: 34px;}
+       h1.title {font-size: 38px;}
+       h2 {font-size: 30px;}
+       h3 {font-size: 24px;}
+       h4 {font-size: 18px;}
+       h5 {font-size: 16px;}
+       h6 {font-size: 12px;}
+       code {color: inherit; background-color: rgba(0, 0, 0, 0.04);}
+       pre:not([class]) { background-color: white }</style>
+<script src="site_libs/jqueryui-1.13.2/jquery-ui.min.js"></script>
+<link href="site_libs/tocify-1.9.1/jquery.tocify.css" rel="stylesheet" />
+<script src="site_libs/tocify-1.9.1/jquery.tocify.js"></script>
+<script src="site_libs/navigation-1.1/tabsets.js"></script>
+<script src="site_libs/navigation-1.1/codefolding.js"></script>
+<link href="site_libs/highlightjs-9.12.0/default.css" rel="stylesheet" />
+<script src="site_libs/highlightjs-9.12.0/highlight.js"></script>
+<link href="site_libs/htmltools-fill-0.5.8.1/fill.css" rel="stylesheet" />
+<script src="site_libs/htmlwidgets-1.6.4/htmlwidgets.js"></script>
+<script src="site_libs/plotly-binding-4.10.4/plotly.js"></script>
+<script src="site_libs/typedarray-0.1/typedarray.min.js"></script>
+<link href="site_libs/crosstalk-1.2.1/css/crosstalk.min.css" rel="stylesheet" />
+<script src="site_libs/crosstalk-1.2.1/js/crosstalk.min.js"></script>
+<link href="site_libs/plotly-htmlwidgets-css-2.11.1/plotly-htmlwidgets.css" rel="stylesheet" />
+<script src="site_libs/plotly-main-2.11.1/plotly-latest.min.js"></script>
+
+<style type="text/css">
+  code{white-space: pre-wrap;}
+  span.smallcaps{font-variant: small-caps;}
+  span.underline{text-decoration: underline;}
+  div.column{display: inline-block; vertical-align: top; width: 50%;}
+  div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
+  ul.task-list{list-style: none;}
+    </style>
+
+<style type="text/css">code{white-space: pre;}</style>
+<script type="text/javascript">
+if (window.hljs) {
+  hljs.configure({languages: []});
+  hljs.initHighlightingOnLoad();
+  if (document.readyState && document.readyState === "complete") {
+    window.setTimeout(function() { hljs.initHighlighting(); }, 0);
+  }
+}
+</script>
+
+
+
+
+
+
+
+
+
+<style type = "text/css">
+.main-container {
+  max-width: 940px;
+  margin-left: auto;
+  margin-right: auto;
+}
+img {
+  max-width:100%;
+}
+.tabbed-pane {
+  padding-top: 12px;
+}
+.html-widget {
+  margin-bottom: 20px;
+}
+button.code-folding-btn:focus {
+  outline: none;
+}
+summary {
+  display: list-item;
+}
+details > summary > p:only-child {
+  display: inline;
+}
+pre code {
+  padding: 0;
+}
+</style>
+
+
+<style type="text/css">
+.dropdown-submenu {
+  position: relative;
+}
+.dropdown-submenu>.dropdown-menu {
+  top: 0;
+  left: 100%;
+  margin-top: -6px;
+  margin-left: -1px;
+  border-radius: 0 6px 6px 6px;
+}
+.dropdown-submenu:hover>.dropdown-menu {
+  display: block;
+}
+.dropdown-submenu>a:after {
+  display: block;
+  content: " ";
+  float: right;
+  width: 0;
+  height: 0;
+  border-color: transparent;
+  border-style: solid;
+  border-width: 5px 0 5px 5px;
+  border-left-color: #cccccc;
+  margin-top: 5px;
+  margin-right: -10px;
+}
+.dropdown-submenu:hover>a:after {
+  border-left-color: #adb5bd;
+}
+.dropdown-submenu.pull-left {
+  float: none;
+}
+.dropdown-submenu.pull-left>.dropdown-menu {
+  left: -100%;
+  margin-left: 10px;
+  border-radius: 6px 0 6px 6px;
+}
+</style>
+
+<script type="text/javascript">
+// manage active state of menu based on current page
+$(document).ready(function () {
+  // active menu anchor
+  href = window.location.pathname
+  href = href.substr(href.lastIndexOf('/') + 1)
+  if (href === "")
+    href = "index.html";
+  var menuAnchor = $('a[href="' + href + '"]');
+
+  // mark the anchor link active (and if it's in a dropdown, also mark that active)
+  var dropdown = menuAnchor.closest('li.dropdown');
+  if (window.bootstrap) { // Bootstrap 4+
+    menuAnchor.addClass('active');
+    dropdown.find('> .dropdown-toggle').addClass('active');
+  } else { // Bootstrap 3
+    menuAnchor.parent().addClass('active');
+    dropdown.addClass('active');
+  }
+
+  // Navbar adjustments
+  var navHeight = $(".navbar").first().height() + 15;
+  var style = document.createElement('style');
+  var pt = "padding-top: " + navHeight + "px; ";
+  var mt = "margin-top: -" + navHeight + "px; ";
+  var css = "";
+  // offset scroll position for anchor links (for fixed navbar)
+  for (var i = 1; i <= 6; i++) {
+    css += ".section h" + i + "{ " + pt + mt + "}\n";
+  }
+  style.innerHTML = "body {" + pt + "padding-bottom: 40px; }\n" + css;
+  document.head.appendChild(style);
+});
+</script>
+
+<!-- tabsets -->
+
+<style type="text/css">
+.tabset-dropdown > .nav-tabs {
+  display: inline-table;
+  max-height: 500px;
+  min-height: 44px;
+  overflow-y: auto;
+  border: 1px solid #ddd;
+  border-radius: 4px;
+}
+
+.tabset-dropdown > .nav-tabs > li.active:before, .tabset-dropdown > .nav-tabs.nav-tabs-open:before {
+  content: "\e259";
+  font-family: 'Glyphicons Halflings';
+  display: inline-block;
+  padding: 10px;
+  border-right: 1px solid #ddd;
+}
+
+.tabset-dropdown > .nav-tabs.nav-tabs-open > li.active:before {
+  content: "\e258";
+  font-family: 'Glyphicons Halflings';
+  border: none;
+}
+
+.tabset-dropdown > .nav-tabs > li.active {
+  display: block;
+}
+
+.tabset-dropdown > .nav-tabs > li > a,
+.tabset-dropdown > .nav-tabs > li > a:focus,
+.tabset-dropdown > .nav-tabs > li > a:hover {
+  border: none;
+  display: inline-block;
+  border-radius: 4px;
+  background-color: transparent;
+}
+
+.tabset-dropdown > .nav-tabs.nav-tabs-open > li {
+  display: block;
+  float: none;
+}
+
+.tabset-dropdown > .nav-tabs > li {
+  display: none;
+}
+</style>
+
+<!-- code folding -->
+<style type="text/css">
+.code-folding-btn { margin-bottom: 4px; }
+</style>
+
+
+
+<style type="text/css">
+
+#TOC {
+  margin: 25px 0px 20px 0px;
+}
+@media (max-width: 768px) {
+#TOC {
+  position: relative;
+  width: 100%;
+}
+}
+
+@media print {
+.toc-content {
+  /* see https://github.com/w3c/csswg-drafts/issues/4434 */
+  float: right;
+}
+}
+
+.toc-content {
+  padding-left: 30px;
+  padding-right: 40px;
+}
+
+div.main-container {
+  max-width: 1200px;
+}
+
+div.tocify {
+  width: 20%;
+  max-width: 260px;
+  max-height: 85%;
+}
+
+@media (min-width: 768px) and (max-width: 991px) {
+  div.tocify {
+    width: 25%;
+  }
+}
+
+@media (max-width: 767px) {
+  div.tocify {
+    width: 100%;
+    max-width: none;
+  }
+}
+
+.tocify ul, .tocify li {
+  line-height: 20px;
+}
+
+.tocify-subheader .tocify-item {
+  font-size: 0.90em;
+}
+
+.tocify .list-group-item {
+  border-radius: 0px;
+}
+
+
+</style>
+
+
+
+</head>
+
+<body>
+
+
+<div class="container-fluid main-container">
+
+
+<!-- setup 3col/9col grid for toc_float and main content  -->
+<div class="row">
+<div class="col-xs-12 col-sm-4 col-md-3">
+<div id="TOC" class="tocify">
+</div>
+</div>
+
+<div class="toc-content col-xs-12 col-sm-8 col-md-9">
+
+
+
+
+<div class="navbar navbar-default  navbar-fixed-top" role="navigation">
+  <div class="container">
+    <div class="navbar-header">
+      <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-bs-toggle="collapse" data-target="#navbar" data-bs-target="#navbar">
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+      </button>
+      <a class="navbar-brand" href="index.html">Home</a>
+    </div>
+    <div id="navbar" class="navbar-collapse collapse">
+      <ul class="nav navbar-nav">
+        
+      </ul>
+      <ul class="nav navbar-nav navbar-right">
+        <li>
+  <a href="ml5222.html">Miriam</a>
+</li>
+<li>
+  <a href="project_proposal.html">Proposal</a>
+</li>
+<li>
+  <a href="mos2128.html">Mari</a>
+</li>
+<li>
+  <a href="jc6452.html">Lizy</a>
+</li>
+<li>
+  <a href="fp2513.html">Flora</a>
+</li>
+<li>
+  <a href="Project_Report.html">Project Report</a>
+</li>
+      </ul>
+    </div><!--/.nav-collapse -->
+  </div><!--/.container -->
+</div><!--/.navbar -->
+
+<div id="header">
+
+<div class="btn-group pull-right float-right">
+<button type="button" class="btn btn-default btn-xs btn-secondary btn-sm dropdown-toggle" data-toggle="dropdown" data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false"><span>Code</span> <span class="caret"></span></button>
+<ul class="dropdown-menu dropdown-menu-right" style="min-width: 50px;">
+<li><a id="rmd-show-all-code" href="#">Show All Code</a></li>
+<li><a id="rmd-hide-all-code" href="#">Hide All Code</a></li>
+</ul>
+</div>
+
+
+
+<h1 class="title toc-ignore">fp2513</h1>
+
+</div>
+
+
+<pre class="r"><code>library(httr)
+library(jsonlite)
+
+
+res=GET(&#39;https://developer.nps.gov/api/v1/newsreleases?limit=10000&amp;api_key=B9nDpbkbrb3kSOjz6kXSxMJ3d6MSpUvt1QqYdeyn&#39;)
+
+
+
+data = res %&gt;%  content(&quot;text&quot;) %&gt;%  jsonlite::fromJSON() %&gt;%  as_tibble()
+
+#do i even need this???</code></pre>
+<pre class="r"><code>data %&gt;% 
+  janitor::clean_names() %&gt;% 
+  select(data) %&gt;% 
+  unnest(data) %&gt;% 
+  view()
+#do i even need this???</code></pre>
+<div id="nature-vs-machines" class="section level1">
+<h1>Nature vs Machines</h1>
+<p>In this page we will explore historical data to inform us on how the
+exponential development and accessibility of automobiles to the general
+public impacts our interaction with national parks.</p>
+<div id="deciding-on-the-topic" class="section level2">
+<h2>Deciding on the topic</h2>
+<p>To examine how our interactions with national parks have evolved over
+time, there are numerous aspects to consider. Instead of selecting a
+topic at random, we wondered if news articles about parks could provide
+insight into major areas of focus.</p>
+<p>For instance, if certain topics repeatedly appear in the news, it
+could indicate ongoing changes or developments in those aspects of
+national parks, making them worthy of further investigation.</p>
+<pre class="r"><code>library(tm)
+library(tidytext)
+library(stringr)
+library(dplyr)
+library(ggplot2)
+
+text_data = data %&gt;% 
+  janitor::clean_names() %&gt;% 
+  select(data) %&gt;% 
+  unnest(data) %&gt;% 
+  select(title, abstract, relatedParks, releaseDate)
+
+clean_text = function(text) {
+  text &lt;- tolower(text)
+  text &lt;- removePunctuation(text)
+  text &lt;- removeNumbers(text)
+  text &lt;- stripWhitespace(text)
+  text &lt;- removeWords(text, stopwords(&quot;en&quot;))
+  return(text)
+}
+
+text_data$cleaned_title = sapply(text_data$title, clean_text)
+
+tidy_titles = text_data %&gt;%
+  unnest_tokens(word, cleaned_title)</code></pre>
+<pre class="r"><code>library(wordcloud)
+
+word_count = tidy_titles %&gt;%
+  count(word, sort = TRUE)
+
+wordcloud(words = word_count$word, freq = word_count$n, min.freq = 20)</code></pre>
+<p><img src="fp2513_files/figure-html/unnamed-chunk-4-1.png" width="672" /></p>
+<p>Consequently, there was no consistently reported topic across the
+years.</p>
+<p>Alternatively, we determined that the most relevant development in
+recent history is the introduction of automobiles to the public. This is
+highly relevant for examining how our exponential relationship with
+automobiles and other forms of transport has changed our interaction
+with national parks, particularly in terms of human-wildlife
+interactions as traffic to these parks has increased.</p>
+<p>Many national parks emphasize preservation, but with increasing human
+contact, management needs to be flexible. To quantify how human-wildlife
+interactions have changed over the years, we can look at visitation
+pressure. High traffic volumes indicate heavy visitor use, leading to
+environmental degradation, pollution, and wildlife disturbance.
+Understanding traffic patterns helps inform management measures to
+protect sensitive ecosystems and manage human-wildlife interactions
+effectively. This can help prioritize areas for resource investment or
+upgrades, such as waste management, road improvements, and parking
+facilities. Tracking changes in traffic over the years can also indicate
+broader trends related to climate change, demographic shifts, and
+changing recreational preferences.</p>
+<p>A limitation of this approach is that a more thorough qualitative
+analysis could have been conducted if more time were available to do a
+better search of major topics of focus, rather than relying on an R
+function to count the features of terms in the articles.</p>
+</div>
+<div id="initial-data-exploration-and-recognition-of-limitations"
+class="section level2">
+<h2>Initial Data Exploration and Recognition of Limitations</h2>
+<p>Analyzing traffic flow can provide insights into whether current
+infrastructure meets visitor needs. High traffic flow and potential
+congestion can lead to increased fuel consumption, decreased
+productivity, negative impacts on local businesses, and higher pollution
+levels. Optimizing traffic flow is essential.</p>
+<p>To achieve more granularity, I decided to separate the analysis by
+state. Different states have different types of national parks, each
+requiring varying levels of traffic flow (some parks may be more
+accessible by car than others).</p>
+<p>A key limitation is the dataset’s high level of granularity, which
+required prioritizing specific aspects for this analysis. For example,
+traffic counts at different entrances or roads within a single park can
+vary significantly.</p>
+<pre class="r"><code>his_traffic_df = read_csv(file = &quot;data/(east) Query Builder for Traffic Counts (1985 - Last Calendar Year).csv&quot;, 
+                           na = c(&quot;NA&quot;, &quot;,&quot;, &quot;.&quot;)) %&gt;% 
+  janitor::clean_names() %&gt;% 
+  filter(park_name %in% c(&quot;Fire Island NS&quot;, &quot;Gateway NRA&quot;, &quot;Saratoga NHP&quot;))
+
+ggplot(his_traffic_df, aes(x = year, y = traffic_count_total, color = traffic_counter)) +
+  geom_point() +
+  geom_smooth(method = &quot;loess&quot;, se = FALSE) +
+  labs(title = &quot;Traffic Count Totals by Year for Selected Parks in New York&quot;,
+       x = &quot;Year&quot;,
+       y = &quot;Total Traffic Count&quot;,
+       color = &quot;Traffic Counter&quot;) +
+  theme_minimal() +
+  theme(legend.position = &quot;bottom&quot;) +
+  facet_wrap(~ park_name, scales = &quot;free_y&quot;)</code></pre>
+<p><img src="fp2513_files/figure-html/unnamed-chunk-5-1.png" width="672" /></p>
+<p>Additionally, each state has a mix of park types, leading to
+disparities in traffic counts across different national parks. Analyzing
+every national park in every state would be overwhelming. Therefore, we
+decided to use the annual mean traffic count for each state to provide a
+nationwide analysis of traffic impact on national parks.</p>
+</div>
+<div id="mean-annual-traffic-count-by-state" class="section level2">
+<h2>Mean Annual Traffic Count by State</h2>
+<p>The mean annual traffic counts for each state across the years are
+presented below. It would be interesting to investigate whether obvious
+increases or decreases in traffic counts are due to changing interest in
+national parks or the introduction of popular parks incentivizing
+visits.</p>
+<p>(find all the plots for the seperate states and position them
+here)</p>
+<pre class="r"><code>read_csv(file = &quot;data/(east) Query Builder for Traffic Counts (1985 - Last Calendar Year).csv&quot;, 
+                           na = c(&quot;NA&quot;, &quot;,&quot;, &quot;.&quot;)) %&gt;% 
+  janitor::clean_names() </code></pre>
+<pre class="r"><code># Ensure all parks have corresponding states
+park_to_state = tibble::tibble(
+  park_name_total = c(
+    &quot;Acadia NP&quot;, &quot;Allegheny Portage Railroad NHS&quot;, &quot;Appomattox Court House NHP&quot;, 
+    &quot;Assateague Island NS&quot;, &quot;Booker T. Washington NM&quot;, &quot;Cape Cod NS&quot;, 
+    &quot;Colonial NHP&quot;, &quot;Delaware Water Gap NRA&quot;, &quot;Fire Island NS&quot;, 
+    &quot;Fort McHenry NM &amp; HS&quot;, &quot;Fort Necessity NB&quot;, &quot;Fredericksburg &amp; Spotsylvania NMP&quot;, 
+    &quot;Gateway NRA&quot;, &quot;Gauley River NRA&quot;, &quot;George Washington Birthplace NM&quot;, 
+    &quot;Gettysburg NMP&quot;, &quot;Home of Franklin D. Roosevelt NHS&quot;, &quot;Hopewell Furnace NHS&quot;, 
+    &quot;Johnstown Flood NMEM&quot;, &quot;Katahdin Woods and Waters NM&quot;, 
+    &quot;Martin Van Buren NHS&quot;, &quot;Minute Man NHP&quot;, &quot;Morristown NHP&quot;, 
+    &quot;New River Gorge NP &amp; PRES&quot;, &quot;Paterson Great Falls NHP&quot;, &quot;Petersburg NB&quot;, 
+    &quot;Richmond NBP&quot;, &quot;Saint-Gaudens NHP&quot;, &quot;Saratoga NHP&quot;, &quot;Shenandoah NP&quot;, 
+    &quot;Steamtown NHS&quot;, &quot;Upper Delaware S&amp;RR&quot;, &quot;Valley Forge NHP&quot;, 
+    &quot;Vanderbilt Mansion NHS&quot;
+  ),
+  state = c(
+    &quot;ME&quot;, &quot;PA&quot;, &quot;VA&quot;, &quot;MD&quot;, &quot;VA&quot;, &quot;MA&quot;, &quot;VA&quot;, &quot;NJ&quot;, &quot;NY&quot;, &quot;MD&quot;, &quot;PA&quot;, &quot;VA&quot;, 
+    &quot;WV&quot;, &quot;WV&quot;, &quot;VA&quot;, &quot;PA&quot;, &quot;NY&quot;, &quot;PA&quot;, &quot;PA&quot;, &quot;PA&quot;, &quot;ME&quot;, &quot;NY&quot;, &quot;MA&quot;, &quot;NJ&quot;, 
+    &quot;VA&quot;, &quot;VA&quot;, &quot;NH&quot;, &quot;NY&quot;, &quot;VA&quot;, &quot;PA&quot;, &quot;PA&quot;, &quot;PA&quot;, &quot;NY&quot;, &quot;PA&quot;  # Add the missing state(s) here
+  )
+)
+
+
+traffic_counts_df = park_to_state %&gt;%
+  full_join(his_traffic_df, by = &quot;park_name_total&quot;)
+
+library(dplyr)
+library(ggplot2)
+
+# Calculate mean traffic_count_total for each state and year
+mean_traffic_counts_by_state_year = traffic_counts_df %&gt;%
+  group_by(state, year) %&gt;%
+  summarise(mean_traffic_count = mean(traffic_count_total, na.rm = TRUE), .groups = &quot;drop&quot;)
+
+# Calculate additional statistics for each state
+traffic_count_stats = traffic_counts_df %&gt;%
+  group_by(state) %&gt;%
+  summarise(
+    min_traffic_count = min(traffic_count_total, na.rm = TRUE),
+    year_of_min_traffic_count = year[which.min(traffic_count_total)],
+    max_traffic_count = max(traffic_count_total, na.rm = TRUE),
+    year_of_max_traffic_count = year[which.max(traffic_count_total)],
+    difference_min_max = max_traffic_count - min_traffic_count,
+    .groups = &quot;drop&quot;
+  )
+
+# Plot the data with faceting by state
+ggplot(mean_traffic_counts_by_state_year, aes(x = year, y = mean_traffic_count)) +
+  geom_line() +
+  facet_wrap(~ state, scales = &quot;free_y&quot;) +
+  theme_minimal() +
+  labs(title = &quot;Mean Traffic Count by State and Year\nin the NorthEast Region&quot;,
+       x = &quot;Year&quot;,
+       y = &quot;Mean Traffic Count&quot;) +
+  theme(
+    strip.text = element_text(size = 10, face = &quot;bold&quot;),
+    plot.title = element_text(size = 16, face = &quot;bold&quot;),
+    axis.text.x = element_text(angle = 45, hjust = 1)
+  )</code></pre>
+<p><img src="fp2513_files/figure-html/unnamed-chunk-7-1.png" width="672" /></p>
+<pre class="r"><code>read_csv(file = &quot;data/(Alaska, InterM, MW) Query Builder for Traffic Counts (1985 - Last Calendar Year).csv&quot;, 
+                           na = c(&quot;NA&quot;, &quot;,&quot;, &quot;.&quot;)) %&gt;% 
+  janitor::clean_names() </code></pre>
+<pre class="r"><code>library(dplyr)
+library(tibble)
+library(tidyr)
+
+# Create the vectors with park names and states
+park_name_total = c(
+  &quot;Amistad NRA&quot;, &quot;Apostle Islands NL&quot;, &quot;Arches NP&quot;, &quot;Arkansas Post NMEM&quot;, &quot;Badlands NP&quot;, 
+  &quot;Bandelier NM&quot;, &quot;Big Bend NP&quot;, &quot;Big Thicket NPRES&quot;, &quot;Bighorn Canyon NRA&quot;, 
+  &quot;Black Canyon of the Gunnison NP&quot;, &quot;Bryce Canyon NP&quot;, &quot;Buffalo NR&quot;, &quot;Canyon de Chelly NM&quot;, 
+  &quot;Canyonlands NP&quot;, &quot;Capitol Reef NP&quot;, &quot;Capulin Volcano NM&quot;, &quot;Carlsbad Caverns NP&quot;, 
+  &quot;Cedar Breaks NM&quot;, &quot;Chaco Culture NHP&quot;, &quot;Chickasaw NRA&quot;, &quot;Colorado NM&quot;, &quot;Coronado NMEM&quot;, 
+  &quot;Curecanti NRA&quot;, &quot;Cuyahoga Valley NP&quot;, &quot;Denali NP &amp; PRES&quot;, &quot;Devils Tower NM&quot;, &quot;Dinosaur NM&quot;, 
+  &quot;El Malpais NM&quot;, &quot;El Morro NM&quot;, &quot;Florissant Fossil Beds NM&quot;, &quot;Fort Laramie NHS&quot;, 
+  &quot;Fort Larned NHS&quot;, &quot;Fossil Butte NM&quot;, &quot;George Washington Carver NM&quot;, &quot;Glacier NP&quot;, 
+  &quot;Glen Canyon NRA&quot;, &quot;Grand Canyon NP&quot;, &quot;Grand Portage NM&quot;, &quot;Grand Teton NP&quot;, 
+  &quot;Great Sand Dunes NP &amp; PRES&quot;, &quot;Guadalupe Mountains NP&quot;, &quot;Homestead NHP&quot;, &quot;Hopewell Culture NHP&quot;, 
+  &quot;Hot Springs NP&quot;, &quot;Hubbell Trading Post NHS&quot;, &quot;Indiana Dunes NP&quot;, &quot;Jewel Cave NM&quot;, 
+  &quot;John D. Rockefeller, Jr. MEM PKWY&quot;, &quot;Katmai NP &amp; PRES&quot;, &quot;Kenai Fjords NP&quot;, &quot;Keweenaw NHP&quot;, 
+  &quot;Lake Meredith NRA&quot;, &quot;Lincoln Boyhood NMEM&quot;, &quot;Little Bighorn Battlefield NM&quot;, 
+  &quot;Lyndon B. Johnson NHP&quot;, &quot;Mesa Verde NP&quot;, &quot;Minuteman Missile NHS&quot;, &quot;Missouri NRR&quot;, 
+  &quot;Montezuma Castle NM&quot;, &quot;Mount Rushmore NMEM&quot;, &quot;Natural Bridges NM&quot;, &quot;Navajo NM&quot;, 
+  &quot;Niobrara NSR&quot;, &quot;Organ Pipe Cactus NM&quot;, &quot;Ozark NSR&quot;, &quot;Padre Island NS&quot;, &quot;Palo Alto Battlefield NHP&quot;, 
+  &quot;Pea Ridge NMP&quot;, &quot;Petrified Forest NP&quot;, &quot;Petroglyph NM&quot;, &quot;Pictured Rocks NL&quot;, &quot;Pipe Spring NM&quot;, 
+  &quot;River Raisin NBP&quot;, &quot;Rocky Mountain NP&quot;, &quot;Saguaro NP&quot;, &quot;San Antonio Missions NHP&quot;, 
+  &quot;Scotts Bluff NM&quot;, &quot;Sleeping Bear Dunes NL&quot;, &quot;Sunset Crater Volcano NM&quot;, &quot;Tallgrass Prairie NPRES&quot;, 
+  &quot;Theodore Roosevelt NP&quot;, &quot;Tonto NM&quot;, &quot;Tuzigoot NM&quot;, &quot;Valles Caldera NPRES&quot;, &quot;Walnut Canyon NM&quot;, 
+  &quot;Washita Battlefield NHS&quot;, &quot;White Sands NP&quot;, &quot;Wilson&#39;s Creek NB&quot;, &quot;Wind Cave NP&quot;, &quot;Yellowstone NP&quot;, 
+  &quot;Zion NP&quot;
+)
+
+state = c(
+  &quot;TX&quot;, &quot;WI&quot;, &quot;UT&quot;, &quot;AR&quot;, &quot;SD&quot;, &quot;NM&quot;, &quot;TX&quot;, &quot;TX&quot;, &quot;MT/WY&quot;, &quot;CO&quot;, &quot;UT&quot;, &quot;AR&quot;, &quot;AZ&quot;, &quot;UT&quot;, &quot;UT&quot;, 
+  &quot;NM&quot;, &quot;NM&quot;, &quot;UT&quot;, &quot;NM&quot;, &quot;OK&quot;, &quot;CO&quot;, &quot;AZ&quot;, &quot;CO&quot;, &quot;OH&quot;, &quot;AK&quot;, &quot;WY&quot;, &quot;CO/UT&quot;, &quot;NM&quot;, &quot;NM&quot;, &quot;CO&quot;, 
+  &quot;WY&quot;, &quot;KS&quot;, &quot;WY&quot;, &quot;MO&quot;, &quot;MT&quot;, &quot;AZ/UT&quot;, &quot;AZ&quot;, &quot;MN&quot;, &quot;WY&quot;, &quot;CO&quot;, &quot;TX&quot;, &quot;NE&quot;, &quot;OH&quot;, &quot;AR&quot;, &quot;AZ&quot;, 
+  &quot;IN&quot;, &quot;SD&quot;, &quot;WY&quot;, &quot;AK&quot;, &quot;AK&quot;, &quot;MI&quot;, &quot;TX&quot;, &quot;IN&quot;, &quot;MT&quot;, &quot;TX&quot;, &quot;CO&quot;, &quot;SD&quot;, &quot;NE/SD&quot;, &quot;AZ&quot;, &quot;SD&quot;, 
+  &quot;UT&quot;, &quot;AZ&quot;, &quot;NE&quot;, &quot;AZ&quot;, &quot;MO&quot;, &quot;TX&quot;, &quot;TX&quot;, &quot;AR&quot;, &quot;AR&quot;, &quot;AZ&quot;, &quot;NM&quot;, &quot;MI&quot;, &quot;AZ&quot;, &quot;MI&quot;, 
+  &quot;AZ&quot;, &quot;TX&quot;, &quot;NE&quot;, &quot;MI&quot;, &quot;AZ&quot;, &quot;KS&quot;, &quot;ND&quot;, &quot;AZ&quot;, &quot;AZ&quot;, &quot;NM&quot;, &quot;AZ&quot;, &quot;OK&quot;, &quot;NM&quot;, &quot;MO&quot;, &quot;SD&quot;, 
+  &quot;WY/MT/ID&quot;, &quot;UT&quot;
+)
+
+# If lengths are not the same, stop and fix the mismatch
+if (length(park_name_total) != length(state)) {
+  stop(&quot;Lengths of park_name_total and state do not match!&quot;)
+}
+
+# Create the tibble
+AL_IM_MW_park_to_state = tibble(
+  park_name_total = park_name_total,
+  state = state
+)
+
+# Separate rows with multiple states
+AL_IM_MW_park_to_state = AL_IM_MW_park_to_state %&gt;%
+  separate_rows(state, sep = &quot;/&quot;)
+
+AL_IM_MW_his_traffic_df = 
+  read_csv(file = &quot;data/(Alaska, InterM, MW) Query Builder for Traffic Counts (1985 - Last Calendar Year).csv&quot;, na = c(&quot;NA&quot;, &quot;,&quot;, &quot;.&quot;)) %&gt;% 
+  janitor::clean_names() 
+
+AL_IM_MW_traffic_counts_df = AL_IM_MW_park_to_state %&gt;%
+  full_join(AL_IM_MW_his_traffic_df, by = &quot;park_name_total&quot;)
+
+
+library(dplyr)
+library(ggplot2)
+
+# Calculate mean absolute traffic count for each state and year
+AL_IM_MW_mean_traffic_counts_by_state_year = AL_IM_MW_traffic_counts_df %&gt;%
+  group_by(state, year) %&gt;%
+  summarise(mean_traffic_count = mean(abs(traffic_count_total), na.rm = TRUE), .groups = &quot;drop&quot;)
+
+# Calculate additional statistics for each state using absolute traffic count
+AL_IM_MW_traffic_count_stats = AL_IM_MW_traffic_counts_df %&gt;%
+  group_by(state) %&gt;%
+  summarise(
+    min_traffic_count = min(abs(traffic_count_total), na.rm = TRUE),
+    year_of_min_traffic_count = year[which.min(abs(traffic_count_total))],
+    max_traffic_count = max(abs(traffic_count_total), na.rm = TRUE),
+    year_of_max_traffic_count = year[which.max(abs(traffic_count_total))],
+    difference_min_max = max_traffic_count - min_traffic_count,
+    .groups = &quot;drop&quot;
+  )
+
+# Plot the data with faceting by state
+ggplot(AL_IM_MW_mean_traffic_counts_by_state_year, aes(x = year, y = mean_traffic_count)) +
+  geom_line() +
+  facet_wrap(~ state, scales = &quot;free_y&quot;) +
+  theme_minimal() +
+  labs(title = &quot;Mean Traffic Count by State and Year\nin the Alaska, Intermountain Region, and MidWest Regions&quot;,
+       x = &quot;Year&quot;,
+       y = &quot;Mean Absolute Traffic Count&quot;) +
+  theme(
+    strip.text = element_text(size = 10, face = &quot;bold&quot;),
+    plot.title = element_text(size = 16, face = &quot;bold&quot;),
+    axis.text.x = element_text(angle = 45, hjust = 1)
+  )</code></pre>
+<p><img src="fp2513_files/figure-html/unnamed-chunk-9-1.png" width="672" /></p>
+<pre class="r"><code>read_csv(file = &quot;data/(CAP_PAC) Query Builder for Traffic Counts (1985 - Last Calendar Year).csv&quot;, 
+                           na = c(&quot;NA&quot;, &quot;,&quot;, &quot;.&quot;)) %&gt;% 
+  janitor::clean_names() </code></pre>
+<pre class="r"><code>library(dplyr)
+library(tibble)
+library(tidyr)
+
+# Create the vectors with park names and states
+park_name_total = c(
+  &quot;Big Hole NB&quot;, &quot;Cabrillo NM&quot;, &quot;Catoctin Mountain Park&quot;, &quot;Chesapeake &amp; Ohio Canal NHP&quot;,
+  &quot;City of Rocks NRES&quot;, &quot;Crater Lake NP&quot;, &quot;Craters of the Moon NM &amp; PRES&quot;, &quot;Death Valley NP&quot;,
+  &quot;Devils Postpile NM&quot;, &quot;Fort Point NHS&quot;, &quot;Fort Vancouver NHS&quot;, &quot;Fort Washington Park&quot;,
+  &quot;George Washington MEM PKWY&quot;, &quot;Golden Gate NRA&quot;, &quot;Great Basin NP&quot;, &quot;Greenbelt Park&quot;,
+  &quot;Haleakala NP&quot;, &quot;Harpers Ferry NHP&quot;, &quot;Hawaii Volcanoes NP&quot;, &quot;John Day Fossil Beds NM&quot;,
+  &quot;Joshua Tree NP&quot;, &quot;Kings Canyon NP&quot;, &quot;Lake Mead NRA&quot;, &quot;Lake Roosevelt NRA&quot;, &quot;Lassen Volcanic NP&quot;,
+  &quot;Lava Beds NM&quot;, &quot;LBJ Memorial Grove on the Potomac&quot;, &quot;Lewis &amp; Clark NHP&quot;, &quot;Manassas NBP&quot;,
+  &quot;Manzanar NHS&quot;, &quot;Mojave NPRES&quot;, &quot;Monocacy NB&quot;, &quot;Mount Rainier NP&quot;, &quot;National Capital Parks East&quot;,
+  &quot;Nez Perce NHP&quot;, &quot;North Cascades NP&quot;, &quot;Olympic NP&quot;, &quot;Oregon Caves NM &amp; PRES&quot;, &quot;Pinnacles NP&quot;,
+  &quot;Piscataway Park&quot;, &quot;Point Reyes NS&quot;, &quot;Prince William Forest Park&quot;, &quot;Pu&#39;ukohola Heiau NHS&quot;,
+  &quot;Redwood NP&quot;, &quot;Ross Lake NRA&quot;, &quot;San Juan Island NHP&quot;, &quot;Santa Monica Mountains NRA&quot;, &quot;Sequoia NP&quot;,
+  &quot;Tule Lake NM&quot;, &quot;War in the Pacific NHP&quot;, &quot;Whiskeytown NRA&quot;, &quot;Whitman Mission NHS&quot;, &quot;Yosemite NP&quot;
+)
+
+state = c(
+  &quot;MT&quot;, &quot;CA&quot;, &quot;MD&quot;, &quot;MD/WV&quot;, &quot;ID&quot;, &quot;OR&quot;, &quot;ID&quot;, &quot;CA/NV&quot;, &quot;CA&quot;, &quot;CA&quot;, &quot;WA&quot;, &quot;MD&quot;, 
+  &quot;DC/VA/MD&quot;, &quot;CA&quot;, &quot;NV&quot;, &quot;MD&quot;, &quot;HI&quot;, &quot;WV/MD/VA&quot;, &quot;HI&quot;, &quot;OR&quot;, &quot;CA&quot;, &quot;CA&quot;, &quot;NV/AZ&quot;, 
+  &quot;WA&quot;, &quot;CA&quot;, &quot;CA&quot;, &quot;DC&quot;, &quot;ID/MT/OR/WA&quot;, &quot;VA&quot;, &quot;CA&quot;, &quot;CA&quot;, &quot;MD&quot;, &quot;WA&quot;, &quot;DC/MD&quot;, 
+  &quot;ID&quot;, &quot;WA&quot;, &quot;WA&quot;, &quot;OR&quot;, &quot;CA&quot;, &quot;MD&quot;, &quot;CA&quot;, &quot;VA&quot;, &quot;HI&quot;, &quot;CA&quot;, &quot;WA&quot;, &quot;WA&quot;, &quot;CA&quot;, 
+  &quot;CA&quot;, &quot;CA&quot;, &quot;GU&quot;, &quot;CA&quot;, &quot;WA&quot;, &quot;CA&quot;
+)
+
+# If lengths are not the same, stop and fix the mismatch
+if (length(park_name_total) != length(state)) {
+  stop(&quot;Lengths of park_name_total and state do not match!&quot;)
+}
+
+# Create the tibble
+CAP_PAC_park_to_state = tibble(
+  park_name_total = park_name_total,
+  state = state
+)
+
+# Separate rows with multiple states
+CAP_PAC_park_to_state = CAP_PAC_park_to_state %&gt;%
+  separate_rows(state, sep = &quot;/&quot;)
+
+CAP_PAC_his_traffic_df = 
+  read_csv(file = &quot;data/(CAP_PAC) Query Builder for Traffic Counts (1985 - Last Calendar Year).csv&quot;, na = c(&quot;NA&quot;, &quot;,&quot;, &quot;.&quot;)) %&gt;% 
+  janitor::clean_names() 
+
+CAP_PAC_traffic_counts_df = CAP_PAC_park_to_state %&gt;%
+  full_join(CAP_PAC_his_traffic_df, by = &quot;park_name_total&quot;)
+
+library(dplyr)
+library(ggplot2)
+
+# Calculate mean absolute traffic count for each state and year
+CAP_PAC_mean_traffic_counts_by_state_year = CAP_PAC_traffic_counts_df %&gt;%
+  group_by(state, year) %&gt;%
+  summarise(mean_traffic_count = mean(abs(traffic_count_total), na.rm = TRUE), .groups = &quot;drop&quot;)
+
+# Calculate additional statistics for each state using absolute traffic count
+CAP_PAC_traffic_count_stats = CAP_PAC_traffic_counts_df %&gt;%
+  group_by(state) %&gt;%
+  summarise(
+    min_traffic_count = min(abs(traffic_count_total), na.rm = TRUE),
+    year_of_min_traffic_count = year[which.min(abs(traffic_count_total))],
+    max_traffic_count = max(abs(traffic_count_total), na.rm = TRUE),
+    year_of_max_traffic_count = year[which.max(abs(traffic_count_total))],
+    difference_min_max = max_traffic_count - min_traffic_count,
+    .groups = &quot;drop&quot;
+  )
+
+# Plot the data with faceting by state
+ggplot(CAP_PAC_mean_traffic_counts_by_state_year, aes(x = year, y = mean_traffic_count)) +
+  geom_line() +
+  facet_wrap(~ state, scales = &quot;free_y&quot;) +
+  theme_minimal() +
+  labs(title = &quot;Mean  Traffic Count by State and Year\nin National Capital and Pacific West Regions&quot;,
+       x = &quot;Year&quot;,
+       y = &quot;Mean Absolute Traffic Count&quot;) +
+  theme(
+    strip.text = element_text(size = 10, face = &quot;bold&quot;),
+    plot.title = element_text(size = 16, face = &quot;bold&quot;),
+    axis.text.x = element_text(angle = 45, hjust = 1)
+  )</code></pre>
+<p><img src="fp2513_files/figure-html/unnamed-chunk-11-1.png" width="672" /></p>
+<pre class="r"><code>read_csv(file = &quot;data/SE Query Builder for Traffic Counts (1985 - Last Calendar Year).csv&quot;, 
+                           na = c(&quot;NA&quot;, &quot;,&quot;, &quot;.&quot;)) %&gt;% 
+  janitor::clean_names() </code></pre>
+<pre class="r"><code>library(dplyr)
+library(tibble)
+library(tidyr)
+
+# Create the vectors with park names and states
+park_name_total = c(
+  &quot;Abraham Lincoln Birthplace NHP&quot;, &quot;Andersonville NHS&quot;, &quot;Andrew Johnson NHS&quot;,
+  &quot;Big Cypress NPRES&quot;, &quot;Big South Fork NRRA&quot;, &quot;Biscayne NP&quot;, &quot;Blue Ridge PKWY&quot;,
+  &quot;Camp Nelson NM&quot;, &quot;Canaveral NS&quot;, &quot;Cane River Creole NHP&quot;, &quot;Cape Hatteras NS&quot;,
+  &quot;Cape Lookout NS&quot;, &quot;Charles Pinckney NHS&quot;, &quot;Chattahoochee River NRA&quot;, 
+  &quot;Chickamauga &amp; Chattanooga NMP&quot;, &quot;Congaree NP&quot;, &quot;Cowpens NB&quot;, 
+  &quot;Cumberland Gap NHP&quot;, &quot;De Soto NMEM&quot;, &quot;Everglades NP&quot;, &quot;Fort Caroline NMEM&quot;, 
+  &quot;Fort Donelson NB&quot;, &quot;Fort Frederica NM&quot;, &quot;Fort Matanzas NM&quot;, &quot;Fort Pulaski NM&quot;, 
+  &quot;Fort Raleigh NHS&quot;, &quot;Great Smoky Mountains NP&quot;, &quot;Guilford Courthouse NMP&quot;, 
+  &quot;Gulf Islands NS&quot;, &quot;Horseshoe Bend NMP&quot;, &quot;Jean Lafitte NHP &amp; PRES&quot;, 
+  &quot;Kennesaw Mountain NBP&quot;, &quot;Kings Mountain NMP&quot;, &quot;Little River Canyon NPRES&quot;, 
+  &quot;Mammoth Cave NP&quot;, &quot;Moores Creek NB&quot;, &quot;Natchez NHP&quot;, &quot;Natchez Trace PKWY&quot;, 
+  &quot;Ninety Six NHS&quot;, &quot;Obed W&amp;SR&quot;, &quot;Ocmulgee Mounds NHP&quot;, &quot;Russell Cave NM&quot;, 
+  &quot;Shiloh NMP&quot;, &quot;Stones River NB&quot;, &quot;Timucuan EHP&quot;, &quot;Vicksburg NMP&quot;, 
+  &quot;Wright Brothers NMEM&quot;
+)
+
+state = c(
+  &quot;KY&quot;, &quot;GA&quot;, &quot;TN&quot;, &quot;FL&quot;, &quot;TN/KY&quot;, &quot;FL&quot;, &quot;VA/NC&quot;, &quot;KY&quot;, &quot;FL&quot;, &quot;LA&quot;, &quot;NC&quot;, &quot;NC&quot;, 
+  &quot;SC&quot;, &quot;GA&quot;, &quot;GA/TN&quot;, &quot;SC&quot;, &quot;SC&quot;, &quot;KY/TN/VA&quot;, &quot;FL&quot;, &quot;FL&quot;, &quot;FL&quot;, &quot;TN&quot;, &quot;GA&quot;, 
+  &quot;FL&quot;, &quot;GA&quot;, &quot;NC&quot;, &quot;TN/NC&quot;, &quot;NC&quot;, &quot;FL/MS&quot;, &quot;AL&quot;, &quot;LA&quot;, &quot;GA&quot;, &quot;SC&quot;, &quot;AL&quot;, &quot;KY&quot;, 
+  &quot;NC&quot;, &quot;MS&quot;, &quot;MS/AL/TN&quot;, &quot;SC&quot;, &quot;TN&quot;, &quot;GA&quot;, &quot;AL&quot;, &quot;TN&quot;, &quot;TN&quot;, &quot;FL&quot;, &quot;MS&quot;, &quot;NC&quot;
+)
+
+# If lengths are not the same, stop and fix the mismatch
+if (length(park_name_total) != length(state)) {
+  stop(&quot;Lengths of park_name_total and state do not match!&quot;)
+}
+
+# Create the tibble
+SE_park_to_state = tibble(
+  park_name_total = park_name_total,
+  state = state
+)
+
+# Separate rows with multiple states
+SE_park_to_state = SE_park_to_state %&gt;%
+  separate_rows(state, sep = &quot;/&quot;)
+
+
+SE_his_traffic_df = 
+  read_csv(file = &quot;data/SE Query Builder for Traffic Counts (1985 - Last Calendar Year).csv&quot;, na = c(&quot;NA&quot;, &quot;,&quot;, &quot;.&quot;)) %&gt;% 
+  janitor::clean_names() 
+
+SE_traffic_counts_df = SE_park_to_state %&gt;%
+  full_join(SE_his_traffic_df, by = &quot;park_name_total&quot;)
+
+library(dplyr)
+library(ggplot2)
+
+# Calculate mean absolute traffic count for each state and year
+SE_mean_traffic_counts_by_state_year = SE_traffic_counts_df %&gt;%
+  group_by(state, year) %&gt;%
+  summarise(mean_traffic_count = mean(abs(traffic_count_total), na.rm = TRUE), .groups = &quot;drop&quot;)
+
+# Calculate additional statistics for each state using absolute traffic count
+SE_traffic_count_stats = SE_traffic_counts_df %&gt;%
+  group_by(state) %&gt;%
+  summarise(
+    min_traffic_count = min(abs(traffic_count_total), na.rm = TRUE),
+    year_of_min_traffic_count = year[which.min(abs(traffic_count_total))],
+    max_traffic_count = max(abs(traffic_count_total), na.rm = TRUE),
+    year_of_max_traffic_count = year[which.max(abs(traffic_count_total))],
+    difference_min_max = max_traffic_count - min_traffic_count,
+    .groups = &quot;drop&quot;
+  )
+
+# Plot the data with faceting by state
+ggplot(SE_mean_traffic_counts_by_state_year, aes(x = year, y = mean_traffic_count)) +
+  geom_line() +
+  facet_wrap(~ state, scales = &quot;free_y&quot;) +
+  theme_minimal() +
+  labs(title = &quot;Mean Traffic Count by State and Year\nin SouthEast Region&quot;,
+       x = &quot;Year&quot;,
+       y = &quot;Mean Absolute Traffic Count&quot;) +
+  theme(
+    strip.text = element_text(size = 10, face = &quot;bold&quot;),
+    plot.title = element_text(size = 16, face = &quot;bold&quot;),
+    axis.text.x = element_text(angle = 45, hjust = 1)
+  )</code></pre>
+<p><img src="fp2513_files/figure-html/unnamed-chunk-13-1.png" width="672" /></p>
+</div>
+<div id="shiny-app" class="section level2">
+<h2>Shiny App</h2>
+<p>To contribute our data analysis of comparing traffic counts and
+national parking lot data to the wider knowledge community, to whoever
+may need this information we have created a shiny app. This shiny app
+allows selection of two different states to compare the traffic count
+across the years and also seperated by the months.</p>
+<p>This is also in attempts to address parts of our limitations where we
+have comprimised the information provided in the dataset. In the shiny
+app, each state’s plot not only shows how their traffic count has
+developed across the years but this development is also seperated by the
+months. This provides insight into potential monthly trends, where more
+traffic may occur through the year. Or even unexpected consistently in
+traffic count through the year.</p>
+</div>
+<div id="pairing-traffic-count-with-parking-lot-data"
+class="section level2">
+<h2>Pairing Traffic Count with Parking Lot Data</h2>
+<p>The mean annual traffic counts for each state across the years reveal
+trends that can be used to investigate whether fluctuations are due to a
+decreased interest in national parks or the introduction of popular
+parks incentivizing more visits.</p>
+<p>However, traffic counts may not be the best estimator for the impact
+of automobiles on human-wildlife interactions in national parks. This is
+because traffic count data does not specify the type of traffic it
+includes. It could be national park maintenance vehicles, visitors, or
+cars merely passing through without interacting with the park.</p>
+<p>To more directly quantify the impact of automobiles on national
+parks, examining parking lot usage may be more insightful. Parking lots
+are clearly man-made and reflect the park’s demand for car access,
+indicating efforts to accommodate visitors. By connecting traffic flow
+data with parking lot usage, we can better understand the needs of
+national parks and potentially improve traffic management and parking
+facilities.</p>
+<p>We could expect that high traffic counts in a state’s national parks
+might incentivize a higher ratio of parking lots to parks in that state.
+States that do not follow this trend may need updates to their parking
+infrastructure. Even if not, this analysis would encourage a closer look
+at the types of parks that, despite high traffic flow, do not require
+additional parking lots. We focused on the ratio rather than the
+absolute number of parking lots because states with more national parks
+would naturally need more parking. This approach avoids disproportionate
+representation and ensures a fair comparison.</p>
+<p>We created an interactive US Plotly map where each state’s color is
+based on the ratio of national park parking lots to the number of parks.
+Hovering over a state reveals the state name, ratio, and additional
+traffic count data, including minimum and maximum counts and their
+respective years. This visualization combines infrastructure and visitor
+trends, providing detailed insights without cluttering the visual.
+Plotly allows overlaying of the two information datasets (traffic counts
+and parking lots) for a comprehensive view.</p>
+<pre class="r"><code>library(dplyr)
+
+# Merge the two dataframes by adding rows
+merged_East_AL_traffic_counts = bind_rows(AL_IM_MW_traffic_count_stats, traffic_count_stats)
+
+merged_East_AL_CAP_traffic_counts = bind_rows(merged_East_AL_traffic_counts, CAP_PAC_traffic_count_stats)
+
+FULL_merged_traffic_counts = bind_rows(merged_East_AL_CAP_traffic_counts, SE_traffic_count_stats)</code></pre>
+<pre class="r"><code>geo_coord_df = 
+  read_csv(file = &quot;data/NPS_-_Points_of_Interest_(POIs)_-_Geographic_Coordinate_System.csv&quot;, na = c(&quot;NA&quot;, &quot;,&quot;, &quot;.&quot;)) %&gt;% 
+  janitor::clean_names()</code></pre>
+<pre class="r"><code>library(tigris)
+library(sf)
+library(dplyr)
+library(viridis)
+library(plotly)
+
+# Convert geo_coord_df to spatial dataframe with latitude/longitude coordinates
+map_geo_coord_df = st_as_sf(geo_coord_df, coords = c(&quot;x&quot;, &quot;y&quot;), crs = 4326)
+
+# Get US states shapefile (boundary) and ensure CRS is correct
+US_states = states(cb = TRUE)</code></pre>
+<pre class="r"><code>library(tigris)
+library(sf)
+library(dplyr)
+library(viridis)
+library(plotly)
+
+# Convert geo_coord_df to spatial dataframe with latitude/longitude coordinates
+map_geo_coord_df = st_as_sf(geo_coord_df, coords = c(&quot;x&quot;, &quot;y&quot;), crs = 4326)
+
+# Get US states shapefile (boundary) and ensure CRS is correct
+US_states = states(cb = TRUE)
+US_states_sf = st_as_sf(US_states)
+
+# Transform coordinate reference system (if necessary)
+US_states_sf = st_transform(US_states_sf, crs = 4326)
+
+# Spatial join between parking lot coordinates and US states polygons
+map_geo_coord_sf = st_join(map_geo_coord_df, US_states_sf, join = st_within)
+
+# Filter for Parking Lots and remove missing state names
+map_geo_coord_sf = map_geo_coord_sf %&gt;%
+  filter(poitype == &quot;Parking Lot&quot;) %&gt;%
+  filter(!is.na(NAME))
+
+# Count parking lots per state
+parking_lots_per_state = map_geo_coord_sf %&gt;%
+  group_by(NAME) %&gt;%
+  summarise(parking_lots = n(), .groups = &quot;drop&quot;)
+
+# Convert parking_lots_per_state to a regular dataframe (no geometry)
+parking_lots_per_state_df = as.data.frame(parking_lots_per_state)
+
+# Merge the parking_lots_per_state data with US_states_sf using left_join
+US_states_sf = US_states_sf %&gt;%
+  left_join(parking_lots_per_state_df, by = &quot;NAME&quot;)
+
+# Prepare the data for plotting with plotly
+US_states_sf_df = as.data.frame(US_states_sf)
+US_states_sf_df$geometry = NULL  # Remove the geometry for plotly
+
+# Create an interactive plotly map
+plot_ly(data = US_states_sf_df, type = &quot;choropleth&quot;,
+        locations = ~STUSPS, locationmode = &quot;USA-states&quot;,
+        z = ~parking_lots, text = ~paste(&quot;State:&quot;, NAME, &quot;&lt;br&gt;Parking Lots:&quot;, parking_lots),
+        colorscale = &quot;Viridis&quot;, reversescale = TRUE,
+        marker = list(line = list(color = &quot;black&quot;, width = 0.5))) %&gt;%
+  colorbar(title = &quot;Parking Lots&quot;) %&gt;%
+  layout(title = &quot;Number of Parking Lots in National Parks per State&quot;,
+         geo = list(scope = &#39;usa&#39;,
+                    projection = list(type = &#39;albers usa&#39;),
+                    showlakes = TRUE,
+                    lakecolor = toRGB(&#39;white&#39;)))</code></pre>
+<div class="plotly html-widget html-fill-item" id="htmlwidget-236ed22a1c9f21dff294" style="width:672px;height:480px;"></div>
+<script type="application/json" data-for="htmlwidget-236ed22a1c9f21dff294">{"x":{"visdat":{"16a8d3f4f1725":["function () ","plotlyVisDat"]},"cur_data":"16a8d3f4f1725","attrs":{"16a8d3f4f1725":{"locations":{},"locationmode":"USA-states","z":{},"text":{},"colorscale":"Viridis","reversescale":true,"marker":{"line":{"color":"black","width":0.5}},"alpha_stroke":1,"sizes":[10,100],"spans":[1,20],"type":"choropleth"}},"layout":{"margin":{"b":40,"l":60,"t":25,"r":10},"scene":{"zaxis":{"title":"parking_lots"}},"hovermode":"closest","showlegend":false,"legend":{"yanchor":"top","y":0.5},"title":"Number of Parking Lots in National Parks per State","geo":{"scope":"usa","projection":{"type":"albers usa"},"showlakes":true,"lakecolor":"rgba(255,255,255,1)"}},"source":"A","config":{"modeBarButtonsToAdd":["hoverclosest","hovercompare"],"showSendToCloud":false},"data":[{"colorbar":{"title":"Parking Lots","ticklen":2,"len":0.5,"lenmode":"fraction","y":1,"yanchor":"top"},"colorscale":"Viridis","showscale":true,"locations":["WY","AK","MD","AS","AR","ND","GU","NM","UT","WV","KS","GA","MS","MN","NH","MO","ID","SD","PA","OK","IN","NJ","NE","CO","NY","MT","KY","VT","DC","FL","NV","MP","TN","IA","AL","MI","CA","CT","AZ","TX","VA","IL","HI","OR","VI","SC","WA","PR","LA","ME","OH","WI","NC","MA"],"locationmode":"USA-states","z":[251,7,120,2,5,13,1,103,219,84,6,101,125,35,1,14,34,22,69,75,4,17,8,323,16,79,93,2,56,147,80,4,485,8,61,39,288,1,309,157,334,2,9,39,20,20,36,4,26,47,16,2,477,59],"text":["State: Wyoming <br>Parking Lots: 251","State: Alaska <br>Parking Lots: 7","State: Maryland <br>Parking Lots: 120","State: American Samoa <br>Parking Lots: 2","State: Arkansas <br>Parking Lots: 5","State: North Dakota <br>Parking Lots: 13","State: Guam <br>Parking Lots: 1","State: New Mexico <br>Parking Lots: 103","State: Utah <br>Parking Lots: 219","State: West Virginia <br>Parking Lots: 84","State: Kansas <br>Parking Lots: 6","State: Georgia <br>Parking Lots: 101","State: Mississippi <br>Parking Lots: 125","State: Minnesota <br>Parking Lots: 35","State: New Hampshire <br>Parking Lots: 1","State: Missouri <br>Parking Lots: 14","State: Idaho <br>Parking Lots: 34","State: South Dakota <br>Parking Lots: 22","State: Pennsylvania <br>Parking Lots: 69","State: Oklahoma <br>Parking Lots: 75","State: Indiana <br>Parking Lots: 4","State: New Jersey <br>Parking Lots: 17","State: Nebraska <br>Parking Lots: 8","State: Colorado <br>Parking Lots: 323","State: New York <br>Parking Lots: 16","State: Montana <br>Parking Lots: 79","State: Kentucky <br>Parking Lots: 93","State: Vermont <br>Parking Lots: 2","State: District of Columbia <br>Parking Lots: 56","State: Florida <br>Parking Lots: 147","State: Nevada <br>Parking Lots: 80","State: Commonwealth of the Northern Mariana Islands <br>Parking Lots: 4","State: Tennessee <br>Parking Lots: 485","State: Iowa <br>Parking Lots: 8","State: Alabama <br>Parking Lots: 61","State: Michigan <br>Parking Lots: 39","State: California <br>Parking Lots: 288","State: Connecticut <br>Parking Lots: 1","State: Arizona <br>Parking Lots: 309","State: Texas <br>Parking Lots: 157","State: Virginia <br>Parking Lots: 334","State: Illinois <br>Parking Lots: 2","State: Hawaii <br>Parking Lots: 9","State: Oregon <br>Parking Lots: 39","State: United States Virgin Islands <br>Parking Lots: 20","State: South Carolina <br>Parking Lots: 20","State: Washington <br>Parking Lots: 36","State: Puerto Rico <br>Parking Lots: 4","State: Louisiana <br>Parking Lots: 26","State: Maine <br>Parking Lots: 47","State: Ohio <br>Parking Lots: 16","State: Wisconsin <br>Parking Lots: 2","State: North Carolina <br>Parking Lots: 477","State: Massachusetts <br>Parking Lots: 59"],"reversescale":true,"marker":{"line":{"color":"black","width":0.5}},"type":"choropleth","frame":null}],"highlight":{"on":"plotly_click","persistent":false,"dynamic":false,"selectize":false,"opacityDim":0.20000000000000001,"selected":{"opacity":1},"debounce":0},"shinyEvents":["plotly_hover","plotly_click","plotly_selected","plotly_relayout","plotly_brushed","plotly_brushing","plotly_clickannotation","plotly_doubleclick","plotly_deselect","plotly_afterplot","plotly_sunburstclick"],"base_url":"https://plot.ly"},"evals":[],"jsHooks":[]}</script>
+<pre class="r"><code>US_states_sf = st_as_sf(US_states)
+
+# Transform coordinate reference system (if necessary)
+US_states_sf = st_transform(US_states_sf, crs = 4326)
+
+# Spatial join between geo_coord_df and US states polygons
+map_geo_coord_sf = st_join(map_geo_coord_df, US_states_sf)
+
+# Filter for &quot;Parking Lot&quot; and remove rows with missing state names
+map_geo_coord_sf = map_geo_coord_sf %&gt;%
+  filter(poitype == &quot;Parking Lot&quot;) %&gt;%
+  filter(!is.na(NAME))  # Ensure no missing state names
+
+# Count unique national parks per state (based on unique unitname)
+national_parks_per_state = map_geo_coord_sf %&gt;%
+  group_by(NAME) %&gt;%
+  summarise(national_parks = n_distinct(unitname), .groups = &quot;drop&quot;)
+
+# Count the number of parking lots per state
+parking_lots_per_state = map_geo_coord_sf %&gt;%
+  group_by(NAME) %&gt;%
+  summarise(parking_lots = n(), .groups = &quot;drop&quot;)
+
+# Merge the parking lots and national parks counts into one regular dataframe
+state_counts = st_join(parking_lots_per_state, national_parks_per_state, left = TRUE) %&gt;%
+  mutate(ratio = parking_lots / national_parks)  # Calculate the ratio of parking lots to national parks
+
+# Merge the ratio data with the spatial states data using a left join
+US_states_sf = US_states_sf %&gt;%
+  st_join(state_counts, left = TRUE)
+
+# Prepare the data for plotting with plotly
+US_states_sf_df = as.data.frame(US_states_sf)
+US_states_sf_df$geometry = NULL  # Remove the geometry for plotly
+
+# Merge traffic_count_stats data with the US_states_sf_df based on state abbreviation (STUSPS)
+US_states_sf_df = US_states_sf_df %&gt;%
+  left_join(FULL_merged_traffic_counts, by = c(&quot;STUSPS&quot; = &quot;state&quot;))
+
+# Create an interactive plotly map with additional stats
+plot_ly(data = US_states_sf_df, type = &quot;choropleth&quot;,
+        locations = ~STUSPS, locationmode = &quot;USA-states&quot;,
+        z = ~ratio, text = ~paste(&quot;State:&quot;, NAME,
+                                  &quot;&lt;br&gt;Ratio:&quot;, round(ratio, 2),
+                                  &quot;&lt;br&gt;Min Traffic Count:&quot;, min_traffic_count,
+                                  &quot;&lt;br&gt;Year of Min Traffic Count:&quot;, year_of_min_traffic_count,
+                                  &quot;&lt;br&gt;Max Traffic Count:&quot;, max_traffic_count,
+                                  &quot;&lt;br&gt;Year of Max Traffic Count:&quot;, year_of_max_traffic_count,
+                                  &quot;&lt;br&gt;Difference (Max - Min):&quot;, difference_min_max),
+        colorscale = &quot;Viridis&quot;, reversescale = TRUE,
+        marker = list(line = list(color = &quot;black&quot;, width = 0.5))) %&gt;%
+  colorbar(title = &quot;Parking Lot to National Park Ratio&quot;) %&gt;%
+  layout(title = &quot;Ratio of Parking Lots to National Parks per State with Traffic Count Stats&quot;,
+         geo = list(scope = &#39;usa&#39;,
+                    projection = list(type = &#39;albers usa&#39;),
+                    showlakes = TRUE,
+                    lakecolor = toRGB(&#39;white&#39;)))</code></pre>
+<div class="plotly html-widget html-fill-item" id="htmlwidget-eba8306ca01da6090057" style="width:672px;height:480px;"></div>
+<script type="application/json" data-for="htmlwidget-eba8306ca01da6090057">{"x":{"visdat":{"16a8d35f5041b":["function () ","plotlyVisDat"]},"cur_data":"16a8d35f5041b","attrs":{"16a8d35f5041b":{"locations":{},"locationmode":"USA-states","z":{},"text":{},"colorscale":"Viridis","reversescale":true,"marker":{"line":{"color":"black","width":0.5}},"alpha_stroke":1,"sizes":[10,100],"spans":[1,20],"type":"choropleth"}},"layout":{"margin":{"b":40,"l":60,"t":25,"r":10},"scene":{"zaxis":{"title":"ratio"}},"hovermode":"closest","showlegend":false,"legend":{"yanchor":"top","y":0.5},"title":"Ratio of Parking Lots to National Parks per State with Traffic Count Stats","geo":{"scope":"usa","projection":{"type":"albers usa"},"showlakes":true,"lakecolor":"rgba(255,255,255,1)"}},"source":"A","config":{"modeBarButtonsToAdd":["hoverclosest","hovercompare"],"showSendToCloud":false},"data":[{"colorbar":{"title":"Parking Lot to National Park Ratio","ticklen":2,"len":0.5,"lenmode":"fraction","y":1,"yanchor":"top"},"colorscale":"Viridis","showscale":true,"locations":["WY","AK","MD","AS","AR","ND","GU","NM","UT","WV","WV","KS","GA","MS","MN","NH","MO","ID","ID","SD","PA","OK","IN","NJ","NE","CO","NY","MT","MT","KY","VT","DC","FL","NV","MP","TN","IA","AL","MI","CA","CT","AZ","AZ","TX","VA","VA","VA","IL","HI","OR","VI","SC","WA","PR","LA","ME","OH","WI","NC","MA"],"locationmode":"USA-states","z":[35.857142857142854,1.75,10,2,5,13,1,6.4375,18.25,21,21,6,10.1,25,35,1,14,5.666666666666667,5.666666666666667,22,34.5,37.5,4,8.5,8,32.299999999999997,5.333333333333333,9.875,9.875,15.5,2,8,16.333333333333332,26.666666666666668,4,40.416666666666664,8,8.7142857142857135,39,19.199999999999999,1,15.449999999999999,15.449999999999999,13.083333333333334,33.399999999999999,33.399999999999999,33.399999999999999,2,3,6.5,6.666666666666667,3.3333333333333335,4,4,5.2000000000000002,47,16,2,53,29.5],"text":["State: Wyoming <br>Ratio: 35.86 <br>Min Traffic Count: 0 <br>Year of Min Traffic Count: 2003 <br>Max Traffic Count: 1801932 <br>Year of Max Traffic Count: 2021 <br>Difference (Max - Min): 1801932","State: Alaska <br>Ratio: 1.75 <br>Min Traffic Count: 0 <br>Year of Min Traffic Count: 1996 <br>Max Traffic Count: 243057 <br>Year of Max Traffic Count: 1999 <br>Difference (Max - Min): 243057","State: Maryland <br>Ratio: 10 <br>Min Traffic Count: 0 <br>Year of Min Traffic Count: 2000 <br>Max Traffic Count: 9864839 <br>Year of Max Traffic Count: 2013 <br>Difference (Max - Min): 9864839","State: American Samoa <br>Ratio: 2 <br>Min Traffic Count: NA <br>Year of Min Traffic Count: NA <br>Max Traffic Count: NA <br>Year of Max Traffic Count: NA <br>Difference (Max - Min): NA","State: Arkansas <br>Ratio: 5 <br>Min Traffic Count: 0 <br>Year of Min Traffic Count: 2007 <br>Max Traffic Count: 1277367 <br>Year of Max Traffic Count: 2006 <br>Difference (Max - Min): 1277367","State: North Dakota <br>Ratio: 13 <br>Min Traffic Count: 11588 <br>Year of Min Traffic Count: 2001 <br>Max Traffic Count: 130581 <br>Year of Max Traffic Count: 2021 <br>Difference (Max - Min): 118993","State: Guam <br>Ratio: 1 <br>Min Traffic Count: 9855 <br>Year of Min Traffic Count: 2022 <br>Max Traffic Count: 139556 <br>Year of Max Traffic Count: 2023 <br>Difference (Max - Min): 129701","State: New Mexico <br>Ratio: 6.44 <br>Min Traffic Count: 0 <br>Year of Min Traffic Count: 2013 <br>Max Traffic Count: 277000 <br>Year of Max Traffic Count: 2021 <br>Difference (Max - Min): 277000","State: Utah <br>Ratio: 18.25 <br>Min Traffic Count: 0 <br>Year of Min Traffic Count: 1992 <br>Max Traffic Count: 1046299 <br>Year of Max Traffic Count: 2017 <br>Difference (Max - Min): 1046299","State: West Virginia <br>Ratio: 21 <br>Min Traffic Count: 0 <br>Year of Min Traffic Count: 2016 <br>Max Traffic Count: 9402895 <br>Year of Max Traffic Count: 2019 <br>Difference (Max - Min): 9402895","State: West Virginia <br>Ratio: 21 <br>Min Traffic Count: 0 <br>Year of Min Traffic Count: 2000 <br>Max Traffic Count: 218436 <br>Year of Max Traffic Count: 2020 <br>Difference (Max - Min): 218436","State: Kansas <br>Ratio: 6 <br>Min Traffic Count: 0 <br>Year of Min Traffic Count: 1998 <br>Max Traffic Count: 22655 <br>Year of Max Traffic Count: 1992 <br>Difference (Max - Min): 22655","State: Georgia <br>Ratio: 10.1 <br>Min Traffic Count: 0 <br>Year of Min Traffic Count: 1992 <br>Max Traffic Count: 5903550 <br>Year of Max Traffic Count: 1993 <br>Difference (Max - Min): 5903550","State: Mississippi <br>Ratio: 25 <br>Min Traffic Count: 0 <br>Year of Min Traffic Count: 2005 <br>Max Traffic Count: 4397661 <br>Year of Max Traffic Count: 2014 <br>Difference (Max - Min): 4397661","State: Minnesota <br>Ratio: 35 <br>Min Traffic Count: 0 <br>Year of Min Traffic Count: 2007 <br>Max Traffic Count: 34877 <br>Year of Max Traffic Count: 2010 <br>Difference (Max - Min): 34877","State: New Hampshire <br>Ratio: 1 <br>Min Traffic Count: NA <br>Year of Min Traffic Count: NA <br>Max Traffic Count: NA <br>Year of Max Traffic Count: NA <br>Difference (Max - Min): NA","State: Missouri <br>Ratio: 14 <br>Min Traffic Count: 0 <br>Year of Min Traffic Count: 1991 <br>Max Traffic Count: 192735 <br>Year of Max Traffic Count: 2007 <br>Difference (Max - Min): 192735","State: Idaho <br>Ratio: 5.67 <br>Min Traffic Count: 0 <br>Year of Min Traffic Count: 1991 <br>Max Traffic Count: 1173528 <br>Year of Max Traffic Count: 2022 <br>Difference (Max - Min): 1173528","State: Idaho <br>Ratio: 5.67 <br>Min Traffic Count: 0 <br>Year of Min Traffic Count: 1992 <br>Max Traffic Count: 117795 <br>Year of Max Traffic Count: 1992 <br>Difference (Max - Min): 117795","State: South Dakota <br>Ratio: 22 <br>Min Traffic Count: 0 <br>Year of Min Traffic Count: 2020 <br>Max Traffic Count: 830224 <br>Year of Max Traffic Count: 2023 <br>Difference (Max - Min): 830224","State: Pennsylvania <br>Ratio: 34.5 <br>Min Traffic Count: NA <br>Year of Min Traffic Count: NA <br>Max Traffic Count: NA <br>Year of Max Traffic Count: NA <br>Difference (Max - Min): NA","State: Oklahoma <br>Ratio: 37.5 <br>Min Traffic Count: 0 <br>Year of Min Traffic Count: 1994 <br>Max Traffic Count: 1524165 <br>Year of Max Traffic Count: 2016 <br>Difference (Max - Min): 1524165","State: Indiana <br>Ratio: 4 <br>Min Traffic Count: 0 <br>Year of Min Traffic Count: 1993 <br>Max Traffic Count: 263656 <br>Year of Max Traffic Count: 2003 <br>Difference (Max - Min): 263656","State: New Jersey <br>Ratio: 8.5 <br>Min Traffic Count: NA <br>Year of Min Traffic Count: NA <br>Max Traffic Count: NA <br>Year of Max Traffic Count: NA <br>Difference (Max - Min): NA","State: Nebraska <br>Ratio: 8 <br>Min Traffic Count: 0 <br>Year of Min Traffic Count: 1991 <br>Max Traffic Count: 505267 <br>Year of Max Traffic Count: 2010 <br>Difference (Max - Min): 505267","State: Colorado <br>Ratio: 32.3 <br>Min Traffic Count: 0 <br>Year of Min Traffic Count: 2019 <br>Max Traffic Count: 5907732 <br>Year of Max Traffic Count: 1998 <br>Difference (Max - Min): 5907732","State: New York <br>Ratio: 5.33 <br>Min Traffic Count: 17109 <br>Year of Min Traffic Count: 1996 <br>Max Traffic Count: 79591 <br>Year of Max Traffic Count: 2008 <br>Difference (Max - Min): 62482","State: Montana <br>Ratio: 9.88 <br>Min Traffic Count: 0 <br>Year of Min Traffic Count: 2003 <br>Max Traffic Count: 1173528 <br>Year of Max Traffic Count: 2022 <br>Difference (Max - Min): 1173528","State: Montana <br>Ratio: 9.88 <br>Min Traffic Count: 0 <br>Year of Min Traffic Count: 1992 <br>Max Traffic Count: 104805 <br>Year of Max Traffic Count: 1992 <br>Difference (Max - Min): 104805","State: Kentucky <br>Ratio: 15.5 <br>Min Traffic Count: 0 <br>Year of Min Traffic Count: 1993 <br>Max Traffic Count: 3451549 <br>Year of Max Traffic Count: 2005 <br>Difference (Max - Min): 3451549","State: Vermont <br>Ratio: 2 <br>Min Traffic Count: NA <br>Year of Min Traffic Count: NA <br>Max Traffic Count: NA <br>Year of Max Traffic Count: NA <br>Difference (Max - Min): NA","State: District of Columbia <br>Ratio: 8 <br>Min Traffic Count: 0 <br>Year of Min Traffic Count: 1992 <br>Max Traffic Count: 9864839 <br>Year of Max Traffic Count: 2013 <br>Difference (Max - Min): 9864839","State: Florida <br>Ratio: 16.33 <br>Min Traffic Count: 0 <br>Year of Min Traffic Count: 1993 <br>Max Traffic Count: 1083075 <br>Year of Max Traffic Count: 2023 <br>Difference (Max - Min): 1083075","State: Nevada <br>Ratio: 26.67 <br>Min Traffic Count: 0 <br>Year of Min Traffic Count: 2007 <br>Max Traffic Count: 3226604 <br>Year of Max Traffic Count: 2023 <br>Difference (Max - Min): 3226604","State: Commonwealth of the Northern Mariana Islands <br>Ratio: 4 <br>Min Traffic Count: NA <br>Year of Min Traffic Count: NA <br>Max Traffic Count: NA <br>Year of Max Traffic Count: NA <br>Difference (Max - Min): NA","State: Tennessee <br>Ratio: 40.42 <br>Min Traffic Count: 0 <br>Year of Min Traffic Count: 2005 <br>Max Traffic Count: 11836342 <br>Year of Max Traffic Count: 1997 <br>Difference (Max - Min): 11836342","State: Iowa <br>Ratio: 8 <br>Min Traffic Count: NA <br>Year of Min Traffic Count: NA <br>Max Traffic Count: NA <br>Year of Max Traffic Count: NA <br>Difference (Max - Min): NA","State: Alabama <br>Ratio: 8.71 <br>Min Traffic Count: 0 <br>Year of Min Traffic Count: 2003 <br>Max Traffic Count: 4397661 <br>Year of Max Traffic Count: 2014 <br>Difference (Max - Min): 4397661","State: Michigan <br>Ratio: 39 <br>Min Traffic Count: 0 <br>Year of Min Traffic Count: 2018 <br>Max Traffic Count: 721795 <br>Year of Max Traffic Count: 2019 <br>Difference (Max - Min): 721795","State: California <br>Ratio: 19.2 <br>Min Traffic Count: 0 <br>Year of Min Traffic Count: 2007 <br>Max Traffic Count: 1069525 <br>Year of Max Traffic Count: 2023 <br>Difference (Max - Min): 1069525","State: Connecticut <br>Ratio: 1 <br>Min Traffic Count: NA <br>Year of Min Traffic Count: NA <br>Max Traffic Count: NA <br>Year of Max Traffic Count: NA <br>Difference (Max - Min): NA","State: Arizona <br>Ratio: 15.45 <br>Min Traffic Count: 0 <br>Year of Min Traffic Count: 1998 <br>Max Traffic Count: 2634844 <br>Year of Max Traffic Count: 2011 <br>Difference (Max - Min): 2634844","State: Arizona <br>Ratio: 15.45 <br>Min Traffic Count: 0 <br>Year of Min Traffic Count: 2012 <br>Max Traffic Count: 3226604 <br>Year of Max Traffic Count: 2023 <br>Difference (Max - Min): 3226604","State: Texas <br>Ratio: 13.08 <br>Min Traffic Count: 0 <br>Year of Min Traffic Count: 2022 <br>Max Traffic Count: 356010 <br>Year of Max Traffic Count: 2009 <br>Difference (Max - Min): 356010","State: Virginia <br>Ratio: 33.4 <br>Min Traffic Count: 15000 <br>Year of Min Traffic Count: 2020 <br>Max Traffic Count: 132586 <br>Year of Max Traffic Count: 1999 <br>Difference (Max - Min): 117586","State: Virginia <br>Ratio: 33.4 <br>Min Traffic Count: 0 <br>Year of Min Traffic Count: 1992 <br>Max Traffic Count: 9864839 <br>Year of Max Traffic Count: 2013 <br>Difference (Max - Min): 9864839","State: Virginia <br>Ratio: 33.4 <br>Min Traffic Count: 0 <br>Year of Min Traffic Count: 1993 <br>Max Traffic Count: 3451549 <br>Year of Max Traffic Count: 2005 <br>Difference (Max - Min): 3451549","State: Illinois <br>Ratio: 2 <br>Min Traffic Count: NA <br>Year of Min Traffic Count: NA <br>Max Traffic Count: NA <br>Year of Max Traffic Count: NA <br>Difference (Max - Min): NA","State: Hawaii <br>Ratio: 3 <br>Min Traffic Count: 0 <br>Year of Min Traffic Count: 1990 <br>Max Traffic Count: 634096 <br>Year of Max Traffic Count: 2012 <br>Difference (Max - Min): 634096","State: Oregon <br>Ratio: 6.5 <br>Min Traffic Count: 0 <br>Year of Min Traffic Count: 1991 <br>Max Traffic Count: 203975 <br>Year of Max Traffic Count: 2017 <br>Difference (Max - Min): 203975","State: United States Virgin Islands <br>Ratio: 6.67 <br>Min Traffic Count: NA <br>Year of Min Traffic Count: NA <br>Max Traffic Count: NA <br>Year of Max Traffic Count: NA <br>Difference (Max - Min): NA","State: South Carolina <br>Ratio: 3.33 <br>Min Traffic Count: 0 <br>Year of Min Traffic Count: 1995 <br>Max Traffic Count: 181880 <br>Year of Max Traffic Count: 2017 <br>Difference (Max - Min): 181880","State: Washington <br>Ratio: 4 <br>Min Traffic Count: 0 <br>Year of Min Traffic Count: 2014 <br>Max Traffic Count: 653115 <br>Year of Max Traffic Count: 1997 <br>Difference (Max - Min): 653115","State: Puerto Rico <br>Ratio: 4 <br>Min Traffic Count: NA <br>Year of Min Traffic Count: NA <br>Max Traffic Count: NA <br>Year of Max Traffic Count: NA <br>Difference (Max - Min): NA","State: Louisiana <br>Ratio: 5.2 <br>Min Traffic Count: 0 <br>Year of Min Traffic Count: 2005 <br>Max Traffic Count: 203132 <br>Year of Max Traffic Count: 1995 <br>Difference (Max - Min): 203132","State: Maine <br>Ratio: 47 <br>Min Traffic Count: NA <br>Year of Min Traffic Count: NA <br>Max Traffic Count: NA <br>Year of Max Traffic Count: NA <br>Difference (Max - Min): NA","State: Ohio <br>Ratio: 16 <br>Min Traffic Count: 0 <br>Year of Min Traffic Count: 1992 <br>Max Traffic Count: 230922 <br>Year of Max Traffic Count: 1994 <br>Difference (Max - Min): 230922","State: Wisconsin <br>Ratio: 2 <br>Min Traffic Count: 6172 <br>Year of Min Traffic Count: 1994 <br>Max Traffic Count: 44906 <br>Year of Max Traffic Count: 1998 <br>Difference (Max - Min): 38734","State: North Carolina <br>Ratio: 53 <br>Min Traffic Count: 0 <br>Year of Min Traffic Count: 1993 <br>Max Traffic Count: 11836342 <br>Year of Max Traffic Count: 1997 <br>Difference (Max - Min): 11836342","State: Massachusetts <br>Ratio: 29.5 <br>Min Traffic Count: NA <br>Year of Min Traffic Count: NA <br>Max Traffic Count: NA <br>Year of Max Traffic Count: NA <br>Difference (Max - Min): NA"],"reversescale":true,"marker":{"line":{"color":"black","width":0.5}},"type":"choropleth","frame":null}],"highlight":{"on":"plotly_click","persistent":false,"dynamic":false,"selectize":false,"opacityDim":0.20000000000000001,"selected":{"opacity":1},"debounce":0},"shinyEvents":["plotly_hover","plotly_click","plotly_selected","plotly_relayout","plotly_brushed","plotly_brushing","plotly_clickannotation","plotly_doubleclick","plotly_deselect","plotly_afterplot","plotly_sunburstclick"],"base_url":"https://plot.ly"},"evals":[],"jsHooks":[]}</script>
+</div>
+<div id="concluding-remarks" class="section level2">
+<h2>Concluding Remarks</h2>
+<p>A key limitation of this analysis is that it represents only an
+initial step in the comprehensive study of traffic patterns and their
+implications in national parks. The current analysis, while insightful,
+provides a broad overview and suggests several avenues for further, more
+detailed research.</p>
+<p>Future studies should aim to delve deeper into specific aspects of
+human-wildlife interactions and environmental impacts. For instance, one
+critical area for further investigation is the quantification of
+pollution levels within national parks over the years. This could
+include analyzing the types and sources of pollutants, their temporal
+trends, and their effects on local ecosystems and wildlife.</p>
+<p>Additionally, understanding visitor experience and satisfaction
+through systematic surveys can offer valuable insights into the adequacy
+of current infrastructure. Surveys could assess the effectiveness of
+parking facilities, the sufficiency of amenities, and overall visitor
+satisfaction. This data would be instrumental in guiding resource
+allocation and infrastructure development to better meet visitor needs
+and protect park environments.</p>
+<p>Moreover, examining the distribution of resources, such as parking
+lots and other facilities, in relation to traffic patterns can highlight
+areas where investments are needed. This could involve spatial analysis
+to identify under-served areas and model the potential impact of
+proposed infrastructure improvements.</p>
+<p>In summary, while this initial analysis provides a foundational
+understanding, it underscores the need for more targeted research to
+address specific questions related to environmental impacts, visitor
+experiences, and infrastructure adequacy in national parks. These
+efforts will contribute to a more nuanced and actionable understanding
+of how to balance conservation efforts with visitor needs in these
+treasured natural spaces.</p>
+</div>
+</div>
+
+
+
+</div>
+</div>
+
+</div>
+
+<script>
+
+// add bootstrap table styles to pandoc tables
+function bootstrapStylePandocTables() {
+  $('tr.odd').parent('tbody').parent('table').addClass('table table-condensed');
+}
+$(document).ready(function () {
+  bootstrapStylePandocTables();
+});
+
+
+</script>
+
+<!-- tabsets -->
+
+<script>
+$(document).ready(function () {
+  window.buildTabsets("TOC");
+});
+
+$(document).ready(function () {
+  $('.tabset-dropdown > .nav-tabs > li').click(function () {
+    $(this).parent().toggleClass('nav-tabs-open');
+  });
+});
+</script>
+
+<!-- code folding -->
+<script>
+$(document).ready(function () {
+  window.initializeCodeFolding("hide" === "show");
+});
+</script>
+
+<script>
+$(document).ready(function ()  {
+
+    // temporarily add toc-ignore selector to headers for the consistency with Pandoc
+    $('.unlisted.unnumbered').addClass('toc-ignore')
+
+    // move toc-ignore selectors from section div to header
+    $('div.section.toc-ignore')
+        .removeClass('toc-ignore')
+        .children('h1,h2,h3,h4,h5').addClass('toc-ignore');
+
+    // establish options
+    var options = {
+      selectors: "h1,h2,h3",
+      theme: "bootstrap3",
+      context: '.toc-content',
+      hashGenerator: function (text) {
+        return text.replace(/[.\\/?&!#<>]/g, '').replace(/\s/g, '_');
+      },
+      ignoreSelector: ".toc-ignore",
+      scrollTo: 0
+    };
+    options.showAndHide = true;
+    options.smoothScroll = true;
+
+    // tocify
+    var toc = $("#TOC").tocify(options).data("toc-tocify");
+});
+</script>
+
+<!-- dynamically load mathjax for compatibility with self-contained -->
+<script>
+  (function () {
+    var script = document.createElement("script");
+    script.type = "text/javascript";
+    script.src  = "https://mathjax.rstudio.com/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML";
+    document.getElementsByTagName("head")[0].appendChild(script);
+  })();
+</script>
+
+</body>
+</html>
