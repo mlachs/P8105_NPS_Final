@@ -7,11 +7,11 @@ navbar:
       href: Activities.html
     - text: "Proposal"
       href: project_proposal.html
-    - text: "Mari"
-      href: mos2128.html
-    - text: "Lizy"
+    - text: "Seasonal Regional Analysis"
+      href: Seasonal_Regional_Analysis.html
+    - text: "Exploring NY "
       href: jc6452.html
-    - text: "Flora"
+    - text: "Nature vs Machines"
       href: fp2513.html
     - text: "Project Report"
       href: Project_Report.html  
