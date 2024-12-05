@@ -1,0 +1,320 @@
+---
+title: "Seasonal Trends in Park Visitation"
+output: 
+  html_document: 
+    toc: true
+    toc_float: true
+    code_folding: hide
+---
+
+```{r global options, include = FALSE}
+knitr::opts_chunk$set(warning = FALSE, message = FALSE)
+```
+
+```{r setup, include=FALSE}
+library(tidyverse)
+library(plotly)
+library(httr)
+library(leaflet)
+library(patchwork)
+knitr::opts_chunk$set(echo = TRUE, 
+                      fig.width = 8, 
+                      fig.height = 6,
+                      out.width = "90%")
+theme_set(theme_minimal() + theme(legend.position = "bottom"))
+
+options(
+  ggplot2.continuous.colour = "viridis",
+  ggplot2.continuous.fill = "viridis"
+)
+
+scale_colour_discrete = scale_colour_viridis_d
+scale_fill_discrete = scale_fill_viridis_d
+```
+
+# **Data Importing and Cleaning**
+
+```{r}
+res = GET('https://developer.nps.gov/api/v1/parks?limit=500&api_key=B9nDpbkbrb3kSOjz6kXSxMJ3d6MSpUvt1QqYdeyn')
+
+data = res %>% 
+  content("text") %>% 
+  jsonlite::fromJSON() %>% 
+  as_tibble()
+
+NPS_data = data %>% 
+  unnest(data) %>% 
+  select(fullName,latitude,longitude,topics, activities,states, parkCode) %>%  janitor::clean_names() %>% 
+  mutate(
+    latitude = as.numeric(latitude), 
+    longitude = as.numeric(longitude)
+  ) %>% 
+  unnest(activities, names_sep = "_") %>% 
+  unnest(topics, names_sep = "_")
+visitation_data <- 
+  read_csv("data/Query Builder for Public Use Statistics (1979 - Last Calendar Year).csv") %>% 
+  janitor::clean_names() %>% 
+  mutate(unit_code = tolower(unit_code)) %>% 
+  rename(park_code = unit_code, 
+         full_name = park_name) %>% 
+  select(full_name, park_code, park_type, region, state, year, month, recreation_visits, tent_campers, rv_campers, tent_campers, backcountry)
+
+combined_data <- full_join(NPS_data, visitation_data, by = c("park_code"))
+```
+
+# **Trends across Time**
+
+## **Total Trend by Park Type Across Months**
+
+```{r}
+visitation_data %>% 
+  group_by(park_type, month) %>% 
+  summarize(total_visitation = sum(recreation_visits)) %>% 
+plot_ly(x = ~as.factor(month), y = ~total_visitation, type = "scatter", 
+        mode = "lines", color = ~park_type)
+
+visitation_data %>% 
+  group_by(park_type) %>% 
+  summarize(parks = n_distinct(full_name)) %>%
+  arrange(desc(parks))  %>%  
+  knitr::kable()
+```
+
+As seen in the graph, national parks have the highest total visitation
+among all park types. Interestingly, there more national monuments,
+national historic sites, and national historic parks than national
+parks, even though all of these have less total visitation than national
+parks.
+
+## **Total Visitation by Visitation Type and Season**
+
+The `visitation_data` data set also includes information on visitation
+split by `tent_campers`, `backcountry`, and `rv_campers`. We were
+interested in looking at the total visitation split by these three
+visitation types and by season.
+
+```{r}
+visitation_data %>% 
+  mutate(season = case_when(
+    month %in% c(12,1,2) ~ "Winter", 
+    month %in% c(3,4,5) ~ "Spring", 
+    month %in% c(6,7,8) ~ "Summer", 
+    TRUE ~ "Fall"
+  )) %>% 
+  group_by(season) %>% 
+  summarize(total_tent = sum(tent_campers), 
+            backcountry_visits = sum(backcountry), 
+            total_rv = sum(rv_campers)) %>% 
+  pivot_longer(
+    total_tent:total_rv, 
+    values_to = "total_visit", 
+    names_to = "type_visit",
+    names_prefix = "total_"
+  ) %>% 
+  plot_ly(x = ~season, y = ~total_visit, color = ~type_visit, type = "bar")
+```
+
+In fall, winter, and spring, the highest visitation is `tent_campers`,
+with a peak summer. Interestingly and unsurprisingly, the highest
+visitation in winter is `rv_campers`. This is probably due to weather
+conditions not permitting tent camping, but allows for rv camping. For
+fall, winter, and spring there is a similar trend where `backcountry`
+has the lowest total visitation and `tent_campers` has the highest
+visitation. In winter, `rv_campers` has the highest total visitation,
+then `tent_campers`, and then `backcountry`.
+
+## **Average Park Visitation by Season and Park Type**
+
+Next, we were interested in seeing the trends in park visitation by
+season and park type.
+
+```{r}
+park_types <- unique(visitation_data$park_type)
+plots <- list()
+for (i in seq_along(park_types)) {
+plots[[i]] <- visitation_data %>% 
+    filter(park_type == park_types[i]) %>% 
+    mutate(season = case_when(
+      month %in% c(12, 1, 2) ~ "Winter", 
+      month %in% c(3, 4, 5) ~ "Spring", 
+      month %in% c(6, 7, 8) ~ "Summer", 
+      TRUE ~ "Fall"
+    )) %>% 
+    group_by(season) %>%
+    summarize(avg_visits = mean(recreation_visits, na.rm = TRUE)) %>%
+    ggplot(aes(x = season, y = avg_visits, fill = season)) +
+    geom_col() +
+    ggtitle(paste( park_types[i])) 
+} 
+```
+
+Most of the parks have a similar trend in average visitation, where
+summer is the highest and winter is the lowest.
+
+## **National Lakeshore Seasonal Trends and Activities**
+
+```{r, message= FALSE}
+plots[7]
+```
+
+For `national lakeshore` parks, there is a really stark difference in
+average visits between summer and the other seasons.
+
+```{r}
+activities_count <- 
+  combined_data %>% 
+  filter(park_type == "National Lakeshore") %>% 
+  distinct(activities_name) %>% 
+  nrow()
+
+combined_data %>% 
+  filter(park_type == "National Lakeshore") %>% 
+  distinct(activities_name) %>% 
+  head() %>% knitr::kable()
+```
+
+Based on the activities offered in National Lakeshore, we can see that
+most of the activities revolve around water, such as `boating`,
+`sailing`, and `boat tours`. Interestingly, at National Lakeshore, there
+are skiing activities, but the winter average visits are still the
+lowest.
+
+## **National Preserve Seasonal Trends and Activities**
+
+```{r, message= FALSE}
+plots[10]
+```
+
+Another interesting pattern is that in National Preserve, there is a
+higher average visitation in spring than summer and winter has a higher
+visitation than fall.
+
+```{r}
+activities_count <- 
+  combined_data %>% 
+  filter(park_type == "National Preserve") %>% 
+  distinct(activities_name) %>% 
+  nrow()
+combined_data %>% 
+  filter(park_type == "National Preserve") %>% 
+  distinct(activities_name)  %>% 
+  head() %>% 
+  knitr::kable()
+```
+
+There are `r activities_count` activities offered at this park. It is
+near the middle of the distribution of total activities, so the trend is
+not due to having many more activities offered than other park types. It
+seems like there is a much bigger variety in the types of activities
+offered at these parks. There are tours, stargazing, biking, picnicking,
+hunting, water activities, wildlife watching, museums and stores, as
+well as winter activities like skiing, and snowshoeing.
+
+## **International Historic Site Seasonal Trends and Activities**
+
+```{r, message= FALSE}
+plots[18]
+```
+
+This plot is interesting because there is no average visitation in
+winter.
+
+```{r}
+activities_count <- 
+  combined_data %>% 
+  filter(park_type == "International Historic Site") %>% 
+  distinct(activities_name) %>%
+  nrow()
+combined_data %>% 
+  filter(park_type == "International Historic Site") %>% 
+  distinct(activities_name) %>%
+  head() %>% 
+  knitr::kable()
+```
+
+There are `r activities_count` activities offered at this park type. It
+makes sense that there is no visitation in the winter because the only
+activities offered are `paddling`, `junior ranger program` and
+`wildlife watching`. There are no activities that would really be done
+in the winter at these parks.
+
+## **Average Visitation by Visit and Park Type**
+
+```{r, message = FALSE}
+park_types <- unique(visitation_data$park_type)
+plots <- list()
+
+for (i in seq_along(park_types)) {
+  visit_summary <- visitation_data %>% 
+    drop_na() %>% 
+    filter(park_type == park_types[i]) %>% 
+    mutate(season = case_when(
+      month %in% c(12, 1, 2) ~ "Winter", 
+      month %in% c(3, 4, 5) ~ "Spring", 
+      month %in% c(6, 7, 8) ~ "Summer", 
+      TRUE ~ "Fall"
+    )) %>% 
+    group_by(season) %>% 
+    summarize(
+      mean_tent = mean(tent_campers, na.rm = TRUE), 
+      mean_backcountry = mean(backcountry, na.rm = TRUE), 
+      mean_rv = mean(rv_campers, na.rm = TRUE)
+    ) %>% 
+    pivot_longer(
+      cols = starts_with("mean_"), 
+      names_to = "type_visit", 
+      values_to = "mean", 
+      names_prefix = "mean_"
+    ) 
+  plots[[i]] <- ggplot(visit_summary, aes(x = season, y = mean)) + 
+    geom_col() + 
+    facet_grid(~type_visit) +
+    ggtitle(paste(park_types[i])) + 
+    theme(axis.text.x = element_text(angle = 90, vjust = 0.5, hjust = 1))
+} 
+
+```
+
+## **No Visitation**
+
+```{r, message = FALSE}
+plots[[4]] + plots[[8]] + plots[[17]] + plots[[18]]
+```
+
+National Historic Sites, National Memorials, National Battlefield Parks,
+International Historic Sites all had no faceted average visits. These
+four park types do not have any `rv_campers`, `backcountry` or
+`tent_campers`.
+
+## **Only Backcountry Visitation**
+
+```{r, message= FALSE}
+plots[[16]] + plots[[15]] + plots[[6]]
+```
+
+`National Reserve` only had backcountry visitation in spring.
+`National Military Park` had backcountry visitation in all seasons, with
+mean visitation being highest in spring. `National Battlefield` had
+backcountry visitation in all seasons, with mean visitation being lowest
+in summer and highest in spring.
+
+## **No RV Visitation**
+
+```{r, message= FALSE}
+plots[13]
+```
+
+National Wild and Scienic River has `backcountry` and `tent` visitation,
+no `rv` visitation. Interestingly though, the mean `tent` visitation is
+low for all seasons, with a slight peak in summer.
+
+## **Park (Other) Visitation**
+
+```{r, message= FALSE}
+plots[14]
+```
+
+This plot was interesting because the park type `Park (Other)` has high
+`tent` mean visitation, `rv` visitation, but low `backcountry`
+visitation. It is the highest in spring and summer.
+
