@@ -357,7 +357,7 @@ This plot was interesting because the park type `Park (Other)` has high
 `tent` mean visitation, `rv` visitation, but low `backcountry`
 visitation. It is the highest in spring and summer.
 
-### Regional Trends
+## Regional Trends
 
 ```{r}
 region_data_vists <- visitation_data %>% 
