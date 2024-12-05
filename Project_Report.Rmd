@@ -6,7 +6,8 @@ output:
     toc_float: true
     code_folding: hide
 ---
-```{r}
+```{r global options, include = FALSE}
+knitr::opts_chunk$set(warning = FALSE, message = FALSE)
 library(tidyverse)
 library(plotly)
 library(httr)
@@ -27,7 +28,26 @@ scale_colour_discrete = scale_colour_viridis_d
 scale_fill_discrete = scale_fill_viridis_d
 ```
 
-# Topic/Research Questions – Flora  
+# Research Questions 
+
+Our initial interest in national parks began with basic questions such as:  
+
+- Are general historical trends reflected in national park data? 
+
+- What are the seasonal visitation trends for national parks? 
+
+- What kind of activities are offered by national parks? 
+
+Our initial exploratory data analysis prompted us to ask more nuanced questions: 
+
+- How can we wrangle complex and visualize traffic count data into an informative database for the wider knowledge community? 
+
+- How can we categorize the nuances of seasonal trends in national parks? For example, seasonal trends based on activities, seasonal trends based on national park type.  
+
+- How can we identify national parks that are decreasing in visitor interest? 
+
+- Using a linear model, can an average visit to a national park be predicted by the number of activities offered by the park? 
+
 
 # Motivation  - Miriam  
 
@@ -101,9 +121,7 @@ data, as well as filtering to the data that we wanted to analyze.
 
 # Exploratory Data Analysis 
 
-## Trends over Time - Mari (only a bit)
-
-## Seasonal Trends
+## Trends over Time
 
 ```{r}
 visitation_data %>% 
@@ -124,6 +142,8 @@ among all park types. Interestingly, there more national monuments,
 national historic sites, and national historic parks than national
 parks, even though all of these have less total visitation than national
 parks.
+
+## Seasonal Trends
 
 ### **Total Visitation by Visitation Type and Season**
 
@@ -356,6 +376,7 @@ plots[14]
 This plot was interesting because the park type `Park (Other)` has high
 `tent` mean visitation, `rv` visitation, but low `backcountry`
 visitation. It is the highest in spring and summer.
+
 
 ## Regional Trends
 
