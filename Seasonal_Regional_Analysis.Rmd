@@ -70,14 +70,13 @@ has `r nrow(visitation_data)` rows and `r ncol(visitation_data)`
 columns. The only data cleaning that needed to be done in the visitation
 dataset is to clean the column names and mutate some of the column names
 to be able to merge the full national parks data with the visitation
-data .
 data, as well as filtering to the data that we wanted to analyze.
 
 -   `full_name`: Includes the full name of the National Park
 
 -   `park_code`: Unique code that identifies each National Park
 
--   `park_type`: 18 Unique National Park Types\*
+-   `park_type`: 18 Unique National Park Types
 
 -   `state`: State(s) that the park is located
 
@@ -102,7 +101,8 @@ data, as well as filtering to the data that we wanted to analyze.
 visitation_data %>% 
   group_by(park_type, month) %>% 
   summarize(total_visitation = sum(recreation_visits)) %>% 
-plot_ly(x = ~as.factor(month), y = ~total_visitation, type = "scatter", mode = "lines", color = ~park_type)
+plot_ly(x = ~as.factor(month), y = ~total_visitation, type = "scatter", 
+        mode = "lines", color = ~park_type)
 
 visitation_data %>% 
   group_by(park_type) %>% 
@@ -184,7 +184,7 @@ summer is the highest and winter is the lowest.
 
 ## **National Lakeshore Seasonal Trends and Activities**
 
-```{r}
+```{r, message= FALSE}
 plots[7]
 ```
 
@@ -212,7 +212,7 @@ lowest.
 
 ## **National Preserve Seasonal Trends and Activities**
 
-```{r}
+```{r, message= FALSE}
 plots[10]
 ```
 
@@ -243,7 +243,7 @@ well as winter activities like skiing, and snowshoeing.
 
 ## **International Historic Site Seasonal Trends and Activities**
 
-```{r}
+```{r, message= FALSE}
 plots[18]
 ```
 
@@ -253,10 +253,12 @@ winter.
 ```{r}
 activities_count <- 
   combined_data %>% 
-  filter(park_type == "International Historic Site") %>% distinct(activities_name) %>%
+  filter(park_type == "International Historic Site") %>% 
+  distinct(activities_name) %>%
   nrow()
 combined_data %>% 
-  filter(park_type == "International Historic Site") %>% distinct(activities_name) %>%
+  filter(park_type == "International Historic Site") %>% 
+  distinct(activities_name) %>%
   head() %>% 
   knitr::kable()
 ```
@@ -269,7 +271,7 @@ in the winter at these parks.
 
 ## **Average Visitation by Visit and Park Type**
 
-```{r}
+```{r, message = FALSE}
 park_types <- unique(visitation_data$park_type)
 plots <- list()
 
@@ -306,7 +308,7 @@ for (i in seq_along(park_types)) {
 
 ## **No Visitation**
 
-```{r}
+```{r, message = FALSE}
 plots[[4]] + plots[[8]] + plots[[17]] + plots[[18]]
 ```
 
@@ -317,7 +319,7 @@ four park types do not have any `rv_campers`, `backcountry` or
 
 ## **Only Backcountry Visitation**
 
-```{r}
+```{r, message= FALSE}
 plots[[16]] + plots[[15]] + plots[[6]]
 ```
 
@@ -329,7 +331,7 @@ in summer and highest in spring.
 
 ## **No RV Visitation**
 
-```{r}
+```{r, message= FALSE}
 plots[13]
 ```
 
@@ -339,7 +341,7 @@ low for all seasons, with a slight peak in summer.
 
 ## **Park (Other) Visitation**
 
-```{r}
+```{r, message= FALSE}
 plots[14]
 ```
 
@@ -364,10 +366,16 @@ region_data_vists <- visitation_data %>%
 ```{r}
 region_data <- combined_data %>% 
   mutate(region = case_when(
-    state %in% c("CT", "RI", "NH", "VT", "NJ", "NY", "PA", "MD", "ME", "MA") ~ "northeast", 
-    state %in% c("IL","IN", "MI", "OH", "WI", "IA", "KS", "MN", "MO", "NE", "ND", "SD") ~ "midwest", 
-    state %in% c("FL", "GA", "NC", "SC", "VA", "DE", "WV", "AL", "KY", "MS", "TN", "AR", "LA", "OK", "TX", "DC") ~ "south", 
-    state %in% c("AK", "CA", "HI", "OR", "WA", "AZ", "CO", "ID", "MT", "NV", "NM", "UT", "WY") ~ "west",
+    state %in% 
+      c("CT", "RI", "NH", "VT", "NJ", "NY", "PA", "MD", "ME", "MA") ~ "northeast", 
+    state %in% 
+      c("IL","IN", "MI", "OH", "WI", "IA", "KS", "MN", "MO",
+        "NE", "ND", "SD") ~ "midwest", 
+    state %in% 
+      c("FL", "GA", "NC", "SC", "VA", "DE", "WV", "AL", "KY", 
+        "MS", "TN", "AR", "LA", "OK", "TX", "DC") ~ "south", 
+    state %in% c("AK", "CA", "HI", "OR", "WA", 
+                 "AZ", "CO", "ID", "MT", "NV", "NM", "UT", "WY") ~ "west",
     state %in% c("VI", "AS", "GU", "PR") ~ "u.s. territory",
     state == TRUE ~ "no state data"
   )) %>% select(c(-full_name.y, -topics_id, -topics_name, -activities_id))
@@ -402,7 +410,8 @@ northeast_plot <- region_data %>%
       names_prefix = "mean_"
     ) %>% ggplot(aes(x = season, y = mean)) + 
   geom_col() +  
-  facet_grid(~type_visit) + theme(axis.text.x = element_text(angle = 90, vjust = 0.5, hjust = 1)) + 
+  facet_grid(~type_visit) + 
+  theme(axis.text.x = element_text(angle = 90, vjust = 0.5, hjust = 1)) + 
   labs(title = "Visitation in Northeast by Season", 
        x = "Season", 
        y = "Average Visitation")
