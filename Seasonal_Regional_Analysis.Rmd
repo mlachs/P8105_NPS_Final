@@ -601,7 +601,7 @@ the second highest mean visitation. Interestingly, in backcountry
 hiking, the midwest has the second highest mean visitation, despite the
 fact that it has one of the lowest amount of parks in the dataset.
 
-## US National Parks by Region
+## **US National Parks by Region**
 
 ```{r}
 
