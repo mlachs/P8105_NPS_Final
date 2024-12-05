@@ -70,11 +70,8 @@ has `r nrow(visitation_data)` rows and `r ncol(visitation_data)`
 columns. The only data cleaning that needed to be done in the visitation
 dataset is to clean the column names and mutate some of the column names
 to be able to merge the full national parks data with the visitation
-<<<<<<< HEAD
 data .
-=======
 data, as well as filtering to the data that we wanted to analyze.
->>>>>>> 98682ae0a8b129d43d54646b315433943bcaf6cd
 
 -   `full_name`: Includes the full name of the National Park
 
@@ -639,8 +636,5 @@ fig <- fig %>% layout(
   )
 fig
 ```
-<<<<<<< HEAD
-=======
 
 Finally, we wanted a way to visualize the national parks on a U.S. map.
->>>>>>> 98682ae0a8b129d43d54646b315433943bcaf6cd
