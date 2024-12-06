@@ -54,7 +54,7 @@ mutate(parkCode=str_to_upper(parkCode))%>% full_join(NPS_data_visits,by=join_by(
 ![](images/tent.png) ![](images/boat.png) ![](images/camper.png) ![](images/moon.png) ![](images/trail.png)
 
 
-There are many activities available to you when visiting a national park. Between all the parks there are `r NPS_Full %>% select(activities_name) %>% drop_na()%>% distinct %>% count()` unique activities. Ranging from `r NPS_Full %>% select(activities_name) %>% drop_na()%>% distinct %>% arrange(activities_name) %>% head(1)` to `r NPS_Full %>% select(activities_name) %>% drop_na()%>% distinct %>% arrange(activities_name) %>% tail(1)`. This range of activities bring millions of people to our national parks each year. This got us thinking, do the number of activities available at each park affect the level of visitation? We did some data analysis to find out. 
+There are many activities available to you when visiting a national park. Between all the parks there are `r NPS_Full %>% select(activities_name) %>% drop_na()%>% distinct %>% count()` unique activity categories. Ranging from `r NPS_Full %>% select(activities_name) %>% drop_na()%>% distinct %>% arrange(activities_name) %>% head(1)` to `r NPS_Full %>% select(activities_name) %>% drop_na()%>% distinct %>% arrange(activities_name) %>% tail(1)`. This range of activities bring millions of people to our national parks each year. This got us thinking, do the number of activities available at each park affect the level of visitation? We did some data analysis to find out. 
 
 ## Popular Activities
 
