@@ -14,7 +14,7 @@ navbar:
     - text: "Nature vs Machines"
       href: fp2513.html
     - text: "Project Report"
-      href: Project_Report.html  
+      href: CopyOfProject_Report.html  
 
 output:
   html_document:
