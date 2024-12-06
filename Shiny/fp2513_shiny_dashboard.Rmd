@@ -16,28 +16,29 @@ library(viridis)
 library(lubridate)
 library(DT)
 library(tidyverse)
+library(rsconnect)
 ```
 
 
 ```{r}
 month_names = month.name
 
-CAP_PAC_shiny = read_csv(here::here ("data", "CAP_PAC_state_info.csv")) %>%
+CAP_PAC_shiny = read_csv("data/CAP_PAC_state_info.csv") %>%
   group_by(state, year, month) %>%
   summarise(total_traffic = sum(traffic_count, na.rm = TRUE)) %>%
   ungroup()
 
-AL_IM_MW_shiny = read_csv(here::here("data", "AL_IM_MW_state_info.csv")) %>%
+AL_IM_MW_shiny = read_csv("data/AL_IM_MW_state_info.csv") %>%
   group_by(state, year, month) %>%
   summarise(total_traffic = sum(traffic_count, na.rm = TRUE)) %>%
   ungroup()
 
-SE_shiny = read_csv(here::here("data", "SE_state_info.csv")) %>%
+SE_shiny = read_csv("data/SE_state_info.csv") %>%
   group_by(state, year, month) %>%
   summarise(total_traffic = sum(traffic_count, na.rm = TRUE)) %>%
   ungroup()
 
-NE_shiny = read_csv(here::here("data", "NE_state_info.csv")) %>%
+NE_shiny = read_csv("data/NE_state_info.csv") %>%
   group_by(state, year, month) %>%
   summarise(total_traffic = sum(traffic_count, na.rm = TRUE)) %>%
   ungroup()
@@ -154,5 +155,10 @@ renderDataTable({
 })
 
 
+```
+
+
+```{r}
+rsconnect::setAccountInfo(name='fp2513', token='DE6F7DA16836BD046504D3271D1497F5', secret='X6/uQLr2cltM+RaEwwF3da7h/GdteGJARGn0BvOv')
 ```
 

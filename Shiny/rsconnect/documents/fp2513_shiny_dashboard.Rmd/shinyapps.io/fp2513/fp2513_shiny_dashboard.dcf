@@ -1,0 +1,10 @@
+name: fp2513_shiny_dashboard
+title:
+username: fp2513
+account: fp2513
+server: shinyapps.io
+hostUrl: https://api.shinyapps.io/v1
+appId: 13535245
+bundleId: 9470419
+url: https://fp2513.shinyapps.io/fp2513_shiny_dashboard/
+version: 1
