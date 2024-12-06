@@ -32,7 +32,7 @@ The base data for this project came from the National Park Services. We have dat
 
 ## The Parks
 
-Each point on the map is a different park, however over the points to check them out.
+Each point on the map is a different park, hover over the points to check them out.
 
 
 ```{r,echo=FALSE, message=FALSE,warning=FALSE}
