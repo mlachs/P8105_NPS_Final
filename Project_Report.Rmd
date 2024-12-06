@@ -49,13 +49,52 @@ Our initial exploratory data analysis prompted us to ask more nuanced questions:
 - Using a linear model, can an average visit to a national park be predicted by the number of activities offered by the park? 
 
 
-# Motivation  - Miriam  
+# Motivation
+
+There are over 400 parks in the United States at this time. In 2023, there were 325.5 million recreation visits, an increase from 2022. Visitation at the parks has been increasing since the dip in visitation during 2020 and 2021, with closure of parks due to the COVID-19 Pandemic (NPS, 2024). Having visited some of the parks ourselves we were interested in what might affect visitation and what other aspects had an effect on the parks. We each chose an part of analysis that held the most interest to us. This allowed us to investigate multiple things like activities, region,  parks local to us here in NYC and even the effects of cars. Our hope for this project was to gain a better understanding of the underlying factors that influence the parks and through this work gain an appreciation for all that goes into making the parks the destination that they are. 
 
 # Significance 
 
 National Parks are an important part of American society, providing opportunities for recreation, education, and the preservation of historical landmarks, endangered landscapes, species, and ecosystems. These parks also play a significant role in boosting local economies by drawing visitors to nearby communities. However, accessing these parks often necessitates driving and parking vehicles, which can lead to increased human-wildlife interactions and the encroachment of parking lots on valuable park space. Such infrastructure disrupts the natural environment and diminishes the ecological integrity of these protected areas. 
 
 Understanding when and why individuals visit National Parks offers valuable insights for fostering broader public engagement and enhancing visitor experiences. This paper examines the activities and parks that resonate most with visitors, providing a basis for strategic planning and resource allocation. Additionally, it explores the environmental impacts of vehicle usage in parks, highlighting opportunities for sustainable solutions that minimize harm to natural habitats. By identifying trends and preferences, these findings aim to promote greater park participation while ensuring the preservation of their natural and cultural heritage for future generations. 
+
+
+
+# Activities
+## Data and Exploritory data Analysis 
+For this section of the work I used three sources of data. The first was the visitation data, then  I used two different calls to the API. The first was the `parks` and the second was `thingstodo`.  These data sets were combined in various ways to get the information we were inserted in. 
+```{r, results='hide',echo=FALSE}
+res=GET('https://developer.nps.gov/api/v1/thingstodo?limit=5000&api_key=B9nDpbkbrb3kSOjz6kXSxMJ3d6MSpUvt1QqYdeyn')
+
+things_data = res %>% content("text") %>% jsonlite::fromJSON() %>% as_tibble()
+
+things_data=things_data %>% unnest(data) %>% unnest(relatedParks,names_sep = "_") %>% unnest(activities,names_sep = "_")
+
+clean_things=things_data %>% select(title,relatedParks_parkCode,latitude,longitude,isReservationRequired,arePetsPermittedWithRestrictions,activities_id,activities_name,doFeesApply,arePetsPermitted,season,timeOfDay) %>%
+  mutate(relatedParks_parkCode=str_to_upper(relatedParks_parkCode),
+           latitude=as.numeric(latitude),
+         longitude=as.numeric(longitude),
+         isReservationRequired=as.logical(isReservationRequired),
+         doFeesApply=as.logical(doFeesApply))
+```
+
+```{r}
+res=GET('https://developer.nps.gov/api/v1/parks?limit=500&api_key=B9nDpbkbrb3kSOjz6kXSxMJ3d6MSpUvt1QqYdeyn')
+
+data = res %>% content("text") %>% jsonlite::fromJSON() %>% as_tibble()
+
+
+NPS_data_parks=data %>% unnest(data) %>% select(fullName,parkCode,description,latitude,longitude,activities,states,entranceFees,operatingHours,designation) %>% unnest(activities,names_sep = '_') %>% unnest(entranceFees,names_sep = '_') %>% unnest(operatingHours,names_sep = '_') 
+
+NPS_data_visits=read_csv('data/Query Builder for Public Use Statistics (1979 - Last Calendar Year).csv')
+
+NPS_Full=NPS_data_parks %>%   mutate(entranceFees_cost=as.numeric(entranceFees_cost)) %>% 
+mutate(parkCode=str_to_upper(parkCode))%>% full_join(NPS_data_visits,by=join_by('parkCode'=='UnitCode'))
+```
+
+
+The Parks data includes variables `r names(NPS_data_parks)`. It has `r nrow(NPS_data_visits)` rows and `r ncol(NPS_data_parks)`. The thingstodo data  includes variables `r names(things_data)`. It has `r nrow(things_data)` rows and `r ncol(things_data)`. The API data need to be cleaned. This involved 
 
 
 
