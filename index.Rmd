@@ -22,6 +22,10 @@ There are over 400 parks in the United States at this time. In 2023, there were 
 
 If you are interested in taking a look at our full code, visit [P8105 National Parks Project](https://github.com/mlachs/P8105_NPS_Final.git). 
 
+## Screen Cast
+
+<iframe width="560" height="315" src="https://youtu.be/3Xic_JNRoy8" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" allowfullscreen></iframe>
+
 ## The Data
 
 The base data for this project came from the National Park Services. We have data on the parks in general, visitation of the parks, things to do at the parks and more. Most of this was either from the NPS API or their query editor. Here are the links to our data: 
