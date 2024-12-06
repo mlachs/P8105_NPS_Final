@@ -7,13 +7,17 @@ output: html_document
 ![](images/logo_NPS_0.png)
 
 
-## **Studying Impacts on Visitation for the National Parks in the U.S.**
+## Studying Impacts on Visitation for the National Parks in the U.S.
 
 There are over 400 parks in the United States at this time. In 2023, there were 325.5 million recreation visits, an increase from 2022. Visitation at the parks has been increasing since the dip in visitation during 2020 and 2021, with closure of parks due to the COVID-19 Pandemic (NPS, 2024). Having visited some of the parks ourselves we were interested in what might affect visitation and what other aspects had an effect on the parks. We each chose an part of analysis that held the most interest to us. This allowed us to investigate multiple things like activities, region,  parks local to us here in NYC and even the effects of cars. 
 
 ## The Data
 
-The base data for this project came from the National Park Services. We have data on the parks in general, visitation of the parks, things to do at the parks and more. Most of this was either from the NPS API or their query editor. 
+The base data for this project came from the National Park Services. We have data on the parks in general, visitation of the parks, things to do at the parks and more. Most of this was either from the NPS API or their query editor. Here are the links to our data: 
+
+[Query Builder for Public Use Statistics](https://irma.nps.gov/Stats/SSRSReports/National%20Reports/Query%20Builder%20for%20Public%20Use%20Statistics%20(1979%20-%20Last%20Calendar%20Year))
+
+[National Park Service API Documentation](https://www.nps.gov/subjects/developer/api-documentation.htm)
 
 ## The Parks
 
