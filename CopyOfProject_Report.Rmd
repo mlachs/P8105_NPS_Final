@@ -191,6 +191,28 @@ My work is included in these two webpages:
 
 # Local NY 
 
+## Exploratory Data Analysis
+
+The analysis reveals interesting trends across New York State parks. A key observation is the dominance of summer visitation, which aligns with warmer weather and increased outdoor activities. Parks such as Fire Island National Seashore attract the most visitors in summer, reflecting their appeal as seasonal destinations. Conversely, winter sees lower overall visitation except in parks equipped with activities suited for colder climates, such as Vanderbilt Mansion NHS, which exhibits more consistent attendance across all seasons.
+
+Camping-specific trends highlight that tent camping remains the most popular activity except during winter, where RV camping surpasses it due to the shelter provided. Backcountry camping remains the least popular due to its challenging nature, requiring experience and preparation. Seasonal variations in visitation further suggest the impact of weather and regional characteristics on visitor behavior.
+
+## Discussion
+
+The findings underscore the importance of tailoring park activities and facilities to seasonal demands. For instance, parks with low winter visitation could consider offering winter-specific activities, such as skiing or snowshoeing, to attract more visitors. Enhancing camping facilities, including RV amenities and all-weather shelters, could encourage year-round visits. The consistent popularity of some parks across seasons, like Vanderbilt Mansion NHS, highlights the potential for expanding offerings to engage visitors beyond traditional peak seasons.
+
+Moreover, understanding regional visitation trends can help the National Parks Service optimize resource allocation and marketing strategies. Promoting under-visited parks with unique activities could balance visitation across the state, ensuring all parks receive adequate attention and funding.
+
+## Limitation
+
+This analysis faced a few key challenges. First, the public use dataset required significant cleaning due to nested and inconsistent values, which may have affected the results. Missing regional data for some parks also made it harder to fully capture geographic trends. Additionally, the activity data only provided general topics, without details on participation rates, which limited insights into specific visitor preferences. Finally, trends like the 2020 visitation drop and the 2006 spring spike seem to align with events like the COVID-19 pandemic and unusual weather, but more data would be needed to confirm these patterns. Future studies addressing these gaps could provide richer, more actionable insights.
+
+## R Code 
+
+New York State Park Analysis can be found on this webpage. 
+
+[Local NY](https://mlachs.github.io/P8105_NPS_Final/jc6452.html)
+
 
 # Nature VS Machine 
 
