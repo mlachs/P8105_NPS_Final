@@ -1,0 +1,10 @@
+name: p8105_nps_final
+title:
+username: mlachs
+account: mlachs
+server: shinyapps.io
+hostUrl: https://api.shinyapps.io/v1
+appId: 13534111
+bundleId: 9469684
+url: https://mlachs.shinyapps.io/p8105_nps_final/
+version: 1

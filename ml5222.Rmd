@@ -16,15 +16,6 @@ res=GET('https://developer.nps.gov/api/v1/parks?limit=500&api_key=B9nDpbkbrb3kSO
 data = res %>% content("text") %>% jsonlite::fromJSON() %>% as_tibble()
 ```
 
-
-```{r eval=FALSE}
-res=GET('https://developer.nps.gov/api/v1/thingstodo?limit=5000&api_key=B9nDpbkbrb3kSOjz6kXSxMJ3d6MSpUvt1QqYdeyn')
-
-things_data = res %>% content("text") %>% jsonlite::fromJSON() %>% as_tibble()
-
-things_data=things_data %>% unnest(data) %>% unnest(relatedParks,names_sep = "_") %>% unnest(activities,names_sep = "_")
-```
-
 ```{r}
 NPS_data_parks=data %>% unnest(data) %>% select(fullName,parkCode,description,latitude,longitude,activities,states,entranceFees,operatingHours,designation) %>% unnest(activities,names_sep = '_') %>% unnest(entranceFees,names_sep = '_') %>% unnest(operatingHours,names_sep = '_') 
 
@@ -32,6 +23,21 @@ NPS_data_visits=read_csv('data/Query Builder for Public Use Statistics (1979 - L
 
 NPS_Full=NPS_data_parks %>%   mutate(entranceFees_cost=as.numeric(entranceFees_cost)) %>% 
 mutate(parkCode=str_to_upper(parkCode))%>% full_join(NPS_data_visits,by=join_by('parkCode'=='UnitCode'))
+```
+
+```{r}
+res=GET('https://developer.nps.gov/api/v1/thingstodo?limit=5000&api_key=B9nDpbkbrb3kSOjz6kXSxMJ3d6MSpUvt1QqYdeyn')
+
+things_data = res %>% content("text") %>% jsonlite::fromJSON() %>% as_tibble()
+
+things_data=things_data %>% unnest(data) %>% unnest(relatedParks,names_sep = "_") %>% unnest(activities,names_sep = "_")
+
+clean_things=things_data %>% select(title,relatedParks_parkCode,latitude,longitude,isReservationRequired,arePetsPermittedWithRestrictions,activities_id,activities_name,doFeesApply,arePetsPermitted,season,timeOfDay) %>%
+  mutate(relatedParks_parkCode=str_to_upper(relatedParks_parkCode),
+           latitude=as.numeric(latitude),
+         longitude=as.numeric(longitude),
+         isReservationRequired=as.logical(isReservationRequired),
+         doFeesApply=as.logical(doFeesApply))
 ```
 
 ```{r}
@@ -102,12 +108,7 @@ NPS_Full %>% distinct(fullName,activities_name,designation) %>% group_by(designa
 
 
 ```{r}
-clean_things=things_data %>% select(title,relatedParks_parkCode,latitude,longitude,isReservationRequired,arePetsPermittedWithRestrictions,activities_id,activities_name,doFeesApply,arePetsPermitted,season,timeOfDay) %>%
-  mutate(relatedParks_parkCode=str_to_upper(relatedParks_parkCode),
-           latitude=as.numeric(latitude),
-         longitude=as.numeric(longitude),
-         isReservationRequired=as.logical(isReservationRequired),
-         doFeesApply=as.logical(doFeesApply))
+
 
 clean_things %>% group_by(relatedParks_parkCode) %>% summarise(act_count=n_distinct(activities_name))
 NPS_Full %>% group_by(parkCode) %>% summarise(act_count=n_distinct(activities_name))
@@ -125,23 +126,9 @@ clean_things %>%
 ```{r}
 NPS_Full %>% drop_na %>% select(entranceFees_cost,entranceFees_title) %>% distinct() %>% ggplot(aes(x=entranceFees_title,y=entranceFees_cost))+geom_boxplot()+theme(axis.text.x = element_text(angle = 90, vjust = 0.5, hjust=1))
   
-  filter(entranceFees_title=='Entrance - Per Person') %>% distinct()
 ```
 
-```{r}
-library(leaflet)
 
-NPS_Full %>% mutate(latitude=as.numeric(latitude),longitude=as.numeric(longitude)) %>% select(fullName,latitude,longitude) %>% distinct() %>% leaflet() %>% addTiles() %>% addMarkers(~longitude,~latitude)
-
-
-NPS_Full %>% mutate(latitude=as.numeric(latitude),longitude=as.numeric(longitude)) %>%
-  filter(
-         entranceFees_cost %in% 0:30)
-
-
-clean_things %>% mutate(latitude=as.numeric(latitude),longitude=as.numeric(longitude)) %>%
-  select(fullName,latitude,longitude) %>% distinct() 
-```
 
 
 ```{r}
