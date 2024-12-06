@@ -1,0 +1,121 @@
+---
+title: "Shiny Dashboard"
+output: 
+  flexdashboard::flex_dashboard:
+    orientation: columns
+    vertical_layout: fill
+runtime: shiny
+---
+
+```{r setup, include=FALSE}
+library(flexdashboard)
+library(httr)
+library(tidyverse)
+library(plotly)
+library(leaflet)
+library(berryFunctions)
+```
+
+```{r}
+res=GET('https://developer.nps.gov/api/v1/thingstodo?limit=5000&api_key=B9nDpbkbrb3kSOjz6kXSxMJ3d6MSpUvt1QqYdeyn')
+
+things_data = res %>% content("text") %>% jsonlite::fromJSON() %>% as_tibble()
+
+things_data=things_data %>% unnest(data) %>% unnest(relatedParks,names_sep = "_") %>% unnest(activities,names_sep = "_")
+
+clean_things=things_data %>% select(title,relatedParks_fullName,relatedParks_designation,relatedParks_parkCode,latitude,longitude,isReservationRequired,arePetsPermittedWithRestrictions,activities_id,activities_name,doFeesApply,arePetsPermitted,season,timeOfDay,duration) %>%
+  mutate(relatedParks_parkCode=str_to_upper(relatedParks_parkCode),
+           latitude=as.numeric(latitude),
+         longitude=as.numeric(longitude),
+         isReservationRequired=as.logical(isReservationRequired),
+         doFeesApply=as.logical(doFeesApply),
+         arePetsPermitted=as.logical(arePetsPermitted))
+```
+
+```{r}
+
+```
+
+
+Column {.sidebar}
+-----------------------------------------------------------------------
+
+```{r}
+
+activities_choices = clean_things %>% select(activities_name) %>% drop_na()%>% distinct %>% arrange(activities_name) %>%  pull(activities_name)
+selectInput(
+  inputId = "act_choice",
+  label = h3("Select Activity"),
+  choices = activities_choices)
+```
+
+
+```{r}
+radioButtons(
+  inputId = 'fee_choice',
+  label=h3("Do Fees Apply"),
+  choices = c(FALSE,TRUE)
+)
+```
+
+
+```{r}
+radioButtons(
+  inputId = 'pets_choice',
+  label=h3("Pets Allowed?"),
+  choices = c(FALSE,TRUE),
+  selected = TRUE
+)
+```
+
+```{r}
+radioButtons(
+  inputId = 'resi_choice',
+  label=h3("Do you need to make a Reservation?"),
+  choices = c(FALSE,TRUE)
+)
+```
+Column {data-width=650}
+-----------------------------------------------------------------------
+
+### Map
+
+```{r}
+renderLeaflet(
+  
+clean_things %>% mutate(latitude=as.numeric(latitude),longitude=as.numeric(longitude)) %>%
+  filter(activities_name==input[['act_choice']],
+         doFeesApply==input[['fee_choice']],
+         arePetsPermitted==input[['pets_choice']],
+         isReservationRequired==input[['resi_choice']])  %>% insertRows(r=1) %>% leaflet() %>% addTiles() %>% addMarkers(~longitude,~latitude,label = ~title)
+)
+```
+
+Column {data-width=350}
+-----------------------------------------------------------------------
+
+### Parks
+
+```{r}
+renderTable({ 
+  clean_things %>% mutate(latitude=as.numeric(latitude),longitude=as.numeric(longitude)) %>%
+  filter(activities_name==input[['act_choice']],
+         doFeesApply==input[['fee_choice']],
+         arePetsPermitted==input[['pets_choice']],
+         isReservationRequired==input[['resi_choice']]) %>% select(relatedParks_fullName,title) %>% distinct()
+})
+```
+
+### Time
+
+```{r}
+renderPlotly(
+  clean_things %>% 
+  filter(activities_name==input[['act_choice']],
+         doFeesApply==input[['fee_choice']],
+         arePetsPermitted==input[['pets_choice']],
+         isReservationRequired==input[['resi_choice']]) %>% count(duration) %>% filter(duration!='')%>%  plot_ly(x = ~duration, y=~n, type = "bar")
+
+)
+
+```

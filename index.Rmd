@@ -3,8 +3,61 @@ title: "National Parks Service Research Project"
 output: html_document
 ---
 
+
+![](images/logo_NPS_0.png)
+
+
 ## **Studying Impacts on Visitation for the National Parks in the U.S.**
 
-There are over 400 parks in the United States at this time. In 2023, there were 325.5 million recreation visits, an increase from 2022. Visitation at the parks has been increasing since the dip in visitation during 2020 and 2021, with closure of parks due to the COVID-19 Pandemic (NPS, 2024).
+There are over 400 parks in the United States at this time. In 2023, there were 325.5 million recreation visits, an increase from 2022. Visitation at the parks has been increasing since the dip in visitation during 2020 and 2021, with closure of parks due to the COVID-19 Pandemic (NPS, 2024). Having visited some of the parks ourselves we were interested in what might affect visitation and what other aspects had an effect on the parks. We each chose an part of analysis that held the most interest to us. This allowed us to investigate multiple things like activities, region, local parks to us here in NYC and even the effects of cars. 
 
-## 
+## The data
+The base data for this project came from the National Park Services. We have data on the parks in general, visitation of the parks, things to do at the parks and more. Most of this was either from the NPS API or their query editor. 
+
+## The parks
+
+Each point on the map is a different park, hoever over the points to check them out.
+
+
+```{r,echo=FALSE, message=FALSE,warning=FALSE}
+library(tidyverse)
+library(httr)
+library(plotly)
+res=GET('https://developer.nps.gov/api/v1/parks?limit=500&api_key=B9nDpbkbrb3kSOjz6kXSxMJ3d6MSpUvt1QqYdeyn')
+
+data = res %>% content("text") %>% jsonlite::fromJSON() %>% as_tibble()
+
+NPS_data_parks=data %>% unnest(data) %>% select(fullName,parkCode,description,latitude,longitude,activities,states,entranceFees,operatingHours,designation) %>% unnest(activities,names_sep = '_') %>% unnest(entranceFees,names_sep = '_') %>% unnest(operatingHours,names_sep = '_') %>% mutate(latitude=as.numeric(latitude), longitude=as.numeric(longitude))
+```
+
+```{r, echo=FALSE, message=FALSE,warning=FALSE}
+regional_data <- NPS_data_parks %>% 
+  mutate(region = case_when(
+    states %in% c("CT", "RI", "NH", "VT", "NJ", "NY", "PA", "MD", "ME", "MA") ~ "northeast", 
+    states %in% c("IL","IN", "MI", "OH", "WI", "IA", "KS", "MN", "MO", "NE", "ND", "SD") ~ "midwest", 
+    states %in% c("FL", "GA", "NC", "SC", "VA", "DE", "WV", "AL", "KY", "MS", "TN", "AR", "LA", "OK", "TX", "DC") ~ "south", 
+    states %in% c("AK", "CA", "HI", "OR", "WA", "AZ", "CO", "ID", "MT", "NV", "NM", "UT", "WY") ~ "west",
+    states %in% c("VI", "AS", "GU", "PR") ~ "u.s. territory"
+  )) %>% drop_na()
+
+g <- list(
+  scope = 'usa',
+  projection = list(type = 'albers usa'),
+  showland = TRUE,
+  landcolor = toRGB("#e5ecf6"),
+  countrywidth = 0.5,
+  subunitwidth = 0.5
+)
+
+fig <- plot_geo(regional_data, lat = ~latitude, lon = ~longitude)
+fig <- fig %>% add_markers(
+    text = ~paste(fullName, states, sep = "<br />"),
+    color = ~region, symbol = I("circle"), size = I(8), hoverinfo = "text"
+  )
+
+fig <- fig %>% layout(
+    title = 'US National Parks', geo = g
+  )
+fig
+```
+
