@@ -5,8 +5,6 @@ navbar:
   right:
     - text: "Activities"
       href: Activities.html
-    - text: "Proposal"
-      href: project_proposal.html
     - text: "Seasonal Analysis"
       href: Seasonal_Analysis.html
     - text: "Regional Analysis"
