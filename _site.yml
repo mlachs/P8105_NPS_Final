@@ -10,9 +10,7 @@ navbar:
     - text: "Seasonal Analysis"
       href: Seasonal_Analysis.html
     - text: "Regional Analysis"
-      href: Regional_Analysis.html  
-    - text: "Seasonal Regional Analysis"
-      href: Seasonal_Regional_Analysis.html
+      href: Regional_Analysis.html
     - text: "Exploring NY "
       href: jc6452.html
     - text: "Nature vs Machines"
