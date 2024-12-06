@@ -145,7 +145,7 @@ clean_things=things_data %>% select(title,relatedParks_parkCode,latitude,longitu
 
 In addition to the general data used in this project, I also used another data set from the API. I also pulled the `thingstodo` data set. To clean this similarly to the parks data set, it needed to be unnested, relevant information selected and some data types converted. The final data set had the following variables `r names(clean_things)`. It has `r nrow(clean_things)` rows and `r ncol(clean_things)` columns.
 
-## EDA 
+## Exploratory Data Analysis
 
 As exploratory data analysis, I looked into the activity counts across states and parks. I also looked at visitation trends. This is how I found I wanted to look into the relationship between activities and visitation. I also looked into entrance cost but ended up going in a different direction. However, it was after looking into the things to do data that I noticed there was a discrepancy in the initial parks data. Some activity categories were showing up under the things to do but not under the general park information. This means I had to go back and combine the data sets and redo the analysis to get a more accurate picture. 
 
@@ -190,4 +190,48 @@ My work is included in these two webpages:
 [Seasonal Analysis](https://mlachs.github.io/P8105_NPS_Final/Seasonal_Analysis.html)
 
 # Local NY 
+
+
 # Nature VS Machine 
+
+## Data 
+
+To do data analysis on national parks’ traffic count I used the Query Builder for National Park Traffic Counts.  
+
+The datasets include data from 1985 to 2023.  
+
+Provided that it was difficult to load data for every single national park into a single csv file, the National Park Traffic Count data was loaded separated by U.S. regions: firstly, North- East, secondly South-East, thirdly Alaska, Intermountain, and Mid-West regions, and lastly National-Capital and Pacific-West regions.  
+
+For each region’s csv file included 15 variables: park name, unit code, park type, region, traffic counter, year, month, traffic count, park name total, unit code total, park type total, region total, traffic counter total, year total, month total, traffic counts total label, and traffic count total.  
+
+National Park datasets included different traffic counters for the same national park. Where each counter would report a monthly count and also an annual count.  
+
+## Exploratory Data Analysis and Discussion
+
+In attempts to examine how our interactions with national parks have evolved over time and with no obvious topic consistently reported in the news, we determined that the most relevant development in recent history is the introduction of automobiles to the public. Many national parks emphasize preservation, but with increasing human contact, management needs to be flexible. To quantify how human-wildlife interactions have changed over the years, we can look at visitation pressure. High traffic volumes indicate heavy visitor use, leading to environmental degradation, pollution, and wildlife disturbance.  
+
+Initial exploration of the data highlighted how traffic counts differ across types of national parks even within the same state. Furthermore, differ across the various traffic counters for each national park. These initial findings shifted focus towards annual mean traffic count for each state to provide a nationwide analysis of traffic impact on national parks, rather than in attempts to encompass every level of information.  
+
+With the nuances of each state and traffic count data, we decided that rather than to create iterative analyses into each state and their national parks, we went down the path of curating and data wrangling to contribute towards the wider knowledge community through our shiny app.  
+
+However, traffic counts may not be the best estimator for the impact of automobiles on human-wildlife interactions in national parks. This is because traffic count data does not specify the type of traffic it includes. It could be national park maintenance vehicles, visitors, or cars merely passing through without interacting with the park. To more directly quantify the impact of automobiles on national parks, examining parking lot usage may be more insightful. Parking lots are clearly man-made and reflect the park’s demand for car access, indicating efforts to accommodate visitors. By connecting traffic flow data with parking lot usage, we can better understand the needs of national parks and potentially improve traffic management and parking facilities. Plotly allows overlaying of two information datasets for a comprehensive view without cluttering the visual.  
+
+## Shiny App
+
+[This](https://fp2513.shinyapps.io/fp2513_shiny_dashboard/) Shiny app enables the selection of two different states: one for Chart 1 and another for Chart 2. This allows users to compare traffic counts side-by-side across years, with data further broken down by month. 
+
+The app addresses previous limitations where we had to generalize data in our plots. By leveraging the app, users can gain a more detailed and interactive view of the traffic count dataset, enhancing the visualization experience and understanding of national park traffic counts. 
+
+## Limitations
+
+A key limitation of this analysis is that it represents only an initial step in the comprehensive study of traffic patterns and their implications in national parks. The current analysis, while insightful, provides a broad overview and suggests several avenues for further, more detailed research. Future studies should aim to delve deeper into specific aspects of human-wildlife interactions and environmental impacts.  
+
+For instance, one critical area for further investigation is the quantification of pollution levels within national parks over the years. This could include analyzing the types and sources of pollutants, their temporal trends, and their effects on local ecosystems and wildlife.  
+
+Additionally, understanding visitor experience and satisfaction through systematic surveys can offer valuable insights into the adequacy of current infrastructure. Surveys could assess the effectiveness of parking facilities, the sufficiency of amenities, and overall visitor satisfaction. This data would be instrumental in guiding resource allocation and infrastructure development to better meet visitor needs and protect park environments. This could involve spatial analysis to identify underserved areas and model the potential impact of proposed infrastructure improvements. 
+
+## R Code 
+
+The work on National Park Traffic Counts can be found on this webpage
+
+[Nature vs Machines](https://mlachs.github.io/P8105_NPS_Final/fp2513.html)
