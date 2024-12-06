@@ -1,0 +1,10 @@
+name: shiny
+title:
+username: fp2513
+account: fp2513
+server: shinyapps.io
+hostUrl: https://api.shinyapps.io/v1
+appId: 13534861
+bundleId: 9470303
+url: https://fp2513.shinyapps.io/shiny/
+version: 1
