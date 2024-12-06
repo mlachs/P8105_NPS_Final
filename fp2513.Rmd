@@ -28,7 +28,6 @@ res=GET('https://developer.nps.gov/api/v1/newsreleases?limit=10000&api_key=B9nDp
 
 data = res %>%  content("text") %>%  jsonlite::fromJSON() %>%  as_tibble()
 
-#do i even need this???
 ```
 
 ```{r , message = FALSE, warning = FALSE}
@@ -37,7 +36,7 @@ data %>%
   select(data) %>% 
   unnest(data) %>% 
   view()
-#do i even need this???
+
 ```
 
 ![](fp2513_files/cars.png)
