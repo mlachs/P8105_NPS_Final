@@ -1,5 +1,5 @@
 ---
-title: "fp2513"
+title: "Nature vs Machines"
 output: 
   html_document:
     toc: true
@@ -28,7 +28,6 @@ res=GET('https://developer.nps.gov/api/v1/newsreleases?limit=10000&api_key=B9nDp
 
 data = res %>%  content("text") %>%  jsonlite::fromJSON() %>%  as_tibble()
 
-#do i even need this???
 ```
 
 ```{r , message = FALSE, warning = FALSE}
@@ -37,16 +36,18 @@ data %>%
   select(data) %>% 
   unnest(data) %>% 
   view()
-#do i even need this???
+
 ```
 
-# Nature vs Machines 
+![](fp2513_files/cars.png)
 
 In this page we will explore historical data to inform us on how the exponential development and accessibility of automobiles to the general public impacts our interaction with national parks. 
 
+<br><br>
+
 ## Deciding on the topic 
 
-To examine how our interactions with national parks have evolved over time, there are numerous aspects to consider. Instead of selecting a topic at random, we wondered if news articles about parks could provide insight into major areas of focus. 
+To examine how our interactions with national parks have evolved over time, there are numerous potential aspects to consider. Instead of selecting a topic at random, we wondered if news articles about parks could provide insight into major areas of focus. 
 
 For instance, if certain topics repeatedly appear in the news, it could indicate ongoing changes or developments in those aspects of national parks, making them worthy of further investigation.
 
@@ -85,35 +86,54 @@ library(wordcloud)
 word_count = tidy_titles %>%
   count(word, sort = TRUE)
 
-wordcloud(words = word_count$word, freq = word_count$n, min.freq = 20)
+wordcloud(words = word_count$word, 
+          freq = word_count$n, 
+          min.freq = 20,  
+          scale = c(4, 0.5), 
+          max.words = 100, 
+          random.order = FALSE, 
+          colors = brewer.pal(8, "Dark2"))
+
+word_count = tidy_titles %>%
+  count(word, sort = TRUE)
+
+top_20_words = word_count %>%
+  top_n(20, n)
+
+ggplot(top_20_words, aes(x = reorder(word, n), y = n)) +
+  geom_bar(stat = "identity", fill = "steelblue") +
+  coord_flip() +  # Flip coordinates for better readability
+  labs(title = "Top 20 Most Frequent Words",
+       x = "Word",
+       y = "Frequency") +
+  theme_minimal() +
+  theme(axis.text.x = element_text(angle = 45, hjust = 1))
+
 ```
 
 
-Consequently, there was no consistently reported topic across the years.
+Understandably, 'national' and 'park' are the two most frequented words in articles. As for the other words, there was no one that appeared significantly more frequently than the others.
 
 Alternatively, we determined that the most relevant development in recent history is the introduction of automobiles to the public. This is highly relevant for examining how our exponential relationship with automobiles and other forms of transport has changed our interaction with national parks, particularly in terms of human-wildlife interactions as traffic to these parks has increased.
 
-Many national parks emphasize preservation, but with increasing human contact, management needs to be flexible. To quantify how human-wildlife interactions have changed over the years, we can look at visitation pressure. High traffic volumes indicate heavy visitor use, leading to environmental degradation, pollution, and wildlife disturbance. Understanding traffic patterns helps inform management measures to protect sensitive ecosystems and manage human-wildlife interactions effectively. This can help prioritize areas for resource investment or upgrades, such as waste management, road improvements, and parking facilities. Tracking changes in traffic over the years can also indicate broader trends related to climate change, demographic shifts, and changing recreational preferences.
-
-A limitation of this approach is that a more thorough qualitative analysis could have been conducted if more time were available to do a better search of major topics of focus, rather than relying on an R function to count the features of terms in the articles.
-
-
+<br><br>
 
 ## Initial Data Exploration and Recognition of Limitations 
 
-Analyzing traffic flow can provide insights into whether current infrastructure meets visitor needs. High traffic flow and potential congestion can lead to increased fuel consumption, decreased productivity, negative impacts on local businesses, and higher pollution levels. Optimizing traffic flow is essential.
+There are a number of different states in the U.S. territory, each with a selection of natioanl parks. Each state also has a mix of national parks and of which can individual have multiple traffic counters. 
 
-To achieve more granularity, I decided to separate the analysis by state. Different states have different types of national parks, each requiring varying levels of traffic flow (some parks may be more accessible by car than others).
+The below graph shows the traffic count merely three national parks in New York. 
 
-A key limitation is the dataset's high level of granularity, which required prioritizing specific aspects for this analysis. For example, traffic counts at different entrances or roads within a single park can vary significantly. 
 
 ```{r}
+library(plotly)
+
 his_traffic_df = read_csv(file = "data/(east) Query Builder for Traffic Counts (1985 - Last Calendar Year).csv", 
                            na = c("NA", ",", ".")) %>% 
   janitor::clean_names() %>% 
   filter(park_name %in% c("Fire Island NS", "Gateway NRA", "Saratoga NHP"))
 
-ggplot(his_traffic_df, aes(x = year, y = traffic_count_total, color = traffic_counter)) +
+p <- ggplot(his_traffic_df, aes(x = year, y = traffic_count_total, color = traffic_counter)) +
   geom_point() +
   geom_smooth(method = "loess", se = FALSE) +
   labs(title = "Traffic Count Totals by Year for Selected Parks in New York",
@@ -124,16 +144,43 @@ ggplot(his_traffic_df, aes(x = year, y = traffic_count_total, color = traffic_co
   theme(legend.position = "bottom") +
   facet_wrap(~ park_name, scales = "free_y")
 
+# Convert ggplot to plotly
+p_plotly = ggplotly(p) %>%
+  layout(
+    legend = list(
+      orientation = "h",  # Horizontal legend
+      xanchor = "center",
+      x = 0.5,
+      y = -0.2,
+      yanchor = "top",
+      font = list(size = 10),  # Adjust font size for better readability
+      itemwidth = 40,  # Adjust width of each legend item
+      tracegroupgap = 5  # Add space between legend items
+    ),
+    height = 600  # You can also adjust the plot height
+  )
+
+p_plotly
+
 ```
 
-Additionally, each state has a mix of park types, leading to disparities in traffic counts across different national parks. Analyzing every national park in every state would be overwhelming. Therefore, we decided to use the annual mean traffic count for each state to provide a nationwide analysis of traffic impact on national parks.
+<br><br>
 
+<br><br>
+
+Analyzing every national park in every state, taking into consideration different traffic counters would be overwhelming. Not to mention traffic count data was also recorded based on monthly and annual counts. 
+
+In order to make sense of the large scale complexity, we decided to use the annual mean traffic count for each state to provide a nationwide analysis of traffic impact on national parks.
+
+
+<br><br>
 
 ## Mean Annual Traffic Count by State
 
-The mean annual traffic counts for each state across the years are presented below. It would be interesting to investigate whether obvious increases or decreases in traffic counts are due to changing interest in national parks or the introduction of popular parks incentivizing visits.
+Separating the data by states, it shows each states' average annual national park traffic count. 
 
-(find all the plots for the seperate states and position them here)
+We decided rather than taking each individual traffic counter to plot the mean traffic count for each national park, then the mean traffic count for the state across its national parks. 
+
 
 ```{r, echo = TRUE, results = 'hide'}
 read_csv(file = "data/(east) Query Builder for Traffic Counts (1985 - Last Calendar Year).csv", 
@@ -301,7 +348,7 @@ ggplot(AL_IM_MW_mean_traffic_counts_by_state_year, aes(x = year, y = mean_traffi
   geom_line() +
   facet_wrap(~ state, scales = "free_y") +
   theme_minimal() +
-  labs(title = "Mean Traffic Count by State and Year\nin the Alaska, Intermountain Region, and MidWest Regions",
+  labs(title = "Mean Traffic Count by State and Year\nin the Alaska, Intermountain, and MidWest Regions",
        x = "Year",
        y = "Mean Absolute Traffic Count") +
   theme(
@@ -502,25 +549,25 @@ ggplot(SE_mean_traffic_counts_by_state_year, aes(x = year, y = mean_traffic_coun
   )
 ```
 
+The mean annual traffic counts for each state across the years are presented below. There does not seem to be a dominant increasing or decreasing trend of traffic counts across all states. This suggests that time is not the unique variable determining traffic count, but that also potentially the state and type of national park influences average annual traffic counts. 
+
+It would be interesting to investigate whether obvious increases or decreases in traffic counts are due to changing interest in national parks or the introduction of popular parks to promote visitation.
+
+
+<br><br>
 
 ## Shiny App 
 
-To contribute our data analysis of comparing traffic counts and national parking lot data to the wider knowledge community, to whoever may need this information we have created a shiny app. This shiny app allows selection of two different states to compare the traffic count across the years and also seperated by the months. 
+With the nuances of each state and traffic count data, we decided that rather than to create iterative analyses into each state and their national parks, we went down the path of curating and data wrangling to contribute towards the wider knowledge community through our shiny app. The app can be found [here](https://fp2513.shinyapps.io/fp2513_shiny_dashboard/). 
 
-This is also in attempts to address parts of our limitations where we have comprimised the information provided in the dataset. In the shiny app, each state's plot not only shows how their traffic count has developed across the years but this development is also seperated by the months. This provides insight into potential monthly trends, where more traffic may occur through the year. Or even unexpected consistently in traffic count through the year.
 
+<br><br>
 
 ## Pairing Traffic Count with Parking Lot Data
 
-The mean annual traffic counts for each state across the years reveal trends that can be used to investigate whether fluctuations are due to a decreased interest in national parks or the introduction of popular parks incentivizing more visits.
+We could expect that high traffic counts in a state’s national parks might equate to a higher ratio of parking lots to parks in that state. We focused on the ratio rather than the absolute number of parking lots because states with more national parks would naturally need more parking. This approach avoids disproportionate representation and ensures a fair comparison.
 
-However, traffic counts may not be the best estimator for the impact of automobiles on human-wildlife interactions in national parks. This is because traffic count data does not specify the type of traffic it includes. It could be national park maintenance vehicles, visitors, or cars merely passing through without interacting with the park.
-
-To more directly quantify the impact of automobiles on national parks, examining parking lot usage may be more insightful. Parking lots are clearly man-made and reflect the park’s demand for car access, indicating efforts to accommodate visitors. By connecting traffic flow data with parking lot usage, we can better understand the needs of national parks and potentially improve traffic management and parking facilities.
-
-We could expect that high traffic counts in a state’s national parks might incentivize a higher ratio of parking lots to parks in that state. States that do not follow this trend may need updates to their parking infrastructure. Even if not, this analysis would encourage a closer look at the types of parks that, despite high traffic flow, do not require additional parking lots. We focused on the ratio rather than the absolute number of parking lots because states with more national parks would naturally need more parking. This approach avoids disproportionate representation and ensures a fair comparison.
-
-We created an interactive US Plotly map where each state’s color is based on the ratio of national park parking lots to the number of parks. Hovering over a state reveals the state name, ratio, and additional traffic count data, including minimum and maximum counts and their respective years. This visualization combines infrastructure and visitor trends, providing detailed insights without cluttering the visual. Plotly allows overlaying of the two information datasets (traffic counts and parking lots) for a comprehensive view.
+The US Plotly map colors states based on the ratio of national park parking lots to the number of parks. 
 
 ```{r, echo = TRUE, results = 'hide'}
 library(dplyr)
@@ -669,21 +716,19 @@ plot_ly(data = US_states_sf_df, type = "choropleth",
          geo = list(scope = 'usa',
                     projection = list(type = 'albers usa'),
                     showlakes = TRUE,
-                    lakecolor = toRGB('white')))
+                    lakecolor = toRGB('white')),
+         height = 500,  # Adjust height (pixels) for a larger map
+         width = 800,  # Adjust width (pixels) for a larger map
+         legend = list(
+           font = list(size = 10)  # Make the legend text smaller
+         ))
 ```
 
+<br><br>
 
 ## Concluding Remarks 
 
-A key limitation of this analysis is that it represents only an initial step in the comprehensive study of traffic patterns and their implications in national parks. The current analysis, while insightful, provides a broad overview and suggests several avenues for further, more detailed research.
-
-Future studies should aim to delve deeper into specific aspects of human-wildlife interactions and environmental impacts. For instance, one critical area for further investigation is the quantification of pollution levels within national parks over the years. This could include analyzing the types and sources of pollutants, their temporal trends, and their effects on local ecosystems and wildlife.
-
-Additionally, understanding visitor experience and satisfaction through systematic surveys can offer valuable insights into the adequacy of current infrastructure. Surveys could assess the effectiveness of parking facilities, the sufficiency of amenities, and overall visitor satisfaction. This data would be instrumental in guiding resource allocation and infrastructure development to better meet visitor needs and protect park environments.
-
-Moreover, examining the distribution of resources, such as parking lots and other facilities, in relation to traffic patterns can highlight areas where investments are needed. This could involve spatial analysis to identify under-served areas and model the potential impact of proposed infrastructure improvements.
-
-In summary, while this initial analysis provides a foundational understanding, it underscores the need for more targeted research to address specific questions related to environmental impacts, visitor experiences, and infrastructure adequacy in national parks. These efforts will contribute to a more nuanced and actionable understanding of how to balance conservation efforts with visitor needs in these treasured natural spaces.
+This initial analysis of traffic counts across national parks provides foundation understanding and underscores the need for more targeted research to address specific questions related to environmental impacts, visitor experiences, and infrastructure adequacy in national parks. These efforts will contribute to a more nuanced and actionable understanding of how to balance conservation efforts with visitor needs in these treasured natural spaces.
 
 
 

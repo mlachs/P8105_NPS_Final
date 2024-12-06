@@ -331,19 +331,19 @@ div.tocify {
   <a href="Activities.html">Activities</a>
 </li>
 <li>
-  <a href="project_proposal.html">Proposal</a>
+  <a href="Seasonal_Analysis.html">Seasonal Analysis</a>
 </li>
 <li>
-  <a href="mos2128.html">Mari</a>
+  <a href="Regional_Analysis.html">Regional Analysis</a>
 </li>
 <li>
-  <a href="jc6452.html">Lizy</a>
+  <a href="jc6452.html">Exploring NY </a>
 </li>
 <li>
-  <a href="fp2513.html">Flora</a>
+  <a href="fp2513.html">Nature vs Machines</a>
 </li>
 <li>
-  <a href="Project_Report.html">Project Report</a>
+  <a href="CopyOfProject_Report.html">Project Report</a>
 </li>
       </ul>
     </div><!--/.nav-collapse -->
@@ -367,12 +367,16 @@ div.tocify {
 </div>
 
 
+<p><img src="images/tent.png" /> <img src="images/boat.png" /> <img
+src="images/camper.png" /> <img src="images/moon.png" /> <img
+src="images/trail.png" /></p>
 <p>There are many activities available to you when visiting a national
-park. Between all the parks there are 99 unique activities. Ranging from
-ATV Off-Roading to Wildlife Watching. This range of activities bring
-millions of people to our national parks each year. This got us
-thinking, do the number of activities available at each park affect the
-level of visitation? We did some data analysis to find out.</p>
+park. Between all the parks there are 99 unique activity categories.
+Ranging from ATV Off-Roading to Wildlife Watching. This range of
+activities bring millions of people to our national parks each year.
+This got us thinking, do the number of activities available at each park
+affect the level of visitation? We did some data analysis to find
+out.</p>
 <div id="popular-activities" class="section level2">
 <h2>Popular Activities</h2>
 <p>First lets look at all the activities available. Below is the list of
@@ -888,6 +892,8 @@ Wildlife Watching
 </tbody>
 </table>
 </div>
+<div id="top-activities" class="section level3">
+<h3>Top Activities</h3>
 <p>Now let’s take a look at which activities are available at the most
 parks.</p>
 <pre class="r"><code>full_act=NPS_Full %&gt;% select(parkCode,activities_name) %&gt;% bind_rows(clean_things %&gt;% select(relatedParks_parkCode,activities_name) %&gt;% mutate(parkCode=relatedParks_parkCode)) %&gt;% select(parkCode,activities_name) %&gt;% distinct() %&gt;% drop_na()
@@ -899,6 +905,9 @@ full_act%&gt;% group_by(activities_name) %&gt;% summarise(cnt=n_distinct(parkCod
 up in more than 100 different parks. The most popular activity being the
 Junior Ranger Program, a program focused on engaging with younger
 visitors.</p>
+</div>
+<div id="number-of-activities-at-each-park" class="section level3">
+<h3>Number of Activities at each Park</h3>
 <p>Let’s look at it another way. Now let’s take a look at the number of
 activities across the different parks. In other words how many different
 activity categories does each park have.</p>
@@ -906,6 +915,7 @@ activity categories does each park have.</p>
 <p><img src="Activities_files/figure-html/unnamed-chunk-7-1.png" width="672" /></p>
 <p>Looks like there is quite a spread. With some parks as low as 1 and
 one with as many as 57 different categories.</p>
+</div>
 </div>
 <div id="activities-and-avg-visits" class="section level2">
 <h2>Activities and Avg Visits</h2>
@@ -953,6 +963,13 @@ participation.</p>
 <pre class="r"><code>clean_things %&gt;% 
   ggplot(aes(x=arePetsPermitted))+geom_bar()</code></pre>
 <p><img src="Activities_files/figure-html/unnamed-chunk-11-3.png" width="672" /></p>
+<div id="shiny-app" class="section level3">
+<h3>Shiny App</h3>
+<p>In order to help people find these activities, we created a shiny app
+to help them find where these promoted things to do are based on the
+criteria they desire. The app can be found <a
+href="https://mlachs.shinyapps.io/shiny_app/">HERE</a></p>
+</div>
 </div>
 
 

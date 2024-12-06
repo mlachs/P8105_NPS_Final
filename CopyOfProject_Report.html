@@ -1,0 +1,849 @@
+<!DOCTYPE html>
+
+<html>
+
+<head>
+
+<meta charset="utf-8" />
+<meta name="generator" content="pandoc" />
+<meta http-equiv="X-UA-Compatible" content="IE=EDGE" />
+
+
+
+
+<title>Project Report</title>
+
+<script src="site_libs/header-attrs-2.28/header-attrs.js"></script>
+<script src="site_libs/jquery-3.6.0/jquery-3.6.0.min.js"></script>
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<link href="site_libs/bootstrap-3.3.5/css/cosmo.min.css" rel="stylesheet" />
+<script src="site_libs/bootstrap-3.3.5/js/bootstrap.min.js"></script>
+<script src="site_libs/bootstrap-3.3.5/shim/html5shiv.min.js"></script>
+<script src="site_libs/bootstrap-3.3.5/shim/respond.min.js"></script>
+<style>h1 {font-size: 34px;}
+       h1.title {font-size: 38px;}
+       h2 {font-size: 30px;}
+       h3 {font-size: 24px;}
+       h4 {font-size: 18px;}
+       h5 {font-size: 16px;}
+       h6 {font-size: 12px;}
+       code {color: inherit; background-color: rgba(0, 0, 0, 0.04);}
+       pre:not([class]) { background-color: white }</style>
+<script src="site_libs/jqueryui-1.13.2/jquery-ui.min.js"></script>
+<link href="site_libs/tocify-1.9.1/jquery.tocify.css" rel="stylesheet" />
+<script src="site_libs/tocify-1.9.1/jquery.tocify.js"></script>
+<script src="site_libs/navigation-1.1/tabsets.js"></script>
+<script src="site_libs/navigation-1.1/codefolding.js"></script>
+<link href="site_libs/highlightjs-9.12.0/default.css" rel="stylesheet" />
+<script src="site_libs/highlightjs-9.12.0/highlight.js"></script>
+
+<style type="text/css">
+  code{white-space: pre-wrap;}
+  span.smallcaps{font-variant: small-caps;}
+  span.underline{text-decoration: underline;}
+  div.column{display: inline-block; vertical-align: top; width: 50%;}
+  div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
+  ul.task-list{list-style: none;}
+    </style>
+
+<style type="text/css">code{white-space: pre;}</style>
+<script type="text/javascript">
+if (window.hljs) {
+  hljs.configure({languages: []});
+  hljs.initHighlightingOnLoad();
+  if (document.readyState && document.readyState === "complete") {
+    window.setTimeout(function() { hljs.initHighlighting(); }, 0);
+  }
+}
+</script>
+
+
+
+
+
+
+
+
+
+<style type = "text/css">
+.main-container {
+  max-width: 940px;
+  margin-left: auto;
+  margin-right: auto;
+}
+img {
+  max-width:100%;
+}
+.tabbed-pane {
+  padding-top: 12px;
+}
+.html-widget {
+  margin-bottom: 20px;
+}
+button.code-folding-btn:focus {
+  outline: none;
+}
+summary {
+  display: list-item;
+}
+details > summary > p:only-child {
+  display: inline;
+}
+pre code {
+  padding: 0;
+}
+</style>
+
+
+<style type="text/css">
+.dropdown-submenu {
+  position: relative;
+}
+.dropdown-submenu>.dropdown-menu {
+  top: 0;
+  left: 100%;
+  margin-top: -6px;
+  margin-left: -1px;
+  border-radius: 0 6px 6px 6px;
+}
+.dropdown-submenu:hover>.dropdown-menu {
+  display: block;
+}
+.dropdown-submenu>a:after {
+  display: block;
+  content: " ";
+  float: right;
+  width: 0;
+  height: 0;
+  border-color: transparent;
+  border-style: solid;
+  border-width: 5px 0 5px 5px;
+  border-left-color: #cccccc;
+  margin-top: 5px;
+  margin-right: -10px;
+}
+.dropdown-submenu:hover>a:after {
+  border-left-color: #adb5bd;
+}
+.dropdown-submenu.pull-left {
+  float: none;
+}
+.dropdown-submenu.pull-left>.dropdown-menu {
+  left: -100%;
+  margin-left: 10px;
+  border-radius: 6px 0 6px 6px;
+}
+</style>
+
+<script type="text/javascript">
+// manage active state of menu based on current page
+$(document).ready(function () {
+  // active menu anchor
+  href = window.location.pathname
+  href = href.substr(href.lastIndexOf('/') + 1)
+  if (href === "")
+    href = "index.html";
+  var menuAnchor = $('a[href="' + href + '"]');
+
+  // mark the anchor link active (and if it's in a dropdown, also mark that active)
+  var dropdown = menuAnchor.closest('li.dropdown');
+  if (window.bootstrap) { // Bootstrap 4+
+    menuAnchor.addClass('active');
+    dropdown.find('> .dropdown-toggle').addClass('active');
+  } else { // Bootstrap 3
+    menuAnchor.parent().addClass('active');
+    dropdown.addClass('active');
+  }
+
+  // Navbar adjustments
+  var navHeight = $(".navbar").first().height() + 15;
+  var style = document.createElement('style');
+  var pt = "padding-top: " + navHeight + "px; ";
+  var mt = "margin-top: -" + navHeight + "px; ";
+  var css = "";
+  // offset scroll position for anchor links (for fixed navbar)
+  for (var i = 1; i <= 6; i++) {
+    css += ".section h" + i + "{ " + pt + mt + "}\n";
+  }
+  style.innerHTML = "body {" + pt + "padding-bottom: 40px; }\n" + css;
+  document.head.appendChild(style);
+});
+</script>
+
+<!-- tabsets -->
+
+<style type="text/css">
+.tabset-dropdown > .nav-tabs {
+  display: inline-table;
+  max-height: 500px;
+  min-height: 44px;
+  overflow-y: auto;
+  border: 1px solid #ddd;
+  border-radius: 4px;
+}
+
+.tabset-dropdown > .nav-tabs > li.active:before, .tabset-dropdown > .nav-tabs.nav-tabs-open:before {
+  content: "\e259";
+  font-family: 'Glyphicons Halflings';
+  display: inline-block;
+  padding: 10px;
+  border-right: 1px solid #ddd;
+}
+
+.tabset-dropdown > .nav-tabs.nav-tabs-open > li.active:before {
+  content: "\e258";
+  font-family: 'Glyphicons Halflings';
+  border: none;
+}
+
+.tabset-dropdown > .nav-tabs > li.active {
+  display: block;
+}
+
+.tabset-dropdown > .nav-tabs > li > a,
+.tabset-dropdown > .nav-tabs > li > a:focus,
+.tabset-dropdown > .nav-tabs > li > a:hover {
+  border: none;
+  display: inline-block;
+  border-radius: 4px;
+  background-color: transparent;
+}
+
+.tabset-dropdown > .nav-tabs.nav-tabs-open > li {
+  display: block;
+  float: none;
+}
+
+.tabset-dropdown > .nav-tabs > li {
+  display: none;
+}
+</style>
+
+<!-- code folding -->
+<style type="text/css">
+.code-folding-btn { margin-bottom: 4px; }
+</style>
+
+
+
+<style type="text/css">
+
+#TOC {
+  margin: 25px 0px 20px 0px;
+}
+@media (max-width: 768px) {
+#TOC {
+  position: relative;
+  width: 100%;
+}
+}
+
+@media print {
+.toc-content {
+  /* see https://github.com/w3c/csswg-drafts/issues/4434 */
+  float: right;
+}
+}
+
+.toc-content {
+  padding-left: 30px;
+  padding-right: 40px;
+}
+
+div.main-container {
+  max-width: 1200px;
+}
+
+div.tocify {
+  width: 20%;
+  max-width: 260px;
+  max-height: 85%;
+}
+
+@media (min-width: 768px) and (max-width: 991px) {
+  div.tocify {
+    width: 25%;
+  }
+}
+
+@media (max-width: 767px) {
+  div.tocify {
+    width: 100%;
+    max-width: none;
+  }
+}
+
+.tocify ul, .tocify li {
+  line-height: 20px;
+}
+
+.tocify-subheader .tocify-item {
+  font-size: 0.90em;
+}
+
+.tocify .list-group-item {
+  border-radius: 0px;
+}
+
+
+</style>
+
+
+
+</head>
+
+<body>
+
+
+<div class="container-fluid main-container">
+
+
+<!-- setup 3col/9col grid for toc_float and main content  -->
+<div class="row">
+<div class="col-xs-12 col-sm-4 col-md-3">
+<div id="TOC" class="tocify">
+</div>
+</div>
+
+<div class="toc-content col-xs-12 col-sm-8 col-md-9">
+
+
+
+
+<div class="navbar navbar-default  navbar-fixed-top" role="navigation">
+  <div class="container">
+    <div class="navbar-header">
+      <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-bs-toggle="collapse" data-target="#navbar" data-bs-target="#navbar">
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+      </button>
+      <a class="navbar-brand" href="index.html">Home</a>
+    </div>
+    <div id="navbar" class="navbar-collapse collapse">
+      <ul class="nav navbar-nav">
+        
+      </ul>
+      <ul class="nav navbar-nav navbar-right">
+        <li>
+  <a href="Activities.html">Activities</a>
+</li>
+<li>
+  <a href="Seasonal_Analysis.html">Seasonal Analysis</a>
+</li>
+<li>
+  <a href="Regional_Analysis.html">Regional Analysis</a>
+</li>
+<li>
+  <a href="jc6452.html">Exploring NY </a>
+</li>
+<li>
+  <a href="fp2513.html">Nature vs Machines</a>
+</li>
+<li>
+  <a href="CopyOfProject_Report.html">Project Report</a>
+</li>
+      </ul>
+    </div><!--/.nav-collapse -->
+  </div><!--/.container -->
+</div><!--/.navbar -->
+
+<div id="header">
+
+<div class="btn-group pull-right float-right">
+<button type="button" class="btn btn-default btn-xs btn-secondary btn-sm dropdown-toggle" data-toggle="dropdown" data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false"><span>Code</span> <span class="caret"></span></button>
+<ul class="dropdown-menu dropdown-menu-right" style="min-width: 50px;">
+<li><a id="rmd-show-all-code" href="#">Show All Code</a></li>
+<li><a id="rmd-hide-all-code" href="#">Hide All Code</a></li>
+</ul>
+</div>
+
+
+
+<h1 class="title toc-ignore">Project Report</h1>
+
+</div>
+
+
+<div id="collaborators" class="section level1">
+<h1>Collaborators:</h1>
+<p>• Miriam Lachs ml5222 <br /> • Flora Pang fp2513 <br /> • Mari
+Sanders mos2128 <br /> • Lizy Choi jc6452</p>
+</div>
+<div id="project-structure" class="section level1">
+<h1>Project Structure</h1>
+<p>Based on the way we split up work we wanted to give a layout of how
+this project report is structured. The initial/general information about
+the project is given. Then each section details the individual analysis
+that was done. The final Appendices include the actual work/r code that
+was completed.</p>
+<ol style="list-style-type: decimal">
+<li>General Project Information
+<ul>
+<li>Research Questions</li>
+<li>Project Motivation</li>
+<li>Project Significance</li>
+<li>Data used throughout</li>
+</ul></li>
+<li>Activities
+<ul>
+<li>Data</li>
+<li>EDA</li>
+<li>Additional Analysis</li>
+<li>Discussion</li>
+<li>Shiny APP</li>
+</ul></li>
+<li>Seasonal Regional Analysis</li>
+<li>Local NY</li>
+<li>Nature VS Machine</li>
+<li>Appendices/Work</li>
+</ol>
+</div>
+<div id="general-information" class="section level1">
+<h1>General Information</h1>
+<div id="research-questions" class="section level2">
+<h2>Research Questions</h2>
+<p>Our initial interest in national parks began with basic questions
+such as:</p>
+<ul>
+<li><p>Are general historical trends reflected in national park
+data?</p></li>
+<li><p>What are the seasonal visitation trends for national
+parks?</p></li>
+<li><p>What kind of activities are offered by national parks?</p></li>
+</ul>
+<p>Our initial exploratory data analysis prompted us to ask more nuanced
+questions:</p>
+<ul>
+<li><p>How can we wrangle complex and visualize traffic count data into
+an informative database for the wider knowledge community?</p></li>
+<li><p>How can we categorize the nuances of seasonal trends in national
+parks? For example, seasonal trends based on activities, seasonal trends
+based on national park type.</p></li>
+<li><p>How can we identify national parks that are decreasing in visitor
+interest?</p></li>
+<li><p>Using a linear model, can an average visit to a national park be
+predicted by the number of activities offered by the park?</p></li>
+</ul>
+</div>
+<div id="project-motivation" class="section level2">
+<h2>Project Motivation</h2>
+<p>The project aims to investigate patterns and trends in visitation to
+national parks across the United States, with the central focus on
+understanding the various factors of influence such as visitation types,
+seasonal trends, historical events, and camping activities. As frequent
+enjoys of the parks, we hope to investigate what makes the parks popular
+and understand what tends to drive participation of the public. We hope
+that this investigation is useful for both people to get them into going
+to the parks and useful for park services to learn what increases
+participation. There are over 400 parks in the United States at this
+time. In 2023, there were 325.5 million recreation visits, an increase
+from 2022. Visitation at the parks has been increasing since the dip in
+visitation during 2020 and 2021, with closure of parks due to the
+COVID-19 Pandemic (NPS, 2024). We each chose an aspect of the
+investigation that appealed most to us. Therefore the project is split
+into different sections based on the area of interest for each
+collaborator.</p>
+</div>
+<div id="significance" class="section level2">
+<h2>Significance</h2>
+<p>National Parks are an important part of American society, providing
+opportunities for recreation, education, and the preservation of
+historical landmarks, endangered landscapes, species, and ecosystems.
+These parks also play a significant role in boosting local economies by
+drawing visitors to nearby communities. However, accessing these parks
+often necessitates driving and parking vehicles, which can lead to
+increased human-wildlife interactions and the encroachment of parking
+lots on valuable park space. Such infrastructure disrupts the natural
+environment and diminishes the ecological integrity of these protected
+areas.</p>
+<p>Understanding when and why individuals visit National Parks offers
+valuable insights for fostering broader public engagement and enhancing
+visitor experiences. This paper examines the activities and parks that
+resonate most with visitors, providing a basis for strategic planning
+and resource allocation. Additionally, it explores the environmental
+impacts of vehicle usage in parks, highlighting opportunities for
+sustainable solutions that minimize harm to natural habitats. By
+identifying trends and preferences, these findings aim to promote
+greater park participation while ensuring the preservation of their
+natural and cultural heritage for future generations.</p>
+</div>
+<div id="data-used" class="section level2">
+<h2>Data used</h2>
+<p>We started this project looking at two primary data sources. One
+looking at general Park information, from the NPS API. The second was a
+csv file generated from the NPS visitation query editor.</p>
+<p>Our visitation data includes variables full_name, park_code,
+park_type, region, state, year, month, recreation_visits, tent_campers,
+rv_campers, backcountry. It has 101419 rows and 11 columns. The only
+data cleaning that needed to be done in the visitation data set is to
+clean the column names and mutate some of the column names to be able to
+merge the full national parks data with the visitation data, as well as
+filtering to the data that we wanted to analyze.</p>
+<ul>
+<li><p><code>full_name</code>: Includes the full name of the National
+Park</p></li>
+<li><p><code>park_code</code>: Unique code that identifies each National
+Park</p></li>
+<li><p><code>park_type</code>: 18 Unique National Park Types</p></li>
+<li><p><code>state</code>: State(s) that the park is located</p></li>
+<li><p><code>year</code>: Year that the data is collected from</p></li>
+<li><p><code>month</code>: Month that the data is collected
+from</p></li>
+<li><p><code>recreation_visits</code>: Total number of recreation visits
+to each National Park</p></li>
+<li><p><code>tent_campers</code>: Number of visits that were tent
+campers</p></li>
+<li><p><code>rv_campers</code>: Number of visits that were RV
+campers</p></li>
+<li><p><code>backcountry</code>: Number of Backcountry hiker
+visits</p></li>
+</ul>
+<pre class="r"><code>res=GET(&#39;https://developer.nps.gov/api/v1/parks?limit=500&amp;api_key=B9nDpbkbrb3kSOjz6kXSxMJ3d6MSpUvt1QqYdeyn&#39;)
+
+data = res %&gt;% content(&quot;text&quot;) %&gt;% jsonlite::fromJSON() %&gt;% as_tibble()
+
+NPS_data_parks=data %&gt;% unnest(data) %&gt;% select(fullName,parkCode,description,latitude,longitude,activities,states,entranceFees,operatingHours,designation) %&gt;% unnest(activities,names_sep = &#39;_&#39;) %&gt;% unnest(entranceFees,names_sep = &#39;_&#39;) %&gt;% unnest(operatingHours,names_sep = &#39;_&#39;) </code></pre>
+<p>The Parks data came from the NPS API. To generate this data we first
+call the API, convert it from a JSON to a tibble, then select the
+information we are interested in and unnest the various data components.
+This cleaned data has the variables fullName, parkCode, description,
+latitude, longitude, activities_id, activities_name, states,
+entranceFees_cost, entranceFees_description, entranceFees_title,
+operatingHours_exceptions, operatingHours_description,
+operatingHours_standardHours, operatingHours_name, designation. It has
+24474 rows and 16 columns.</p>
+</div>
+</div>
+<div id="activities" class="section level1">
+<h1>Activities</h1>
+<div id="data" class="section level2">
+<h2>Data</h2>
+<pre class="r"><code>res=GET(&#39;https://developer.nps.gov/api/v1/thingstodo?limit=5000&amp;api_key=B9nDpbkbrb3kSOjz6kXSxMJ3d6MSpUvt1QqYdeyn&#39;)
+
+things_data = res %&gt;% content(&quot;text&quot;) %&gt;% jsonlite::fromJSON() %&gt;% as_tibble()
+
+things_data=things_data %&gt;% unnest(data) %&gt;% unnest(relatedParks,names_sep = &quot;_&quot;) %&gt;% unnest(activities,names_sep = &quot;_&quot;)
+
+clean_things=things_data %&gt;% select(title,relatedParks_parkCode,latitude,longitude,isReservationRequired,arePetsPermittedWithRestrictions,activities_id,activities_name,doFeesApply,arePetsPermitted,season,timeOfDay) %&gt;%
+  mutate(relatedParks_parkCode=str_to_upper(relatedParks_parkCode),
+           latitude=as.numeric(latitude),
+         longitude=as.numeric(longitude),
+         isReservationRequired=as.logical(isReservationRequired),
+         doFeesApply=as.logical(doFeesApply))</code></pre>
+<p>In addition to the general data used in this project, I also used
+another data set from the API. I also pulled the <code>thingstodo</code>
+data set. To clean this similarly to the parks data set, it needed to be
+unnested, relevant information selected and some data types converted.
+The final data set had the following variables title,
+relatedParks_parkCode, latitude, longitude, isReservationRequired,
+arePetsPermittedWithRestrictions, activities_id, activities_name,
+doFeesApply, arePetsPermitted, season, timeOfDay. It has 3544 rows and
+12 columns.</p>
+</div>
+<div id="exploratory-data-analysis" class="section level2">
+<h2>Exploratory Data Analysis</h2>
+<p>As exploratory data analysis, I looked into the activity counts
+across states and parks. I also looked at visitation trends. This is how
+I found I wanted to look into the relationship between activities and
+visitation. I also looked into entrance cost but ended up going in a
+different direction. However, it was after looking into the things to do
+data that I noticed there was a discrepancy in the initial parks data.
+Some activity categories were showing up under the things to do but not
+under the general park information. This means I had to go back and
+combine the data sets and redo the analysis to get a more accurate
+picture.</p>
+</div>
+<div id="analysis-of-visitation-and-activities" class="section level2">
+<h2>Analysis of Visitation and Activities</h2>
+<p>To do this analysis, after combining the data sets, I looked at the
+EDA graph showing the comparison of # of activities to average park
+visits per month. While slight I thought there may be a relationship and
+decided to run a linear regression.</p>
+</div>
+<div id="discussion" class="section level2">
+<h2>Discussion</h2>
+<p>I found that the linear regression was significant. This meant there
+was a relationship between the number of activities offered by a park
+and the average number of visits to that park. Because of this positive
+relationship I wanted to look more into the advertised activities in the
+things to do data set. This is when I decided to build a shiny app to
+look into the different activities offered.</p>
+</div>
+<div id="shiny-app" class="section level2">
+<h2>Shiny APP</h2>
+<p>The shiny app can be found <a
+href="https://mlachs.shinyapps.io/shiny_app/">HERE</a>. It allows you to
+find the various things to do based on activity category and other
+filters like reservations, pets and fees.</p>
+</div>
+<div id="r-code-work" class="section level2">
+<h2>R code/ work</h2>
+<p>My work was a mix of a working page <a
+href="https://mlachs.github.io/P8105_NPS_Final/ml5222.html">ml5222</a>
+and the <a
+href="https://mlachs.github.io/P8105_NPS_Final/Activities.html">Activities</a>.</p>
+</div>
+</div>
+<div id="seasonal-regional-analysis" class="section level1">
+<h1>Seasonal Regional Analysis</h1>
+<div id="exploratory-data-analysis-1" class="section level2">
+<h2>Exploratory Data Analysis</h2>
+<p>On initial analysis, it seems that July has the largest total
+visitation of any month. Therefore, we wanted to look at how different
+visitation looked like across seasons. Splitting the parks by month,
+there was clearly seasonal variation, with summer having the highest
+number of visitors across most park types. Winter recorded the lowest
+visitation levels, except for park types that specifically have
+activities that can be done during winter weather. More people visit
+national parks overall than any other park type, despite the fact that
+there are other park types with more parks across the U.S. There were
+some parks with variations, such as National Preserve, that had almost
+uniform visitation across the seasons. Looking at the activities offered
+there made it obvious that there were activities that could be done in
+all seasons.</p>
+<p>Analyzing activity-specific trends shows that tent camping is the
+most popular activity except in winter, where RV camping is the highest
+due to its ability to provide shelter in the winter weather. Backcountry
+hiking is the lowest in popularity across seasons, possibly due to the
+experience and training that it takes to complete a task such as this
+one. There were some park types that had none of these activities,
+including National Historic Site, National Memorial, National
+Battlefield, and International Historic Site. Additionally, there were
+parks that only have Backcountry visitation or RV camping. Doing an
+analysis of regional trends on different activities offered in the parks
+shows that the west has the most visitation, especially in the summer
+months, despite the fact that the south has more visitation overall.
+This could be due to the more favorable weather conditions in the states
+that these parks are located that allow for more year-round
+visitation.</p>
+</div>
+<div id="discussion-1" class="section level2">
+<h2>Discussion</h2>
+<p>Studying trends in seasonal and regional visitation shows that
+several things can be done to improve park visitation. If possible,
+parks with low winter visitation could benefit from the inclusion of
+winter-specific activities, such as snowshoeing. Additionally, improving
+facilities for RV and tent camping could help attract more visitors
+year-round. Using these results, the National Parks Service can make
+more data-informed decisions in order to optimize visitor experiences
+and ensure that the parks continue to preserve America’s precious
+landscapes.</p>
+</div>
+<div id="limitations" class="section level2">
+<h2>Limitations</h2>
+<p>Many of the limitations in this project come from the data itself.
+One of the datasets was obtained through an API, where each of the
+columns was nested. In order to access any of the data contained in
+these columns would require several additional steps that is not usually
+needed. The two data sets used had different lengths, so joining them to
+use data in both was difficult Additionally, many of the parks had
+missing state data, which made it difficult to analyze regional trends.
+Further study could be conducted on more specific activities that are
+the most popular in the parks. The dataset obtained from an API included
+only the topics of the activities and not how many people do each
+activity. It would be interesting to do data analysis on these
+activities to see which ones are the most popular and could help improve
+park programming</p>
+</div>
+<div id="r-code" class="section level2">
+<h2>R Code</h2>
+<p>My work is included in these two webpages:</p>
+<p><a
+href="https://mlachs.github.io/P8105_NPS_Final/Regional_Analysis.html">Regional
+Analysis</a></p>
+<p><a
+href="https://mlachs.github.io/P8105_NPS_Final/Seasonal_Analysis.html">Seasonal
+Analysis</a></p>
+</div>
+</div>
+<div id="local-ny" class="section level1">
+<h1>Local NY</h1>
+</div>
+<div id="nature-vs-machine" class="section level1">
+<h1>Nature VS Machine</h1>
+<div id="data-1" class="section level2">
+<h2>Data</h2>
+<p>To do data analysis on national parks’ traffic count I used the Query
+Builder for National Park Traffic Counts.</p>
+<p>The datasets include data from 1985 to 2023.</p>
+<p>Provided that it was difficult to load data for every single national
+park into a single csv file, the National Park Traffic Count data was
+loaded separated by U.S. regions: firstly, North- East, secondly
+South-East, thirdly Alaska, Intermountain, and Mid-West regions, and
+lastly National-Capital and Pacific-West regions.</p>
+<p>For each region’s csv file included 15 variables: park name, unit
+code, park type, region, traffic counter, year, month, traffic count,
+park name total, unit code total, park type total, region total, traffic
+counter total, year total, month total, traffic counts total label, and
+traffic count total.</p>
+<p>National Park datasets included different traffic counters for the
+same national park. Where each counter would report a monthly count and
+also an annual count.</p>
+</div>
+<div id="exploratory-data-analysis-and-discussion"
+class="section level2">
+<h2>Exploratory Data Analysis and Discussion</h2>
+<p>In attempts to examine how our interactions with national parks have
+evolved over time and with no obvious topic consistently reported in the
+news, we determined that the most relevant development in recent history
+is the introduction of automobiles to the public. Many national parks
+emphasize preservation, but with increasing human contact, management
+needs to be flexible. To quantify how human-wildlife interactions have
+changed over the years, we can look at visitation pressure. High traffic
+volumes indicate heavy visitor use, leading to environmental
+degradation, pollution, and wildlife disturbance.</p>
+<p>Initial exploration of the data highlighted how traffic counts differ
+across types of national parks even within the same state. Furthermore,
+differ across the various traffic counters for each national park. These
+initial findings shifted focus towards annual mean traffic count for
+each state to provide a nationwide analysis of traffic impact on
+national parks, rather than in attempts to encompass every level of
+information.</p>
+<p>With the nuances of each state and traffic count data, we decided
+that rather than to create iterative analyses into each state and their
+national parks, we went down the path of curating and data wrangling to
+contribute towards the wider knowledge community through our shiny
+app.</p>
+<p>However, traffic counts may not be the best estimator for the impact
+of automobiles on human-wildlife interactions in national parks. This is
+because traffic count data does not specify the type of traffic it
+includes. It could be national park maintenance vehicles, visitors, or
+cars merely passing through without interacting with the park. To more
+directly quantify the impact of automobiles on national parks, examining
+parking lot usage may be more insightful. Parking lots are clearly
+man-made and reflect the park’s demand for car access, indicating
+efforts to accommodate visitors. By connecting traffic flow data with
+parking lot usage, we can better understand the needs of national parks
+and potentially improve traffic management and parking facilities.
+Plotly allows overlaying of two information datasets for a comprehensive
+view without cluttering the visual.</p>
+</div>
+<div id="shiny-app-1" class="section level2">
+<h2>Shiny App</h2>
+<p><a
+href="https://fp2513.shinyapps.io/fp2513_shiny_dashboard/">This</a>
+Shiny app enables the selection of two different states: one for Chart 1
+and another for Chart 2. This allows users to compare traffic counts
+side-by-side across years, with data further broken down by month.</p>
+<p>The app addresses previous limitations where we had to generalize
+data in our plots. By leveraging the app, users can gain a more detailed
+and interactive view of the traffic count dataset, enhancing the
+visualization experience and understanding of national park traffic
+counts.</p>
+</div>
+<div id="limitations-1" class="section level2">
+<h2>Limitations</h2>
+<p>A key limitation of this analysis is that it represents only an
+initial step in the comprehensive study of traffic patterns and their
+implications in national parks. The current analysis, while insightful,
+provides a broad overview and suggests several avenues for further, more
+detailed research. Future studies should aim to delve deeper into
+specific aspects of human-wildlife interactions and environmental
+impacts.</p>
+<p>For instance, one critical area for further investigation is the
+quantification of pollution levels within national parks over the years.
+This could include analyzing the types and sources of pollutants, their
+temporal trends, and their effects on local ecosystems and wildlife.</p>
+<p>Additionally, understanding visitor experience and satisfaction
+through systematic surveys can offer valuable insights into the adequacy
+of current infrastructure. Surveys could assess the effectiveness of
+parking facilities, the sufficiency of amenities, and overall visitor
+satisfaction. This data would be instrumental in guiding resource
+allocation and infrastructure development to better meet visitor needs
+and protect park environments. This could involve spatial analysis to
+identify underserved areas and model the potential impact of proposed
+infrastructure improvements.</p>
+</div>
+<div id="r-code-1" class="section level2">
+<h2>R Code</h2>
+<p>The work on National Park Traffic Counts can be found on this
+webpage</p>
+<p><a href="https://mlachs.github.io/P8105_NPS_Final/fp2513.html">Nature
+vs Machines</a></p>
+</div>
+</div>
+
+
+
+</div>
+</div>
+
+</div>
+
+<script>
+
+// add bootstrap table styles to pandoc tables
+function bootstrapStylePandocTables() {
+  $('tr.odd').parent('tbody').parent('table').addClass('table table-condensed');
+}
+$(document).ready(function () {
+  bootstrapStylePandocTables();
+});
+
+
+</script>
+
+<!-- tabsets -->
+
+<script>
+$(document).ready(function () {
+  window.buildTabsets("TOC");
+});
+
+$(document).ready(function () {
+  $('.tabset-dropdown > .nav-tabs > li').click(function () {
+    $(this).parent().toggleClass('nav-tabs-open');
+  });
+});
+</script>
+
+<!-- code folding -->
+<script>
+$(document).ready(function () {
+  window.initializeCodeFolding("hide" === "show");
+});
+</script>
+
+<script>
+$(document).ready(function ()  {
+
+    // temporarily add toc-ignore selector to headers for the consistency with Pandoc
+    $('.unlisted.unnumbered').addClass('toc-ignore')
+
+    // move toc-ignore selectors from section div to header
+    $('div.section.toc-ignore')
+        .removeClass('toc-ignore')
+        .children('h1,h2,h3,h4,h5').addClass('toc-ignore');
+
+    // establish options
+    var options = {
+      selectors: "h1,h2,h3",
+      theme: "bootstrap3",
+      context: '.toc-content',
+      hashGenerator: function (text) {
+        return text.replace(/[.\\/?&!#<>]/g, '').replace(/\s/g, '_');
+      },
+      ignoreSelector: ".toc-ignore",
+      scrollTo: 0
+    };
+    options.showAndHide = true;
+    options.smoothScroll = true;
+
+    // tocify
+    var toc = $("#TOC").tocify(options).data("toc-tocify");
+});
+</script>
+
+<!-- dynamically load mathjax for compatibility with self-contained -->
+<script>
+  (function () {
+    var script = document.createElement("script");
+    script.type = "text/javascript";
+    script.src  = "https://mathjax.rstudio.com/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML";
+    document.getElementsByTagName("head")[0].appendChild(script);
+  })();
+</script>
+
+</body>
+</html>
