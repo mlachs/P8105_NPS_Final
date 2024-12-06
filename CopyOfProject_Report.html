@@ -13,7 +13,7 @@
 
 <title>Project Report</title>
 
-<script src="site_libs/header-attrs-2.28/header-attrs.js"></script>
+<script src="site_libs/header-attrs-2.29/header-attrs.js"></script>
 <script src="site_libs/jquery-3.6.0/jquery-3.6.0.min.js"></script>
 <meta name="viewport" content="width=device-width, initial-scale=1" />
 <link href="site_libs/bootstrap-3.3.5/css/cosmo.min.css" rel="stylesheet" />
@@ -329,7 +329,13 @@ div.tocify {
   <a href="Activities.html">Activities</a>
 </li>
 <li>
-  <a href="Seasonal_Regional_Analysis.html">Seasonal Regional Analysis</a>
+  <a href="project_proposal.html">Proposal</a>
+</li>
+<li>
+  <a href="Seasonal_Analysis.html">Seasonal Analysis</a>
+</li>
+<li>
+  <a href="Regional_Analysis.html">Regional Analysis</a>
 </li>
 <li>
   <a href="jc6452.html">Exploring NY </a>
@@ -372,8 +378,8 @@ Sanders mos2128 <br /> • Lizy Choi jc6452</p>
 <p>Based on the way we split up work we wanted to give a layout of how
 this project report is structured. The initial/general information about
 the project is given. Then each section details the individual analysis
-that was done. The final Appedicies include the actual work/r code that
-was compleated.</p>
+that was done. The final Appendices include the actual work/r code that
+was completed.</p>
 <ol style="list-style-type: decimal">
 <li>General Project Information
 <ul>
@@ -390,7 +396,7 @@ was compleated.</p>
 <li>Discussion</li>
 <li>Shiny APP</li>
 </ul></li>
-<li>Seasonal Reginal Analysis</li>
+<li>Seasonal Regional Analysis</li>
 <li>Local NY</li>
 <li>Nature VS Machine</li>
 <li>Appendices/Work</li>
@@ -429,15 +435,15 @@ predicted by the number of activities offered by the park?</p></li>
 national parks across the United States, with the central focus on
 understanding the various factors of influence such as visitation types,
 seasonal trends, historical events, and camping activities. As frequent
-enjoyers of the parks, we hope to investigate what makes the parks
-popular and understand what tends to drive participation of the public.
-We hope that this investigation is useful for both people to get them
-into going to the parks and useful for park services to learn what
-increases participation. There are over 400 parks in the United States
-at this time. In 2023, there were 325.5 million recreation visits, an
-increase from 2022. Visitation at the parks has been increasing since
-the dip in visitation during 2020 and 2021, with closure of parks due to
-the COVID-19 Pandemic (NPS, 2024). We each chose an aspect of the
+enjoys of the parks, we hope to investigate what makes the parks popular
+and understand what tends to drive participation of the public. We hope
+that this investigation is useful for both people to get them into going
+to the parks and useful for park services to learn what increases
+participation. There are over 400 parks in the United States at this
+time. In 2023, there were 325.5 million recreation visits, an increase
+from 2022. Visitation at the parks has been increasing since the dip in
+visitation during 2020 and 2021, with closure of parks due to the
+COVID-19 Pandemic (NPS, 2024). We each chose an aspect of the
 investigation that appealed most to us. Therefore the project is split
 into different sections based on the area of interest for each
 collaborator.</p>
@@ -473,7 +479,7 @@ csv file generated from the NPS visitation query editor.</p>
 <p>Our visitation data includes variables full_name, park_code,
 park_type, region, state, year, month, recreation_visits, tent_campers,
 rv_campers, backcountry. It has 101419 rows and 11 columns. The only
-data cleaning that needed to be done in the visitation dataset is to
+data cleaning that needed to be done in the visitation data set is to
 clean the column names and mutate some of the column names to be able to
 merge the full national parks data with the visitation data, as well as
 filtering to the data that we wanted to analyze.</p>
@@ -493,7 +499,7 @@ to each National Park</p></li>
 campers</p></li>
 <li><p><code>rv_campers</code>: Number of visits that were RV
 campers</p></li>
-<li><p><code>backcountry</code>: Number of backcountry hiker
+<li><p><code>backcountry</code>: Number of Backcountry hiker
 visits</p></li>
 </ul>
 <pre class="r"><code>res=GET(&#39;https://developer.nps.gov/api/v1/parks?limit=500&amp;api_key=B9nDpbkbrb3kSOjz6kXSxMJ3d6MSpUvt1QqYdeyn&#39;)
@@ -536,7 +542,10 @@ The final data set had the following variables title,
 relatedParks_parkCode, latitude, longitude, isReservationRequired,
 arePetsPermittedWithRestrictions, activities_id, activities_name,
 doFeesApply, arePetsPermitted, season, timeOfDay. It has 3544 rows and
-12 columns. ## EDA</p>
+12 columns.</p>
+</div>
+<div id="eda" class="section level2">
+<h2>EDA</h2>
 <p>As exploratory data analysis, I looked into the activity counts
 across states and parks. I also looked at visitation trends. This is how
 I found I wanted to look into the relationship between activities and
@@ -562,35 +571,55 @@ was a relationship between the number of activities offered by a park
 and the average number of visits to that park. Because of this positive
 relationship I wanted to look more into the advertised activities in the
 things to do data set. This is when I decided to build a shiny app to
-look into the different activities offered. ## Shiny APP The shiny app
-can be found <a href="https://mlachs.shinyapps.io/shiny_app/">HERE</a>.
-It allows you to find the various things to do based on activity
-catagory and other filters like reservations, pets and fees. ## R code/
-work My work was a mix of a working page <a
+look into the different activities offered.</p>
+</div>
+<div id="shiny-app" class="section level2">
+<h2>Shiny APP</h2>
+<p>The shiny app can be found <a
+href="https://mlachs.shinyapps.io/shiny_app/">HERE</a>. It allows you to
+find the various things to do based on activity category and other
+filters like reservations, pets and fees.</p>
+</div>
+<div id="r-code-work" class="section level2">
+<h2>R code/ work</h2>
+<p>My work was a mix of a working page <a
 href="https://mlachs.github.io/P8105_NPS_Final/ml5222.html">ml5222</a>
 and the <a
-href="https://mlachs.github.io/P8105_NPS_Final/Activities.html">Activities</a>.
-# Seasonal Reginal Analysis ## Exploratory Data Analysis:</p>
+href="https://mlachs.github.io/P8105_NPS_Final/Activities.html">Activities</a>.</p>
+</div>
+</div>
+<div id="seasonal-regional-analysis" class="section level1">
+<h1>Seasonal Regional Analysis</h1>
+<div id="exploratory-data-analysis" class="section level2">
+<h2>Exploratory Data Analysis</h2>
 <p>On initial analysis, it seems that July has the largest total
 visitation of any month. Therefore, we wanted to look at how different
-visitiation looked like across seasons. Splitting the parks by month,
+visitation looked like across seasons. Splitting the parks by month,
 there was clearly seasonal variation, with summer having the highest
 number of visitors across most park types. Winter recorded the lowest
 visitation levels, except for park types that specifically have
-activities that can be done when during winter weather. More people
-visit national parks overall than any other park type, despite the fact
-that there are other park types with more parks across the U.S.</p>
+activities that can be done during winter weather. More people visit
+national parks overall than any other park type, despite the fact that
+there are other park types with more parks across the U.S. There were
+some parks with variations, such as National Preserve, that had almost
+uniform visitation across the seasons. Looking at the activities offered
+there made it obvious that there were activities that could be done in
+all seasons.</p>
 <p>Analyzing activity-specific trends shows that tent camping is the
 most popular activity except in winter, where RV camping is the highest
 due to its ability to provide shelter in the winter weather. Backcountry
 hiking is the lowest in popularity across seasons, possibly due to the
 experience and training that it takes to complete a task such as this
-one. Doing an analysis of regional trends on different activities
-offered in the parks shows that the west has the most visitation,
-especially in the summer months, despite the fact that the south has
-more visitation overall. This could be due to the more favorable weather
-conditions in the states that these parks are located that allow for
-more year-round visitation.</p>
+one. There were some park types that had none of these activities,
+including National Historic Site, National Memorial, National
+Battlefield, and International Historic Site. Additionally, there were
+parks that only have Backcountry visitation or RV camping. Doing an
+analysis of regional trends on different activities offered in the parks
+shows that the west has the most visitation, especially in the summer
+months, despite the fact that the south has more visitation overall.
+This could be due to the more favorable weather conditions in the states
+that these parks are located that allow for more year-round
+visitation.</p>
 </div>
 <div id="discussion-1" class="section level2">
 <h2>Discussion</h2>
@@ -603,6 +632,32 @@ year-round. Using these results, the National Parks Service can make
 more data-informed decisions in order to optimize visitor experiences
 and ensure that the parks continue to preserve America’s precious
 landscapes.</p>
+</div>
+<div id="limitations" class="section level2">
+<h2>Limitations</h2>
+<p>Many of the limitations in this project come from the data itself.
+One of the datasets was obtained through an API, where each of the
+columns was nested. In order to access any of the data contained in
+these columns would require several additional steps that is not usually
+needed. The two data sets used had different lengths, so joining them to
+use data in both was difficult Additionally, many of the parks had
+missing state data, which made it difficult to analyze regional trends.
+Further study could be conducted on more specific activities that are
+the most popular in the parks. The dataset obtained from an API included
+only the topics of the activities and not how many people do each
+activity. It would be interesting to do data analysis on these
+activities to see which ones are the most popular and could help improve
+park programming</p>
+</div>
+<div id="r-code" class="section level2">
+<h2>R Code</h2>
+<p>My work is included in these two webpages:</p>
+<p><a
+href="https://mlachs.github.io/P8105_NPS_Final/Regional_Analysis.html">Regional
+Analysis</a></p>
+<p><a
+href="https://mlachs.github.io/P8105_NPS_Final/Seasonal_Analysis.html">Seasonal
+Analysis</a></p>
 </div>
 </div>
 <div id="local-ny" class="section level1">

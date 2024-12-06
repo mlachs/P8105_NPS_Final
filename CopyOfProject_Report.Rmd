@@ -21,7 +21,7 @@ library(httr)
   
 # Project Structure 
 
-Based on the way we split up work we wanted to give a layout of how this project report is structured. The initial/general information about the project is given. Then each section details the individual analysis that was done. The final Appedicies include the actual work/r code that was compleated. 
+Based on the way we split up work we wanted to give a layout of how this project report is structured. The initial/general information about the project is given. Then each section details the individual analysis that was done. The final Appendices include the actual work/r code that was completed. 
 
 1. General Project Information 
     - Research Questions
@@ -34,7 +34,7 @@ Based on the way we split up work we wanted to give a layout of how this project
     - Additional Analysis 
     - Discussion 
     - Shiny APP
-3. Seasonal Reginal Analysis 
+3. Seasonal Regional Analysis 
 4. Local NY 
 5. Nature VS Machine 
 6. Appendices/Work 
@@ -63,7 +63,7 @@ Our initial exploratory data analysis prompted us to ask more nuanced questions:
 
 ## Project Motivation 
 
-The project aims to investigate patterns and trends in visitation to national parks across the United States, with the central focus on understanding the various factors of influence such as visitation types, seasonal trends, historical events, and camping activities. As frequent enjoyers of the parks, we hope to investigate what makes the parks popular and understand what tends to drive participation of the public. We hope that this investigation is useful for both people to get them into going to the parks and useful for park services to learn what increases participation. There are over 400 parks in the United States at this time. In 2023, there were 325.5 million recreation visits, an increase from 2022. Visitation at the parks has been increasing since the dip in visitation during 2020 and 2021, with closure of parks due to the COVID-19 Pandemic (NPS, 2024). We each chose an aspect of the investigation that appealed most to us. Therefore the project is split into different sections based on the area of interest for each collaborator. 
+The project aims to investigate patterns and trends in visitation to national parks across the United States, with the central focus on understanding the various factors of influence such as visitation types, seasonal trends, historical events, and camping activities. As frequent enjoys of the parks, we hope to investigate what makes the parks popular and understand what tends to drive participation of the public. We hope that this investigation is useful for both people to get them into going to the parks and useful for park services to learn what increases participation. There are over 400 parks in the United States at this time. In 2023, there were 325.5 million recreation visits, an increase from 2022. Visitation at the parks has been increasing since the dip in visitation during 2020 and 2021, with closure of parks due to the COVID-19 Pandemic (NPS, 2024). We each chose an aspect of the investigation that appealed most to us. Therefore the project is split into different sections based on the area of interest for each collaborator. 
 
 ## Significance 
 
@@ -88,7 +88,7 @@ visitation_data <-
 Our visitation data includes variables `r names(visitation_data)`. It
 has `r nrow(visitation_data)` rows and `r ncol(visitation_data)`
 columns. The only data cleaning that needed to be done in the visitation
-dataset is to clean the column names and mutate some of the column names
+data set is to clean the column names and mutate some of the column names
 to be able to merge the full national parks data with the visitation
 data, as well as filtering to the data that we wanted to analyze.
 
@@ -111,7 +111,7 @@ data, as well as filtering to the data that we wanted to analyze.
 
 -   `rv_campers`: Number of visits that were RV campers
 
--   `backcountry`: Number of backcountry hiker visits
+-   `backcountry`: Number of Backcountry hiker visits
 
 ```{r}
 res=GET('https://developer.nps.gov/api/v1/parks?limit=500&api_key=B9nDpbkbrb3kSOjz6kXSxMJ3d6MSpUvt1QqYdeyn')
@@ -125,6 +125,7 @@ The Parks data came from the NPS API. To generate this data we first call the AP
 columns.
 
 # Activities
+
 ## Data 
 
 ```{r}
@@ -143,30 +144,50 @@ clean_things=things_data %>% select(title,relatedParks_parkCode,latitude,longitu
 ```
 
 In addition to the general data used in this project, I also used another data set from the API. I also pulled the `thingstodo` data set. To clean this similarly to the parks data set, it needed to be unnested, relevant information selected and some data types converted. The final data set had the following variables `r names(clean_things)`. It has `r nrow(clean_things)` rows and `r ncol(clean_things)` columns.
+
 ## EDA 
 
 As exploratory data analysis, I looked into the activity counts across states and parks. I also looked at visitation trends. This is how I found I wanted to look into the relationship between activities and visitation. I also looked into entrance cost but ended up going in a different direction. However, it was after looking into the things to do data that I noticed there was a discrepancy in the initial parks data. Some activity categories were showing up under the things to do but not under the general park information. This means I had to go back and combine the data sets and redo the analysis to get a more accurate picture. 
 
 ## Analysis of Visitation and Activities
+
 To do this analysis, after combining the data sets, I looked at the EDA graph showing the comparison of # of activities to average park visits per month. While slight I thought there may be a relationship and decided to run a linear regression.
 
 ## Discussion 
+
 I found that the linear regression was significant. This meant there was a relationship between the number of activities offered by a park and the average number of visits to that park. Because of this positive relationship I wanted to look more into the advertised activities in the things to do data set. This is when I decided to build a shiny app to look into the different activities offered. 
+
 ## Shiny APP
-The shiny app can be found [HERE](https://mlachs.shinyapps.io/shiny_app/). It allows you to find the various things to do based on activity catagory and other filters like reservations, pets and fees. 
+
+The shiny app can be found [HERE](https://mlachs.shinyapps.io/shiny_app/). It allows you to find the various things to do based on activity category and other filters like reservations, pets and fees. 
+
 ## R code/ work 
+
 My work was a mix of a working page [ml5222](https://mlachs.github.io/P8105_NPS_Final/ml5222.html) and the [Activities](https://mlachs.github.io/P8105_NPS_Final/Activities.html).
-# Seasonal Reginal Analysis 
-## Exploratory Data Analysis: 
 
-On initial analysis, it seems that July has the largest total visitation of any month. Therefore, we wanted to look at how different visitiation looked like across seasons. Splitting the parks by month, there was clearly seasonal variation, with summer having the highest number of visitors across most park types. Winter recorded the lowest visitation levels, except for park types that specifically have activities that can be done when during winter weather. More people visit national parks overall than any other park type, despite the fact that there are other park types with more parks across the U.S.  
+# Seasonal Regional Analysis 
 
-Analyzing activity-specific trends shows that tent camping is the most popular activity except in winter, where RV camping is the highest due to its ability to provide shelter in the winter weather. Backcountry hiking is the lowest in popularity across seasons, possibly due to the experience and training that it takes to complete a task such as this one. Doing an analysis of regional trends on different activities offered in the parks shows that the west has the most visitation, especially in the summer months, despite the fact that the south has more visitation overall. This could be due to the more favorable weather conditions in the states that these parks are located that allow for more year-round visitation. 
+## Exploratory Data Analysis
+
+On initial analysis, it seems that July has the largest total visitation of any month. Therefore, we wanted to look at how different visitation looked like across seasons. Splitting the parks by month, there was clearly seasonal variation, with summer having the highest number of visitors across most park types. Winter recorded the lowest visitation levels, except for park types that specifically have activities that can be done during winter weather. More people visit national parks overall than any other park type, despite the fact that there are other park types with more parks across the U.S. There were some parks with variations, such as National Preserve, that had almost uniform visitation across the seasons. Looking at the activities offered there made it obvious that there were activities that could be done in all seasons.  
+
+Analyzing activity-specific trends shows that tent camping is the most popular activity except in winter, where RV camping is the highest due to its ability to provide shelter in the winter weather. Backcountry hiking is the lowest in popularity across seasons, possibly due to the experience and training that it takes to complete a task such as this one. There were some park types that had none of these activities, including National Historic Site, National Memorial, National Battlefield, and International Historic Site. Additionally, there were parks that only have Backcountry visitation or RV camping.  Doing an analysis of regional trends on different activities offered in the parks shows that the west has the most visitation, especially in the summer months, despite the fact that the south has more visitation overall. This could be due to the more favorable weather conditions in the states that these parks are located that allow for more year-round visitation. 
 
 ## Discussion
 
 Studying trends in seasonal and regional visitation shows that several things can be done to improve park visitation. If possible, parks with low winter visitation could benefit from the inclusion of winter-specific activities, such as snowshoeing. Additionally, improving facilities for RV and tent camping could help attract more visitors year-round. Using these results, the National Parks Service can make more data-informed decisions in order to optimize visitor experiences and ensure that the parks continue to preserve America’s precious landscapes. 
 
+## Limitations
+
+Many of the limitations in this project come from the data itself. One of the datasets was obtained through an API, where each of the columns was nested. In order to access any of the data contained in these columns would require several additional steps that is not usually needed. The two data sets used had different lengths, so joining them to use data in both was difficult Additionally, many of the parks had missing state data, which made it difficult to analyze regional trends. Further study could be conducted on more specific activities that are the most popular in the parks. The dataset obtained from an API included only the topics of the activities and not how many people do each activity. It would be interesting to do data analysis on these activities to see which ones are the most popular and could help improve park programming
+
+## R Code 
+
+My work is included in these two webpages:
+
+[Regional Analysis](https://mlachs.github.io/P8105_NPS_Final/Regional_Analysis.html)
+
+[Seasonal Analysis](https://mlachs.github.io/P8105_NPS_Final/Seasonal_Analysis.html)
 
 # Local NY 
 # Nature VS Machine 
